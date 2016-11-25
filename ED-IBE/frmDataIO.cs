@@ -758,8 +758,6 @@ namespace IBE
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportVisitedStations(Path.Combine(sourcePath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import visited stations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
@@ -777,8 +775,6 @@ namespace IBE
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
                                 Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName), EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromRN);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import collected price data...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
@@ -798,8 +794,6 @@ namespace IBE
                             {
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
                                 Program.Data.ImportPricesFromCSVFile(Path.Combine(sourcePath, FileName), EliteDBIO.enImportBehaviour.OnlyNewer, EliteDBIO.enDataSource.fromFILE, importParams);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import EDDN price data...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
                             }
@@ -861,7 +855,7 @@ namespace IBE
                             // update the visited information
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating visited systems and stations...", AddSeparator=true});
                             Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
-                            Program.Data.updateVisitedFlagsFromBase();
+                            Program.Data.updateVisitedFlagsFromBase(true, true);
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating visited systems and stations...<OK>", NewLine = true});
 
                             // insert missing localization entries
@@ -1299,9 +1293,6 @@ namespace IBE
                     var t = new Task(() => Program.Data.ImportPricesFromCSVFile(fbFileDialog.FileName, importBehaviour, EliteDBIO.enDataSource.fromFILE));
                     t.Start();
                     await t;
-
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedstations.TableName);
 
                     Program.Data.Progress -= Data_Progress;
 

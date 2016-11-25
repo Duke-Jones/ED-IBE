@@ -14,8 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Win32.SafeHandles;
 using System.Runtime.InteropServices;
-using IBE.Enums_and_Utility_Classes;
-using System.Threading;
 using IBE.SQL;
 
 namespace IBE.EDDN

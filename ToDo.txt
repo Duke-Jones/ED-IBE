@@ -18,16 +18,18 @@ todo:
 * call EDSM/EDDB directly
 * unhandled exception always shuts down
 
-* unclear state when connecting to fd-servers without valid data and error (see forum) 
 * preset today/7 days for date filter cmdrs log
 * save filter settings
-* font is too small in navigation bar
-* 
 
 *************************************************************************************
 
+
 done:
 
+v0.5.6
+  * fixed behaviour when enter illegal values to text fields
+  * showing of the 'n' last stations first is working again in comboboxes
+-------------------------------------------------------------------------------------         
   * dropdown boxes on PriceAnalysis tab now have a well formated and readable design
 -------------------------------------------------------------------------------------         
   * corrected order of combobox entries ("system - station" / "station - system")

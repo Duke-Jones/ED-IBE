@@ -153,6 +153,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 5, 5))
                         UpdateTo_0_5_5(ref foundError);
 
+                    if (dbVersion < new Version(0, 5, 6))
+                        UpdateTo_0_5_6(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -1465,7 +1468,158 @@ namespace IBE
                 throw new Exception("Error while updating to v0.5.5", ex);
             }
         }
-        
+
+        private static void UpdateTo_0_5_6(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.6...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+                sqlString = "-- MySQL Workbench Synchronization                                                                                                                              \n" +
+                            "-- Generated: 2016-11-25 15:19                                                                                                                                  \n" +
+                            "-- Model: New Model                                                                                                                                             \n" +
+                            "-- Version: 1.0                                                                                                                                                 \n" +
+                            "-- Project: Name of the project                                                                                                                                 \n" +
+                            "-- Author: Duke                                                                                                                                                 \n" +
+                            "                                                                                                                                                                \n" +
+                            "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                                        \n" +
+                            "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                                         \n" +
+                            "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                                       \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbSystems`                                                                                                                              \n" +
+                            "CHANGE COLUMN `visited` `visited` TINYINT(4) NOT NULL DEFAULT 0 ,                                                                                               \n" +
+                            "ADD INDEX `fk_tbSystems_tbVisitType1_idx` (`visited` ASC);                                                                                                      \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbStations`                                                                                                                             \n" +
+                            "CHANGE COLUMN `visited` `visited` TINYINT(4) NULL DEFAULT 0 ,                                                                                                   \n" +
+                            "ADD INDEX `fk_tbStations_tbVisitType1_idx` (`visited` ASC);                                                                                                     \n" +
+                            "                                                                                                                                                                \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`tbVisitType` (                                                                                                           \n" +
+                            "  `id` TINYINT(4) NOT NULL,                                                                                                                                     \n" +
+                            "  `VisitType` VARCHAR(80) NOT NULL,                                                                                                                             \n" +
+                            "  PRIMARY KEY (`id`))                                                                                                                                           \n" +
+                            "ENGINE = InnoDB                                                                                                                                                 \n" +
+                            "DEFAULT CHARACTER SET = utf8;                                                                                                                                   \n" +
+                            "                                                                                                                                                                \n" +
+                            "INSERT INTO `elite_db`.`tbVisitType` (`id`, `VisitType`) VALUES (0, 'NoVisit');                                                                                 \n" +
+                            "INSERT INTO `elite_db`.`tbVisitType` (`id`, `VisitType`) VALUES (1, 'VirtualVisit');                                                                            \n" +
+                            "INSERT INTO `elite_db`.`tbVisitType` (`id`, `VisitType`) VALUES (2, 'RealVisit');                                                                               \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbVisitedSystems`                                                                                                                       \n" +
+                            "ADD COLUMN `visitType` TINYINT(4) NOT NULL DEFAULT 2 AFTER `time`,                                                                                              \n" +
+                            "ADD INDEX `fk_tbVisitedSystems_tbVisitType1_idx` (`visitType` ASC),                                                                                             \n" +
+                            "ADD INDEX `Idx_tbVisitedSystems_time` (`time` ASC);                                                                                                             \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbVisitedStations`                                                                                                                      \n" +
+                            "ADD COLUMN `visitType` TINYINT(4) NOT NULL DEFAULT 2 AFTER `time`,                                                                                              \n" +
+                            "ADD INDEX `fk_tbVisitedStations_tbVisitType1_idx` (`visitType` ASC),                                                                                            \n" +
+                            "ADD INDEX `Idx_tbVisitedStations_time` (`time` ASC);                                                                                                            \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbSystems`                                                                                                                              \n" +
+                            "ADD CONSTRAINT `fk_tbSystems_tbVisitType1`                                                                                                                      \n" +
+                            "  FOREIGN KEY (`visited`)                                                                                                                                       \n" +
+                            "  REFERENCES `elite_db`.`tbVisitType` (`id`)                                                                                                                    \n" +
+                            "  ON DELETE NO ACTION                                                                                                                                           \n" +
+                            "  ON UPDATE NO ACTION;                                                                                                                                          \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbStations`                                                                                                                             \n" +
+                            "ADD CONSTRAINT `fk_tbStations_tbVisitType1`                                                                                                                     \n" +
+                            "  FOREIGN KEY (`visited`)                                                                                                                                       \n" +
+                            "  REFERENCES `elite_db`.`tbVisitType` (`id`)                                                                                                                    \n" +
+                            "  ON DELETE NO ACTION                                                                                                                                           \n" +
+                            "  ON UPDATE NO ACTION;                                                                                                                                          \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbVisitedSystems`                                                                                                                       \n" +
+                            "ADD CONSTRAINT `fk_tbVisitedSystems_tbVisitType1`                                                                                                               \n" +
+                            "  FOREIGN KEY (`visitType`)                                                                                                                                     \n" +
+                            "  REFERENCES `elite_db`.`tbVisitType` (`id`)                                                                                                                    \n" +
+                            "  ON DELETE NO ACTION                                                                                                                                           \n" +
+                            "  ON UPDATE NO ACTION;                                                                                                                                          \n" +
+                            "                                                                                                                                                                \n" +
+                            "ALTER TABLE `elite_db`.`tbVisitedStations`                                                                                                                      \n" +
+                            "ADD CONSTRAINT `fk_tbVisitedStations_tbVisitType1`                                                                                                              \n" +
+                            "  FOREIGN KEY (`visitType`)                                                                                                                                     \n" +
+                            "  REFERENCES `elite_db`.`tbVisitType` (`id`)                                                                                                                    \n" +
+                            "  ON DELETE NO ACTION                                                                                                                                           \n" +
+                            "  ON UPDATE NO ACTION;                                                                                                                                          \n" +
+                            "                                                                                                                                                                \n" +
+                            "-- -----------------------------------------------------                                                                                                        \n" +
+                            "-- Placeholder table for view `elite_db`.`vilog`                                                                                                                \n" +
+                            "-- -----------------------------------------------------                                                                                                        \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`vilog` (`time` INT, `systemname` INT, `stationname` INT, `eventtype` INT, `cargoaction` INT, `loccommodity` INT,         \n" +
+                            " `cargovolume` INT, `credits_transaction` INT, `credits_total` INT, `distance` INT, `notes` INT);                                                               \n" +
+                            "                                                                                                                                                                \n" +
+                            "                                                                                                                                                                \n" +
+                            "USE `elite_db`;                                                                                                                                                 \n" +
+                            "                                                                                                                                                                \n" +
+                            "-- -----------------------------------------------------                                                                                                        \n" +
+                            "-- View `elite_db`.`vilog`                                                                                                                                      \n" +
+                            "-- -----------------------------------------------------                                                                                                        \n" +
+                            "DROP TABLE IF EXISTS `elite_db`.`vilog`;                                                                                                                        \n" +
+                            "USE `elite_db`;                                                                                                                                                 \n" +
+                            "CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS                                                          \n" +
+                            "select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eventtype`,`c`.`cargoaction`               \n" +
+                            "AS `cargoaction`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction`                                             \n" +
+                            "AS `credits_transaction`,`l`.`credits_total` AS `credits_total`, `l`.`distance` AS `distance`, `l`.`notes` AS `notes` from (((((`tblog` `l`                     \n" +
+                            "left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`)))                               \n" +
+                            "left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`)))                                     \n" +
+                            "left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));                                                                                             \n" +
+                            "                                                                                                                                                                \n" +
+                            "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                                     \n" +
+                            "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                                 \n" +
+                            "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                           \n" +
+                            "                                                                                                                                                                \n" +
+                            "update tbVisitedSystems set VisitType = 2 where VisitType = 1;                                                                                                  \n" +
+                            "update tbVisitedStations set VisitType = 2 where VisitType = 1;                                                                                                 \n" +
+                            "update tbSystems set visited = 2 where visited = 1;                                                                                                             \n" +
+                            "update tbStations set visited = 2 where visited = 1;                                                                                                            \n" +
+                            "                                                                                                                                                                \n" +
+                            "update tbSystems S left join tbVisitedSystems V on S.id = V.system_id                                                                                           \n" +
+                            "   set visited = if(V.system_id is null, 0, V.visitType);                                                                                                       \n" +
+                            "update tbStations S left join tbVisitedStations V on S.id = V.station_id                                                                                        \n" +
+                            "   set visited = if(V.station_id is null, 0, V.visitType);                                                                                                      \n";
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.6...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.5.6", ex);
+            }
+        }        
 
         static void sqlScript_ScriptCompleted(object sender, EventArgs e)
         {
@@ -1526,8 +1680,8 @@ namespace IBE
 
                         Program.Colors.SetColor(GUIColors.ColorNames.Default_ForeColor, foreGround);
                         Program.Colors.SetColor(GUIColors.ColorNames.Default_BackColor, backGround);
-
                     }
+
                    
                 }
 

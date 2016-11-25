@@ -103,12 +103,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.cmbSystemBase = new System.Windows.Forms.ComboBox();
             this.cbMaxDistanceToStar = new System.Windows.Forms.CheckBox();
-            this.cbOrderByAmount = new System.Windows.Forms.CheckBox();
+            this.cbLastVisitedStations = new System.Windows.Forms.CheckBox();
             this.rbOrderByDistance = new System.Windows.Forms.RadioButton();
             this.rbOrderByStation = new System.Windows.Forms.RadioButton();
             this.rbOrderBySystem = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtOrderByAmount = new System.Windows.Forms.TextBoxInt32();
+            this.txtLastVisitedStations = new System.Windows.Forms.TextBoxInt32();
             this.label2 = new System.Windows.Forms.Label();
             this.tpAllCommodities = new System.Windows.Forms.TabPage();
             this.scAllCommodities_1 = new System.Windows.Forms.SplitContainer();
@@ -313,7 +313,6 @@
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.copysellStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.tpAllCommodities.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scAllCommodities_1)).BeginInit();
@@ -414,17 +413,17 @@
             this.cbMaxDistanceToStar.UseVisualStyleBackColor = true;
             this.cbMaxDistanceToStar.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
-            // cbOrderByAmount
+            // cbLastVisitedStations
             // 
-            this.cbOrderByAmount.AutoSize = true;
-            this.cbOrderByAmount.Location = new System.Drawing.Point(115, 32);
-            this.cbOrderByAmount.Name = "cbOrderByAmount";
-            this.cbOrderByAmount.Size = new System.Drawing.Size(130, 17);
-            this.cbOrderByAmount.TabIndex = 25;
-            this.cbOrderByAmount.Tag = "OrderByAmount;true";
-            this.cbOrderByAmount.Text = "last           stations first";
-            this.cbOrderByAmount.UseVisualStyleBackColor = true;
-            this.cbOrderByAmount.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
+            this.cbLastVisitedStations.AutoSize = true;
+            this.cbLastVisitedStations.Location = new System.Drawing.Point(115, 32);
+            this.cbLastVisitedStations.Name = "cbLastVisitedStations";
+            this.cbLastVisitedStations.Size = new System.Drawing.Size(130, 17);
+            this.cbLastVisitedStations.TabIndex = 25;
+            this.cbLastVisitedStations.Tag = "LastVisitedStations;true";
+            this.cbLastVisitedStations.Text = "last           stations first";
+            this.cbLastVisitedStations.UseVisualStyleBackColor = true;
+            this.cbLastVisitedStations.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // rbOrderByDistance
             // 
@@ -466,8 +465,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.txtOrderByAmount);
-            this.groupBox1.Controls.Add(this.cbOrderByAmount);
+            this.groupBox1.Controls.Add(this.txtLastVisitedStations);
+            this.groupBox1.Controls.Add(this.cbLastVisitedStations);
             this.groupBox1.Controls.Add(this.rbOrderByDistance);
             this.groupBox1.Controls.Add(this.rbOrderByStation);
             this.groupBox1.Controls.Add(this.rbOrderBySystem);
@@ -479,19 +478,19 @@
             this.groupBox1.Tag = "OrderOfEntrys;systemname";
             this.groupBox1.Text = "Sorting";
             // 
-            // txtOrderByAmount
+            // txtLastVisitedStations
             // 
-            this.txtOrderByAmount.Location = new System.Drawing.Point(157, 29);
-            this.txtOrderByAmount.MaxLength = 2;
-            this.txtOrderByAmount.MaxValue = 999;
-            this.txtOrderByAmount.MinValue = 1;
-            this.txtOrderByAmount.Name = "txtOrderByAmount";
-            this.txtOrderByAmount.Size = new System.Drawing.Size(19, 20);
-            this.txtOrderByAmount.TabIndex = 26;
-            this.txtOrderByAmount.Tag = "OrderByAmountValue;4";
-            this.txtOrderByAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtOrderByAmount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtOrderByAmount_KeyDown);
-            this.txtOrderByAmount.Leave += new System.EventHandler(this.txtOrderByAmount_Leave);
+            this.txtLastVisitedStations.Location = new System.Drawing.Point(157, 29);
+            this.txtLastVisitedStations.MaxLength = 2;
+            this.txtLastVisitedStations.MaxValue = 999;
+            this.txtLastVisitedStations.MinValue = 1;
+            this.txtLastVisitedStations.Name = "txtLastVisitedStations";
+            this.txtLastVisitedStations.Size = new System.Drawing.Size(19, 20);
+            this.txtLastVisitedStations.TabIndex = 26;
+            this.txtLastVisitedStations.Tag = "LastVisitedStationsValue;4";
+            this.txtLastVisitedStations.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtLastVisitedStations.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtLastVisitedStations_KeyDown);
+            this.txtLastVisitedStations.Leave += new System.EventHandler(this.txtLastVisitedStations_Leave);
             // 
             // label2
             // 
@@ -918,10 +917,13 @@
             // 
             this.cmbByStation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cmbByStation.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbByStation.ColumnWidthType = MultiColumnComboBox.ComboBoxMC.ColumnWidthTypes.Relative;
+            this.cmbByStation.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cmbByStation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbByStation.FormattingEnabled = true;
             this.cmbByStation.Location = new System.Drawing.Point(52, 15);
             this.cmbByStation.Name = "cmbByStation";
+            this.cmbByStation.Separator = null;
             this.cmbByStation.Size = new System.Drawing.Size(250, 21);
             this.cmbByStation.TabIndex = 1;
             // 
@@ -2162,10 +2164,13 @@
             // 
             this.cmbStation2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cmbStation2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStation2.ColumnWidthType = MultiColumnComboBox.ComboBoxMC.ColumnWidthTypes.Relative;
+            this.cmbStation2.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cmbStation2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStation2.FormattingEnabled = true;
             this.cmbStation2.Location = new System.Drawing.Point(366, 19);
             this.cmbStation2.Name = "cmbStation2";
+            this.cmbStation2.Separator = null;
             this.cmbStation2.Size = new System.Drawing.Size(250, 21);
             this.cmbStation2.TabIndex = 6;
             // 
@@ -2173,6 +2178,7 @@
             // 
             this.cmbStation1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cmbStation1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbStation1.ColumnWidthType = MultiColumnComboBox.ComboBoxMC.ColumnWidthTypes.Relative;
             this.cmbStation1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cmbStation1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStation1.FormattingEnabled = true;
@@ -2194,7 +2200,6 @@
             // tpStationToStation
             // 
             this.tpStationToStation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tpStationToStation.Controls.Add(this.listBox1);
             this.tpStationToStation.Controls.Add(this.cmdClearCommodityFilters);
             this.tpStationToStation.Controls.Add(this.cmdCommodityFilter2);
             this.tpStationToStation.Controls.Add(this.cmdCommodityFilter1);
@@ -2841,14 +2846,6 @@
             this.copysellStationnameToClipboardToolStripMenuItem.Text = "Copy \'sell\' stationname to clipboard";
             this.copysellStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
             // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(715, -38);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(120, 95);
-            this.listBox1.TabIndex = 51;
-            // 
             // tabPriceAnalysis
             // 
             this.Controls.Add(this.groupBox4);
@@ -2934,8 +2931,8 @@
         private System.Windows.Forms.ComboBox cmbSystemBase;
         private System.Windows.Forms.CheckBox cbMaxDistanceToStar;
         private System.Windows.Forms.ComboBoxInt32 cmbStationLightSeconds;
-        private System.Windows.Forms.TextBoxInt32 txtOrderByAmount;
-        private System.Windows.Forms.CheckBox cbOrderByAmount;
+        private System.Windows.Forms.TextBoxInt32 txtLastVisitedStations;
+        private System.Windows.Forms.CheckBox cbLastVisitedStations;
         private System.Windows.Forms.RadioButton rbOrderByDistance;
         private System.Windows.Forms.RadioButton rbOrderByStation;
         private System.Windows.Forms.RadioButton rbOrderBySystem;
@@ -3143,6 +3140,5 @@
         private System.Windows.Forms.ToolStripMenuItem copybuyStationnameToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem copysellStationnameToClipboardToolStripMenuItem;
-        private System.Windows.Forms.ListBox listBox1;
     }
 }

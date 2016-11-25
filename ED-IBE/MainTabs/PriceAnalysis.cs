@@ -289,12 +289,12 @@ namespace IBE.MTPriceAnalysis
         /// <summary>
         /// creates the filtered basetable of systems and stations
         /// </summary>
-        /// <param name="SystemID"></param>
+        /// <param name="baseCoordinates"></param>
         /// <param name="Distance"></param>
         /// <param name="DistanceToStar"></param>
         /// <param name="minLandingPadSize"></param>
         /// <param name="locationType"></param>
-        public void createFilteredTable(Int32 SystemID, Object Distance, Object DistanceToStar, Object minLandingPadSize, Program.enVisitedFilter VisitedFilter, Object locationType)
+        public void createFilteredTable(Point3Dbl baseCoordinates, Object Distance, Object DistanceToStar, Object minLandingPadSize, Program.enVisitedFilter VisitedFilter, Object locationType)
         {
             String sqlString;
             DataTable currentSystem = new DataTable();
@@ -304,10 +304,6 @@ namespace IBE.MTPriceAnalysis
             {
                 stopTime = (DateTime.Now - new TimeSpan(Program.DBCon.getIniValue<Int32>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilterDays", "30", true), 0, 0, 0));
 
-                // get info of basesystem
-                sqlString = "select * from tbSystems where ID = " + SystemID.ToString();
-                m_lDBCon.Execute(sqlString, currentSystem);
-
                 sqlString = "truncate table tmFilteredStations;";
                 m_lDBCon.Execute(sqlString);
 
@@ -316,9 +312,9 @@ namespace IBE.MTPriceAnalysis
                             "   select Sy.ID As System_id, St.ID As Station_id, SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) As Distance, Sy.x, Sy.y, Sy.z" + 
                             "   from tbSystems Sy, tbStations St" +
                             "   where Sy.ID = St.System_id",
-                            DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["x"]), 
-                            DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["y"]), 
-                            DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["z"])); 
+                            DBConnector.SQLDecimal(baseCoordinates.X.Value), 
+                            DBConnector.SQLDecimal(baseCoordinates.Y.Value), 
+                            DBConnector.SQLDecimal(baseCoordinates.Z.Value)); 
 
                 if(true)                            
                 {
@@ -360,9 +356,9 @@ namespace IBE.MTPriceAnalysis
                     sqlString = sqlString + String.Format(
                             "   and ((Sy.x <> 0.0 AND Sy.y <> 0.0 AND Sy.z <> 0.0) Or (Sy.Systemname = 'Sol'))" +
                             "   and sqrt(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)) <=  {3}",
-                            DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["x"]), 
-                            DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["y"]), 
-                            DBConnector.SQLDecimal((Double)currentSystem.Rows[0]["z"]), 
+                            DBConnector.SQLDecimal(baseCoordinates.X.Value), 
+                            DBConnector.SQLDecimal(baseCoordinates.Y.Value), 
+                            DBConnector.SQLDecimal(baseCoordinates.Z.Value),
                             ((Int32)Distance).ToString());
                 }
                             

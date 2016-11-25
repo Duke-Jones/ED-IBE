@@ -373,10 +373,12 @@ namespace IBE
             {
               if(e.KeyCode == Keys.Enter)
                     if(((TextBoxDouble)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender))
                         {
 
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -391,10 +393,12 @@ namespace IBE
             try
             {
                 if(((TextBoxDouble)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender))
                     {
 
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -410,10 +414,12 @@ namespace IBE
             {
               if(e.KeyCode == Keys.Enter)
                     if(((TextBoxInt32)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender))
                         {
 
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -428,10 +434,12 @@ namespace IBE
             try
             {
                 if(((TextBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender))
                     {
 
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -447,10 +455,12 @@ namespace IBE
             {
               if(e.KeyCode == Keys.Enter)
                     if(((TextBoxInt32)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender))
                         {
 
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -465,10 +475,12 @@ namespace IBE
             try
             {
                 if(((TextBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender))
                     {
 
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }

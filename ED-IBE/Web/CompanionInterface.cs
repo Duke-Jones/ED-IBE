@@ -103,7 +103,6 @@ namespace IBE.Web
             Stream receiveStream;
             StreamReader readStream;
             String answer;
-            String Code;
 
             try
             {
@@ -303,7 +302,6 @@ namespace IBE.Web
             Stream receiveStream;
             StreamReader readStream;
             String answer;
-            String Code;
 
             try
             {

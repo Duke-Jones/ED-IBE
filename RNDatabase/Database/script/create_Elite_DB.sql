@@ -86,6 +86,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `elite_db`.`tbVisitType`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbVisitType` (
+  `id` TINYINT NOT NULL,
+  `VisitType` VARCHAR(80) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `elite_db`.`tbSystems`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `elite_db`.`tbSystems` (
@@ -104,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbSystems` (
   `needs_permit` TINYINT(1) NULL,
   `updated_at` DATETIME NOT NULL,
   `is_changed` TINYINT(1) NULL DEFAULT 0,
-  `visited` TINYINT(1) NOT NULL DEFAULT 0,
+  `visited` TINYINT NOT NULL DEFAULT 0,
   `Power_id` INT NULL,
   `PowerState_id` INT NULL,
   PRIMARY KEY (`id`),
@@ -119,6 +129,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbSystems` (
   INDEX `idx_tbSystems_Systemname` (`systemname` ASC),
   INDEX `fk_tbSystems_tbPower1_idx` (`Power_id` ASC),
   INDEX `fk_tbSystems_tbPowerState1_idx` (`PowerState_id` ASC),
+  INDEX `fk_tbSystems_tbVisitType1_idx` (`visited` ASC),
   CONSTRAINT `fk_tbSystems_tbAllegiance1`
     FOREIGN KEY (`allegiance_id`)
     REFERENCES `elite_db`.`tbAllegiance` (`id`)
@@ -152,6 +163,11 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbSystems` (
   CONSTRAINT `fk_tbSystems_tbPowerState1`
     FOREIGN KEY (`PowerState_id`)
     REFERENCES `elite_db`.`tbPowerState` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbSystems_tbVisitType1`
+    FOREIGN KEY (`visited`)
+    REFERENCES `elite_db`.`tbVisitType` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -195,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbStations` (
   `outfitting_updated_at` DATETIME NULL,
   `market_updated_at` DATETIME NULL,
   `is_changed` TINYINT(1) NULL DEFAULT 0,
-  `visited` TINYINT(1) NULL DEFAULT 0,
+  `visited` TINYINT NULL DEFAULT 0,
   `type_id` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_tbStations_tbSystems_idx` (`system_id` ASC),
@@ -204,6 +220,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbStations` (
   INDEX `fk_tbStations_tbState1_idx` (`state_id` ASC),
   INDEX `fk_tbStations_tbStationType1_idx` (`stationtype_id` ASC),
   INDEX `idx_tbStations_Stationname` (`stationname` ASC),
+  INDEX `fk_tbStations_tbVisitType1_idx` (`visited` ASC),
   CONSTRAINT `fk_tbStations_tbSystems`
     FOREIGN KEY (`system_id`)
     REFERENCES `elite_db`.`tbSystems` (`id`)
@@ -227,6 +244,11 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbStations` (
   CONSTRAINT `fk_tbStations_tbStationType1`
     FOREIGN KEY (`stationtype_id`)
     REFERENCES `elite_db`.`tbStationType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tbStations_tbVisitType1`
+    FOREIGN KEY (`visited`)
+    REFERENCES `elite_db`.`tbVisitType` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -552,12 +574,20 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `elite_db`.`tbVisitedSystems` (
   `system_id` INT NOT NULL,
   `time` DATETIME NOT NULL,
+  `visitType` TINYINT NOT NULL DEFAULT 2,
   PRIMARY KEY (`system_id`),
+  INDEX `fk_tbVisitedSystems_tbVisitType1_idx` (`visitType` ASC),
+  INDEX `Idx_tbVisitedSystems_time` (`time` ASC),
   CONSTRAINT `fk_tbSystems_tbVisitedSystems`
     FOREIGN KEY (`system_id`)
     REFERENCES `elite_db`.`tbSystems` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_tbVisitedSystems_tbVisitType1`
+    FOREIGN KEY (`visitType`)
+    REFERENCES `elite_db`.`tbVisitType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -567,12 +597,20 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `elite_db`.`tbVisitedStations` (
   `station_id` INT NOT NULL,
   `time` DATETIME NOT NULL,
+  `visitType` TINYINT NOT NULL DEFAULT 2,
   PRIMARY KEY (`station_id`),
+  INDEX `fk_tbVisitedStations_tbVisitType1_idx` (`visitType` ASC),
+  INDEX `Idx_tbVisitedStations_time` (`time` ASC),
   CONSTRAINT `fk_tbStations_tbVisitedStations`
     FOREIGN KEY (`station_id`)
     REFERENCES `elite_db`.`tbStations` (`id`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_tbVisitedStations_tbVisitType1`
+    FOREIGN KEY (`visitType`)
+    REFERENCES `elite_db`.`tbVisitType` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -1184,6 +1222,18 @@ COMMIT;
 
 
 -- -----------------------------------------------------
+-- Data for table `elite_db`.`tbVisitType`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbVisitType` (`id`, `VisitType`) VALUES (0, 'NoVisit');
+INSERT INTO `elite_db`.`tbVisitType` (`id`, `VisitType`) VALUES (1, 'VirtualVisit');
+INSERT INTO `elite_db`.`tbVisitType` (`id`, `VisitType`) VALUES (2, 'RealVisit');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `elite_db`.`tbStationType`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -1245,7 +1295,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.5');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.6');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;

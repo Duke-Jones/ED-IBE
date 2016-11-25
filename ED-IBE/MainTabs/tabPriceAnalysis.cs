@@ -517,7 +517,7 @@ namespace IBE.MTPriceAnalysis
                         cmbByStation.DisplayMembers.Add("Distance; ({0:f1} ly)");
                         cmbByStation.DisplayMember   = "SystemStation";
 
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "SystemName";
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "time desc, SystemName";
                         break;
                     case "stationname":
                         cmbStation1.DisplayMembers.Clear();
@@ -525,20 +525,23 @@ namespace IBE.MTPriceAnalysis
                         cmbStation1.DisplayMembers.Add("<SEP>;-");
                         cmbStation1.DisplayMembers.Add("SystemName");
                         cmbStation1.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbStation1.DisplayMember   = "StationSystem";
 
                         cmbStation2.DisplayMembers.Clear();
                         cmbStation2.DisplayMembers.Add("StationName");
                         cmbStation2.DisplayMembers.Add("<SEP>;-");
                         cmbStation2.DisplayMembers.Add("SystemName");
                         cmbStation2.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbStation2.DisplayMember   = "StationSystem";
 
                         cmbByStation.DisplayMembers.Clear();
                         cmbByStation.DisplayMembers.Add("StationName");
                         cmbByStation.DisplayMembers.Add("<SEP>;-");
                         cmbByStation.DisplayMembers.Add("SystemName");
                         cmbByStation.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbByStation.DisplayMember   = "StationSystem";
 
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "StationName";
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "time desc, StationName";
                         break;
                     case "distance":
                         cmbStation1.DisplayMembers.Clear();
@@ -546,6 +549,7 @@ namespace IBE.MTPriceAnalysis
                         cmbStation1.DisplayMembers.Add("<SEP>;-");
                         cmbStation1.DisplayMembers.Add("StationName");
                         cmbStation1.DisplayMembers.Add("Distance; ({0:f1} ly)");
+                        cmbStation1.DisplayMember   = "SystemStation";
 
                         cmbStation2.DisplayMembers.Clear();
                         cmbStation2.DisplayMembers.Add("SystemName");
@@ -561,7 +565,7 @@ namespace IBE.MTPriceAnalysis
                         cmbByStation.DisplayMembers.Add("Distance; ({0:f1} ly)");
                         cmbByStation.DisplayMember   = "SystemStation";
 
-                        ((BindingSource)(cmbStation1.DataSource)).Sort = "Distance";
+                        ((BindingSource)(cmbStation1.DataSource)).Sort = "time desc, Distance";
                         break;
                 }
             }
@@ -601,11 +605,12 @@ namespace IBE.MTPriceAnalysis
                 if(cbLocation.Checked)                 
                     locationType = cmbLocation.Text;
 
+
                 // get the id of the selected "base system"
                 if((cmbSystemBase.Text == "") || (cmbSystemBase.Text.Equals(CURRENT_SYSTEM, StringComparison.InvariantCultureIgnoreCase)))
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
+                    sqlString = "select ID, x, y, z from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
                 else
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(cmbSystemBase.Text);
+                    sqlString = "select ID, x, y, z from tbSystems where Systemname = " + DBConnector.SQLAEscape(cmbSystemBase.Text);
 
                 Data = new DataTable();
                 Program.DBCon.Execute(sqlString, Data);
@@ -616,22 +621,23 @@ namespace IBE.MTPriceAnalysis
                     cmbSystemBase.Text             = CURRENT_SYSTEM;
                     this.cmbSystemBase.TextUpdate +=  cmbSystemBase_TextUpdate;
 
-                    sqlString = "select ID from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
+                    sqlString = "select ID, x, y, z from tbSystems where Systemname = " + DBConnector.SQLAEscape(Program.actualCondition.System);
                     Program.DBCon.Execute(sqlString, Data);
                 }
 
                 if (Data.Rows.Count > 0)
                 {
-                    Int32 SystemID;
+                    Int32     SystemID          = (Int32)Data.Rows[0]["ID"];
+                    Point3Dbl baseCoodinates    = new Point3Dbl((Double)Data.Rows[0]["x"], (Double)Data.Rows[0]["y"], (Double)Data.Rows[0]["z"]);
+
                     Program.enVisitedFilter VFilter;
-                    SystemID = (Int32)Data.Rows[0]["ID"];
 
                     VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettingsView.DB_GROUPNAME,
                                                                                         "VisitedFilter",
                                                                                         ((Int32)Program.enVisitedFilter.showAll).ToString(),
                                                                                         false);
 
-                    m_DataSource.createFilteredTable(SystemID, Distance, DistanceToStar, minLandingPadSize, VFilter, locationType);
+                    m_DataSource.createFilteredTable(baseCoodinates, Distance, DistanceToStar, minLandingPadSize, VFilter, locationType);
 
                     Int32 StationCount;
                     Int32 SystemCount;
@@ -640,11 +646,12 @@ namespace IBE.MTPriceAnalysis
                     lblSystemsFound.Text = SystemCount.ToString();
                     lblStationsFound.Text = StationCount.ToString();
 
+                    // select the filtered stations
                     sqlString = "select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," +
                                 "       concat(St.StationName, ' - ', Sy.SystemName,  ' (', Round(Distance,1), ' ly)') As StationSystem," +
                                 "       concat(Sy.SystemName,  ' - ', St.StationName, ' (', Round(Distance,1), ' ly)') As SystemStation," +
                                 "       concat(Sy.SystemName,  ' - ', St.StationName, ' (', Round(Distance,1), ' ly)') As SystemDistance," +
-                                "       Fs.Distance" +
+                                "       Fs.Distance, {ts'2000-01-01 00:00:00'} as time" +
                                 " from tmFilteredStations Fs, tbSystems Sy, tbStations St" +
                                 " where FS.Station_ID = St.ID" +
                                 " and   St.System_ID  = Sy.ID;";
@@ -652,12 +659,47 @@ namespace IBE.MTPriceAnalysis
 
                     Program.DBCon.Execute(sqlString, m_DGVTables[cmbByStation.Name]);
 
-                    //foreach (DataRow dRow in m_DGVTables[cmbByStation.Name].Rows)
-                    //{
-                    //    System.Drawing.Graphics.MeasureString(dRow["SystemName"].ToString(), cmbStation1.Font).Width;
-                    //}
+                    if(cbLastVisitedStations.Checked && Int32.Parse(txtLastVisitedStations.Text) > 0)
+                    {
+                        DataTable currentSystem = new DataTable();
+                        Int32 amountLastStations = Int32.Parse(txtLastVisitedStations.Text);
 
+                        // select the 'n' previously visited stations (unattached from the filter settings)
+                        sqlString = String.Format("select Sy.ID As SystemID, Sy.SystemName, St.ID As StationID, St.StationName," +
+                                                  " concat(St.StationName, ' - ', Sy.SystemName,  ' (', Round(SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)),1), ' ly)') As StationSystem," +
+                                                  " concat(Sy.SystemName,  ' - ', St.StationName, ' (', Round(SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)),1), ' ly)') As SystemStation," +
+                                                  " concat(Sy.SystemName,  ' - ', St.StationName, ' (', Round(SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)),1), ' ly)') As SystemDistance," +
+                                                  " Round(SQRT(POW(Sy.x - {0}, 2) + POW(Sy.y - {1}, 2) +  POW(Sy.z - {2}, 2)),1) As Distance, V.time" +
+                                                  " from tbSystems Sy, tbStations St, tbVisitedStations V" +
+                                                  " where St.System_ID  = Sy.ID" +
+                                                  " and   St.id         = V.Station_Id" +
+                                                  " and   V.VisitType   = {4}" +
+	                                              " order by V.time desc" +
+ 	                                              " limit {3}", 
+                                                  DBConnector.SQLDecimal(baseCoodinates.X.Value), 
+                                                  DBConnector.SQLDecimal(baseCoodinates.Y.Value), 
+                                                  DBConnector.SQLDecimal(baseCoodinates.Z.Value),
+                                                  amountLastStations, 
+                                                  (sbyte)EliteDBIO.VisitedType.RealVisit);
 
+                        DataTable tmpTable = new DataTable();
+                        Program.DBCon.Execute(sqlString, tmpTable);
+
+                        m_DGVTables[cmbByStation.Name].Merge(tmpTable);
+
+                        DataRow separatorRow = m_DGVTables[cmbByStation.Name].NewRow();
+                        separatorRow["SystemID"]        = "0";
+                        separatorRow["SystemName"]      = "----------";
+                        separatorRow["StationID"]       = "0";
+                        separatorRow["StationName"]     = "----------";
+                        separatorRow["StationSystem"]   = "----------";
+                        separatorRow["SystemStation"]   = "----------";
+                        separatorRow["SystemDistance"]  = "----------";
+                        separatorRow["Distance"]        = "0";
+                        separatorRow["time"]            = new DateTime(2002, 01, 01);
+
+                        m_DGVTables[cmbByStation.Name].Rows.Add(separatorRow);
+                    }
 
                     if(cmbStation1.ValueMember == "")
                     { 
@@ -833,15 +875,17 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-        private void txtOrderByAmount_Leave(object sender, EventArgs e)
+        private void txtLastVisitedStations_Leave(object sender, EventArgs e)
         {
             try
             {
                 if(((TextBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender))
                     {
                         setFilterHasChanged(true);                
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -851,16 +895,18 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-        private void txtOrderByAmount_KeyDown(object sender, KeyEventArgs e)
+        private void txtLastVisitedStations_KeyDown(object sender, KeyEventArgs e)
         {
             try
             {
                 if(e.KeyCode == Keys.Enter)
                     if(((TextBoxInt32)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender))
                         {
                             setFilterHasChanged(true);                
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -876,10 +922,12 @@ namespace IBE.MTPriceAnalysis
             {
               if(e.KeyCode == Keys.Enter)
                     if(((ComboBoxInt32)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender) && cbOnlyStationsWithin.Checked)
                         {
                             setFilterHasChanged(true);                
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -894,10 +942,12 @@ namespace IBE.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender) && cbOnlyStationsWithin.Checked)
                     {
                         setFilterHasChanged(true);                
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -912,10 +962,12 @@ namespace IBE.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender) && cbOnlyStationsWithin.Checked)
                     {
                         setFilterHasChanged(true);                
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -930,10 +982,12 @@ namespace IBE.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender) && cbMaxDistanceToStar.Checked)
                     {
                         setFilterHasChanged(true);                
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -948,10 +1002,12 @@ namespace IBE.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender) && cbMaxDistanceToStar.Checked)
                     {
                         setFilterHasChanged(true);                
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -967,10 +1023,12 @@ namespace IBE.MTPriceAnalysis
             {
                 if(e.KeyCode == Keys.Enter)
                     if(((ComboBoxInt32)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender) && cbMaxDistanceToStar.Checked)
                         {
                             setFilterHasChanged(true);                
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -1032,10 +1090,12 @@ namespace IBE.MTPriceAnalysis
             {
               if(e.KeyCode == Keys.Enter)
                     if(((ComboBoxInt32)sender).checkValue())
+                    {
                         if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
                         {
                             setFilterHasChanged(true);                
                         }
+                    }
                     else
                         m_GUIInterface.loadSetting(sender);
             }
@@ -1050,10 +1110,12 @@ namespace IBE.MTPriceAnalysis
             try
             {
                 if(((ComboBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
                     {
                         Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }
@@ -1066,12 +1128,14 @@ namespace IBE.MTPriceAnalysis
         private void cmbMaxTripDistance_Leave(object sender, EventArgs e)
         {
             try
-            {
+            {       
                 if(((ComboBoxInt32)sender).checkValue())
+                {
                     if(m_GUIInterface.saveSetting(sender) && cbMaxTripDistance.Checked)
                     {
                         setFilterHasChanged(true);                
                     }
+                }
                 else
                     m_GUIInterface.loadSetting(sender);
             }

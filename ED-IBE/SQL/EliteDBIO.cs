@@ -91,6 +91,18 @@ namespace IBE.SQL
             fromEDDN_T          =  4
         }
 
+      /// <summary>
+        /// Switch the language, updating the loccommodity-string in tbCommodities.
+        /// </summary>
+        /// <param name="Language">new language for viewing</param>
+
+        public enum VisitedType : sbyte
+        {
+            NoVisit       =  0,
+            VirtualVisit  =  1,
+            RealVisit     =  2
+        }
+
 #endregion
 
         /// <summary>
@@ -286,8 +298,6 @@ namespace IBE.SQL
                                                             "tbcategorylocalization", 
                                                             "tbcategory", 
                                                             "tbeconomylevel", 
-                                                            "tbvisitedsystems", 
-                                                            "tbvisitedstations", 
                                                             "tbpower",
                                                             "tbpowerstate", 
                                                             "tblanguage", 
@@ -1049,8 +1059,6 @@ namespace IBE.SQL
             String sqlString;
             List<EDSystem> Systems;
             EDSystem importSystem;
-            dsEliteDB.tbsystemsRow[] FoundRows;
-            dsEliteDB.tbsystems_orgRow[] FoundRows_org;
             DateTime Timestamp_new, Timestamp_old;
             Int32 ImportCounter = 0;
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<Int32, Int32>();
@@ -1256,12 +1264,12 @@ namespace IBE.SQL
         /// imports the data from the list of systems
         /// </summary>
         /// <param name="fileName"></param>
-        public Dictionary<Int32, Int32> ImportSystems_Own(EDSystem System, Boolean OnlyAddUnknown = false, Boolean setVisitedFlag = false)
+        public Dictionary<Int32, Int32> ImportSystems_Own(EDSystem System, Boolean OnlyAddUnknown = false, VisitedType setVisitedType = VisitedType.NoVisit)
         {
             try
             {
                 List<EDSystem> SystemList = new List<EDSystem>() {System};
-                return ImportSystems_Own(ref SystemList, OnlyAddUnknown, setVisitedFlag);
+                return ImportSystems_Own(ref SystemList, OnlyAddUnknown, setVisitedType);
             }
             catch (Exception ex)
             {
@@ -1273,7 +1281,7 @@ namespace IBE.SQL
         /// imports the data from the list of systems
         /// </summary>
         /// <param name="fileName"></param>
-        public Dictionary<Int32, Int32> ImportSystems_Own(ref List<EDSystem> Systems, Boolean OnlyAddUnknown = false, Boolean setVisitedFlag = false)
+        public Dictionary<Int32, Int32> ImportSystems_Own(ref List<EDSystem> Systems, Boolean OnlyAddUnknown = false, VisitedType setVisitedType = VisitedType.NoVisit)
         {
             DBConnector               lDBCon = null;
             String sqlString;
@@ -1367,7 +1375,7 @@ namespace IBE.SQL
                             dsEliteDB.tbsystemsRow newRow = (dsEliteDB.tbsystemsRow)Data.tbsystems.NewRow();
                             CopyEDSystemToDataRow(System, (DataRow)newRow, true, null, true);
 
-                            newRow.visited      = setVisitedFlag;
+                            newRow.visited      = (sbyte)setVisitedType;
                             newRow.updated_at   = DateTime.UtcNow;
 
                             Data.tbsystems.Rows.Add(newRow);
@@ -1734,11 +1742,11 @@ namespace IBE.SQL
         /// imports the "own" station data from the list of stations
         /// </summary>
         /// <param name="fileName"></param>
-        public void ImportStations_Own(EDStation Station, Boolean OnlyAddUnknown = false, Boolean setVisitedFlag = false)
+        public void ImportStations_Own(EDStation Station, Boolean OnlyAddUnknown = false, VisitedType setVisitedType = VisitedType.NoVisit)
         {
             try
             {
-                ImportStations_Own(new List<EDStation>() {Station}, new Dictionary<Int32, Int32>(), OnlyAddUnknown, setVisitedFlag);
+                ImportStations_Own(new List<EDStation>() {Station}, new Dictionary<Int32, Int32>(), OnlyAddUnknown, setVisitedType);
             }
             catch (Exception ex)
             {
@@ -1766,7 +1774,7 @@ namespace IBE.SQL
         /// imports the "own" station data into the database
         /// </summary>
         /// <param name="fileName"></param>
-        public void ImportStations_Own(List<EDStation> Stations, Dictionary<Int32, Int32> changedSystemIDs, Boolean OnlyAddUnknown = false, Boolean setVisitedFlag = false)
+        public void ImportStations_Own(List<EDStation> Stations, Dictionary<Int32, Int32> changedSystemIDs, Boolean OnlyAddUnknown = false, VisitedType setVisitedType = VisitedType.NoVisit)
         {
             DBConnector               lDBCon = null;
             String sqlString;
@@ -1886,7 +1894,7 @@ namespace IBE.SQL
                             dsEliteDB.tbstationsRow newRow = (dsEliteDB.tbstationsRow)Data.tbstations.NewRow();
 
                             CopyEDStationToDataRow(Station, (DataRow)newRow, true, null, true);
-                            newRow.visited      = setVisitedFlag;
+                            newRow.visited      = (sbyte)setVisitedType;
                             newRow.updated_at   = DateTime.UtcNow;
 
                             Data.tbstations.Rows.Add(newRow);
@@ -2222,12 +2230,13 @@ namespace IBE.SQL
 
                     try
                     {
-                        sqlString = String.Format("insert ignore into tbVisitedSystems(system_id, time)" +
+                        sqlString = String.Format("insert ignore into tbVisitedSystems(system_id, time, visitType)" +
                                                   " SELECT d.* FROM (SELECT" +
                                                   " (select id from tbSystems where systemname = {0}) as system_id," +
-                                                  " {1} as time) as d", 
+                                                  " {1} as time, {2} As visitType) as d", 
                                                   DBConnector.SQLAString(DBConnector.SQLEscape(System)), 
-                                                  DBConnector.SQLDateTime(VisitEvent.Visited));
+                                                  DBConnector.SQLDateTime(VisitEvent.Visited), 
+                                                  (sbyte)VisitedType.RealVisit);
 
                         lDBCon.Execute(sqlString);
                     }
@@ -2238,15 +2247,16 @@ namespace IBE.SQL
 
                     try
                     {
-                        sqlString = String.Format("insert ignore into tbVisitedStations(station_id, time)" +
+                        sqlString = String.Format("insert ignore into tbVisitedStations(station_id, time, visitType)" +
                                                   " SELECT d.* FROM (SELECT" +
                                                   " (select id from tbStations" + 
                                                   "        where stationname = {0}" + 
                                                   "          and system_id   = (select id from tbSystems where systemname = {1})) as station_id," +
-                                                  " {2} as time) as d", 
+                                                  " {2} as time, {3} As visitType) as d", 
                                                   DBConnector.SQLAString(DBConnector.SQLEscape(Station)), 
                                                   DBConnector.SQLAString(DBConnector.SQLEscape(System)),
-                                                  DBConnector.SQLDateTime(VisitEvent.Visited));
+                                                  DBConnector.SQLDateTime(VisitEvent.Visited), 
+                                                  (sbyte)VisitedType.RealVisit);
 
                         lDBCon.Execute(sqlString);
                     }
@@ -2684,7 +2694,6 @@ namespace IBE.SQL
             try
             {
                 List<String> CSV_Strings    = new List<string>();
-                ProgressEventArgs eva;
 
                 var reader              = new StreamReader(File.OpenRead(filename));
                 Int32 counter           = 0;
@@ -3008,8 +3017,11 @@ namespace IBE.SQL
                                }
                                else
                                { 
-                                      // system is in the bubble - set as visited
-                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, null, true);
+                                   // force refresh the old visited flag from tbVisitedStations/-Systems
+                                   updateVisitedFlagsFromBase(StationData[i].SystemId, StationData[i].Id);
+
+                                   // system is in the bubble - set as virtuel visited (of not already marked as visited)
+                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, null, VisitedType.VirtualVisit);
                                }
 
                                eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize-i, TotalValue=initialSize };
@@ -3035,7 +3047,7 @@ namespace IBE.SQL
 
                     if(!eva.Cancelled)
                     {
-                        Program.Data.updateVisitedFlagsFromBase();
+                        Program.Data.updateVisitedFlagsFromBase(true, true);
                         eva = new ProgressEventArgs() { Info = "refreshing basetables in memory...", CurrentValue=25, TotalValue=100, ForceRefresh=true };
                         sendProgressEvent(eva);
                     }
@@ -3528,8 +3540,6 @@ namespace IBE.SQL
         public void DeleteNoLongerExistingMarketData(int days, int? singleStationID=null)
         {
             String sqlString;
-            Int32 deletedRows = 0;
-            Int32 deletedRowsSum = 0;
             Int32 stationsToCheck;
             String sqlBaseString_Get;
             String sqlBaseString_Delete;
@@ -3726,8 +3736,8 @@ namespace IBE.SQL
             {
                 if((Refresh & enVisitType.Systems) > 0)
                 { 
-                    sqlString = "insert into tbVisitedSystems(system_id, time)" +
-                                "   select L1.system_id, L1.time " +
+                    sqlString = "insert into tbVisitedSystems(system_id, time, visitType)" +
+                                "   select L1.system_id, L1.time, 2 " +
                                 "      from tbLog L1 left join tbVisitedSystems V1 on L1.system_id = V1.system_id " +
                                 "      where L1.system_id is not null " +
                                 "      and   L1.time      > V1.time" +
@@ -3741,8 +3751,8 @@ namespace IBE.SQL
 
                 if((Refresh & enVisitType.Stations) > 0)
                 { 
-                    sqlString = "insert into tbVisitedStations(station_id, time)" +
-                                "   select L1.station_id, L1.time " +
+                    sqlString = "insert into tbVisitedStations(station_id, time, visitType)" +
+                                "   select L1.station_id, L1.time, 2 " +
                                 "      from tbLog L1 left join tbVisitedStations V1 on L1.station_id = V1.station_id " +
                                 "      where L1.station_id is not null " +
                                 "      and   L1.time      > V1.time" +
@@ -3775,14 +3785,50 @@ namespace IBE.SQL
                 if(newSystem)
                 { 
                     sqlString = "update tbSystems S left join tbVisitedSystems V on S.id = V.system_id" +
-                                "   set visited = if(V.system_id is null, 0, 1)";
+                                "   set visited = if(V.system_id is null, 0, V.visitType)";
                     Program.DBCon.Execute(sqlString);
                 }
 
                 if(newStation)
                 { 
                     sqlString = "update tbStations S left join tbVisitedStations V on S.id = V.station_id" +
-                                "   set visited = if(V.station_id is null, 0, 1)";
+                                "   set visited = if(V.station_id is null, 0, V.visitType)";
+                    Program.DBCon.Execute(sqlString);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating the visited systems from log", ex);
+            }
+        }
+
+        /// <summary>
+        /// Update the visited-flag in the stations- and systems-tables
+        /// from the visited-basetables (tbVisitedStations/tbVistitedSystems).
+        /// </summary>
+        /// <param name="Refresh"></param>
+        public void updateVisitedFlagsFromBase(Int32 systemID = 0, Int32 stationID = 0)
+        {
+            String sqlString;
+            
+            try
+            {
+                if(systemID != 0)
+                { 
+                    sqlString = String.Format("update tbSystems S left join tbVisitedSystems V on S.id = V.system_id" +
+                                              "   set visited = if(V.system_id is null, 0, V.visitType)" +
+                                              "   where S.ID = {0};",
+                                              systemID);
+                    Program.DBCon.Execute(sqlString);
+                }
+
+                if(stationID != 0)
+                { 
+                    sqlString = String.Format("update tbStations S left join tbVisitedStations V on S.id = V.station_id" +
+                                              "   set visited = if(V.station_id is null, 0, V.visitType) " +
+                                              "   where S.ID = {0};" ,
+                                              stationID);
                     Program.DBCon.Execute(sqlString);
                 }
 
@@ -3933,15 +3979,16 @@ namespace IBE.SQL
         /// <param name="newStationName"></param>
         /// <param name="setVisitedFlag"></param>
         /// <param name="name"></param>
-        public void checkPotentiallyNewSystemOrStation(String newSystemName, String newStationName, Point3Dbl coordinates = null, Boolean setVisitedFlag = true)
+        /// 
+        public void checkPotentiallyNewSystemOrStation(String newSystemName, String newStationName, Point3Dbl coordinates = null, VisitedType setVisitedType = VisitedType.RealVisit)
         {
             String sqlString;
             Int32 systemID = 0;
             Int32 stationID = 0;
-            Boolean systemFirstTimeVisited = false;
-            Boolean stationFirstTimeVisited = false;
+            Boolean systemDataChanged = false;
+            Boolean stationDataChanged = false;
             DataTable Data = new DataTable();
-            Boolean Visited;
+            VisitedType Visited;
             PerformanceTimer pt = new PerformanceTimer();
 
             try
@@ -3958,24 +4005,27 @@ namespace IBE.SQL
                     {
                         // system is existing, check or update the visited-flag
                         systemID    = (Int32)(Data.Rows[0]["ID"]);
-                        Visited     = (Boolean)(Data.Rows[0]["visited"]);
+                        Visited     = (VisitedType)(Data.Rows[0]["visited"]);
 
-                        if (!Visited && setVisitedFlag)
+                        if (Visited < setVisitedType)
                         {
-                            sqlString = String.Format("update tbSystems set visited = 1 where id = {0};" +
-                                                      "insert ignore into tbVisitedSystems(system_id, time) values" +
-                                                      " ({0},{1});", 
+
+                            sqlString = String.Format("update tbSystems set visited = {2} where id = {0};" +
+                                                      "insert into tbVisitedSystems(system_id, time, visitType) values" +
+                                                      " ({0},{1},{2}) ON DUPLICATE KEY UPDATE" +
+                                                      " time = VALUES(time), visitType = VALUES(visitType);", 
                                                       systemID.ToString(), 
-                                                      DBConnector.SQLDateTime(DateTime.UtcNow));
+                                                      DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                      (sbyte)setVisitedType);
 
                             Program.DBCon.Execute(sqlString);
 
-                            // set flag in the memory table
+                            // set flag in the memory table 'tbsystems'
                             var system = Program.Data.BaseData.tbsystems.FindByid(systemID);
                             if(system != null)
-                                system.visited = setVisitedFlag;
+                                system.visited = (sbyte)setVisitedType;
 
-                            systemFirstTimeVisited = setVisitedFlag;
+                            systemDataChanged = true;
                         }
 
                         if((coordinates != null) && (coordinates.Valid))
@@ -3983,12 +4033,12 @@ namespace IBE.SQL
                             var system = Program.Data.BaseData.tbsystems.FindByid(systemID);
                             if(system != null)
                             {
-                                if((system.x == null) || (Math.Abs(system.x - coordinates.X.Value) > 0.001) ||
-                                   (system.y == null) || (Math.Abs(system.y - coordinates.Y.Value) > 0.001) ||
-                                   (system.z == null) || (Math.Abs(system.z - coordinates.Z.Value) > 0.001))
+                                if(Convert.IsDBNull(system.x) || (Math.Abs(system.x - coordinates.X.Value) > 0.01) ||
+                                   Convert.IsDBNull(system.y) || (Math.Abs(system.y - coordinates.Y.Value) > 0.01) ||
+                                   Convert.IsDBNull(system.z) || (Math.Abs(system.z - coordinates.Z.Value) > 0.01))
                                 {
                                     sqlString = String.Format("update tbSystems set x={0}, y={1}, z={2}, updated_at = UTC_TIMESTAMP()" +
-                                                              " where ((ABS(x-{0}) > 0.001) or (ABS(y-{1}) > 0.001) or (ABS(z-{2}) > 0.001)) and id = {3}", 
+                                                              " where ((ABS(x-{0}) > 0.01) or (ABS(y-{1}) > 0.01) or (ABS(z-{2}) > 0.01)) and id = {3}", 
                                                               DBConnector.SQLDecimal(coordinates.X.Value), 
                                                               DBConnector.SQLDecimal(coordinates.Y.Value), 
                                                               DBConnector.SQLDecimal(coordinates.Z.Value), 
@@ -3999,6 +4049,8 @@ namespace IBE.SQL
                                         system.x = coordinates.X.Value;
                                         system.y = coordinates.Y.Value;
                                         system.z = coordinates.Z.Value;
+
+                                        systemDataChanged = true;
                                     }
                                 }
                             }
@@ -4013,26 +4065,39 @@ namespace IBE.SQL
                         {
                             systemID = Program.DBCon.Execute<Int32>("select min(ID)-1 from tbsystems");
                         
-                            sqlString = String.Format("insert into tbSystems(id, systemname, x, y, z, updated_at, visited) values ({0},{1},{2},{3},{4},{5},{6});" +
-                                                      "insert ignore into tbVisitedsystems(system_id, time) values ({0},{5});",
-                                                      systemID, 
-                                                      DBConnector.SQLAEscape(newSystemName), 
-                                                      coordinates.Valid ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
-                                                      coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
-                                                      coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
-                                                      DBConnector.SQLDateTime(DateTime.UtcNow), 
-                                                      "1"); 
+                            if(setVisitedType > VisitedType.NoVisit)
+                            {
+                                sqlString = String.Format("insert into tbSystems(id, systemname, x, y, z, updated_at, visited) values ({0},{1},{2},{3},{4},{5},{6});" +
+                                                          "insert ignore into tbVisitedsystems(system_id, time, visitType) values ({0},{5},{6});",
+                                                          systemID, 
+                                                          DBConnector.SQLAEscape(newSystemName), 
+                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
+                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
+                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
+                                                          DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                          (sbyte)setVisitedType); 
+                            }
+                            else
+                            {
+                                sqlString = String.Format("insert into tbSystems(id, systemname, x, y, z, updated_at, visited) values ({0},{1},{2},{3},{4},{5},{6});",
+                                                          systemID, 
+                                                          DBConnector.SQLAEscape(newSystemName), 
+                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
+                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
+                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
+                                                          DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                          (sbyte)setVisitedType); 
+                            }
                             Program.DBCon.Execute(sqlString);
                             Program.DBCon.TransCommit();
                         }
                         catch (Exception ex)
                         {
                                 Program.DBCon.TransRollback();
-                                throw new Exception("Error while inserting a new system");
+                                throw new Exception("Error while inserting a new system", ex);
                         }
 
-
-                        systemFirstTimeVisited = setVisitedFlag;
+                        systemDataChanged = true;
 
                         dsEliteDB.tbsystemsRow newSystemRow = (dsEliteDB.tbsystemsRow)Program.Data.BaseData.tbsystems.NewRow();
 
@@ -4045,7 +4110,7 @@ namespace IBE.SQL
                             newSystemRow.z          = coordinates.X.Value;
                         }
                         newSystemRow.updated_at = DateTime.UtcNow;
-                        newSystemRow.visited    = setVisitedFlag;
+                        newSystemRow.visited    = (sbyte)setVisitedType;
 
                         Program.Data.BaseData.tbsystems.Rows.Add(newSystemRow);
                     }
@@ -4065,21 +4130,25 @@ namespace IBE.SQL
                         {
                             // station is existing, check or update the visited-flag
                             stationID = (Int32)(Data.Rows[0]["ID"]);
-                            Visited = (Boolean)(Data.Rows[0]["visited"]);
+                            Visited   = (VisitedType)(Data.Rows[0]["visited"]);
 
-                            if (!Visited && setVisitedFlag)
+                            if (Visited < setVisitedType)
                             {
-                                sqlString = String.Format("update tbStations set visited = 1 where id = {0};" +
-                                                          "insert ignore into tbVisitedStations(station_id, time) values" +
-                                                          " ({0},{1});", stationID.ToString(), DBConnector.SQLDateTime(DateTime.UtcNow));
+                                sqlString = String.Format("update tbStations set visited = {2} where id = {0};" +
+                                                          "insert ignore into tbVisitedStations(station_id, time, visitType) values" +
+                                                          " ({0},{1},{2}) ON DUPLICATE KEY UPDATE" +
+                                                          " time = VALUES(time), visitType = VALUES(visitType);", 
+                                                          stationID.ToString(), 
+                                                          DBConnector.SQLDateTime(DateTime.UtcNow),
+                                                          (sbyte)setVisitedType);
                                 Program.DBCon.Execute(sqlString);
 
                                 // set flag in the memory table
                                 var station = Program.Data.BaseData.tbstations.FindByid(stationID);
                                 if(station != null)
-                                    station.visited = setVisitedFlag;
+                                    station.visited = (sbyte)setVisitedType;
 
-                                stationFirstTimeVisited = setVisitedFlag;
+                                stationDataChanged = true;
                             }
                         }
                         else
@@ -4090,23 +4159,36 @@ namespace IBE.SQL
                             {
                                 stationID = Program.DBCon.Execute<Int32>("select min(ID)-1 from tbStations");
 
-                                sqlString = String.Format("insert into tbStations(id, stationname, system_id, updated_at, visited) values ({0},{1},{2},{3},{4});" +
-                                                          "insert ignore into tbVisitedstations(station_id, time) values ({0},{3});",
-                                                          stationID, 
-                                                          DBConnector.SQLAEscape(newSystemName), 
-                                                          systemID, 
-                                                          DBConnector.SQLDateTime(DateTime.UtcNow), 
-                                                          "1"); 
+                                if(setVisitedType > VisitedType.NoVisit)
+                                {
+                                    sqlString = String.Format("insert into tbStations(id, stationname, system_id, updated_at, visited) values ({0},{1},{2},{3},{4});" +
+                                                              "insert ignore into tbVisitedstations(station_id, time, visitType) values ({0},{3},{4});",
+                                                              stationID, 
+                                                              DBConnector.SQLAEscape(newSystemName), 
+                                                              systemID, 
+                                                              DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                              (sbyte)setVisitedType);
+                                }
+                                else
+                                {
+                                    sqlString = String.Format("insert into tbStations(id, stationname, system_id, updated_at, visited) values ({0},{1},{2},{3},{4});",
+                                                              stationID, 
+                                                              DBConnector.SQLAEscape(newSystemName), 
+                                                              systemID, 
+                                                              DBConnector.SQLDateTime(DateTime.UtcNow), 
+                                                              (sbyte)setVisitedType);
+                                }
+
                                 Program.DBCon.Execute(sqlString);
                                 Program.DBCon.TransCommit();
                             }
                             catch (Exception ex)
                             {
                                 Program.DBCon.TransRollback();
-                                throw new Exception("Error while inserting a new station");
+                                throw new Exception("Error while inserting a new station", ex);
                             }
 
-                            stationFirstTimeVisited = setVisitedFlag;
+                            stationDataChanged = true;
 
                             dsEliteDB.tbstationsRow newStationRow = (dsEliteDB.tbstationsRow)Program.Data.BaseData.tbstations.NewRow();
 
@@ -4114,30 +4196,14 @@ namespace IBE.SQL
                             newStationRow.system_id     = systemID;
                             newStationRow.stationname   = DBConnector.SQLAEscape(newStationName);
                             newStationRow.updated_at    = DateTime.UtcNow;
-                            newStationRow.visited       = setVisitedFlag;
+                            newStationRow.visited       = (sbyte)setVisitedType;
 
                             Program.Data.BaseData.tbstations.Rows.Add(newStationRow);
 
                         }
                     }
 
-
-                    if(systemFirstTimeVisited && (Program.Data.BaseData.tbvisitedsystems.Select("System_ID = " + systemID).Count() == 0))
-                    {
-                        dsEliteDB.tbvisitedsystemsRow newVisSystemRow = (dsEliteDB.tbvisitedsystemsRow)Program.Data.BaseData.tbvisitedsystems.NewRow();
-                        newVisSystemRow.system_id   = systemID;
-                        newVisSystemRow.time        = DateTime.UtcNow;
-                        Program.Data.BaseData.tbvisitedsystems.Rows.Add(newVisSystemRow);
-                    }
-                    if(stationFirstTimeVisited && (Program.Data.BaseData.tbvisitedstations.Select("Station_ID = " + stationID).Count() == 0))
-                    {
-                        dsEliteDB.tbvisitedstationsRow newVisStationRow = (dsEliteDB.tbvisitedstationsRow)Program.Data.BaseData.tbvisitedstations.NewRow();
-                        newVisStationRow.station_id  = stationID;
-                        newVisStationRow.time        = DateTime.UtcNow;
-                        Program.Data.BaseData.tbvisitedstations.Rows.Add(newVisStationRow);
-                    }
-
-                    if (((systemFirstTimeVisited) || (stationFirstTimeVisited)) && 
+                    if (((systemDataChanged) || (stationDataChanged)) && 
                         (stationID != 0) && 
                         (Program.Data.BaseData.visystemsandstations.Select("SystemID = " + systemID + " and StationID = " + stationID).Count() == 0))
                     {
@@ -4508,16 +4574,13 @@ namespace IBE.SQL
                         sendProgressEvent(eva);
                     }
 
-                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 0, TotalValue = 3, NewLine = true};
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 0, TotalValue = 2, NewLine = true};
                     sendProgressEvent(eva);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 1, TotalValue = 3, ForceRefresh = true};
-                    sendProgressEvent(eva);
-                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbvisitedsystems.TableName);
-                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 2, TotalValue = 3, ForceRefresh = true};
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 1, TotalValue = 2, ForceRefresh = true};
                     sendProgressEvent(eva);
                     Program.Data.PrepareBaseTables(Program.Data.BaseData.visystemsandstations.TableName);
-                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 3, TotalValue = 3, ForceRefresh = true};
+                    eva = new ProgressEventArgs() { Info="refreshing base tables...", CurrentValue = 3, TotalValue = 2, ForceRefresh = true};
                     sendProgressEvent(eva);
                 }
                 else
@@ -4553,7 +4616,6 @@ namespace IBE.SQL
                 Int32 errors = 0;
                 Int32 counter = 0;
                 Int32 counter2 = 0;
-                ProgressEventArgs eva;
 
                 switch (enImportTypes)
                 {
@@ -4717,7 +4779,6 @@ namespace IBE.SQL
             String sqlString = "";
             DataTable data;
             Int32 counter;
-            String infoString = "";
             String idString = "";
 
             try
@@ -4729,7 +4790,6 @@ namespace IBE.SQL
                                     "   from tbCommodityLocalization Lo, tbLanguage La" +
                                     "   where Lo.language_id = La.id" +
                                     " order by Lo.commodity_id, La.id";
-                        infoString = "export commodity localization...";
                         idString = "Commodity_ID;Language;Name";
                         break;
                     case enLocalizationType.Category:
@@ -4737,7 +4797,6 @@ namespace IBE.SQL
                                     "   from tbCategoryLocalization Lo, tbLanguage La" +
                                     "   where Lo.language_id = La.id" +
                                     " order by Lo.category_id, La.id";
-                        infoString = "export category localization...";
                         idString = "Category_ID;Language;Name";
                         break;
                     case enLocalizationType.Economylevel:
@@ -4745,7 +4804,6 @@ namespace IBE.SQL
                                     "   from tbLevelLocalization Lo, tbLanguage La" +
                                     "   where Lo.language_id = La.id" +
                                     " order by Lo.economylevel_id, La.id";
-                        infoString = "export economylevel localization...";
                         idString = "EconomyLevel_ID;Language;Name";
                         break;
                     default:
@@ -4788,11 +4846,9 @@ namespace IBE.SQL
 
         public void ImportLocalizationDataFromCSV(string fileName, EliteDBIO.enLocalizationType activeSetting, enLocalisationImportType importType = enLocalisationImportType.onlyNew)
         {
-            String sqlString = "";
             Int32 counter = 0;
             String infoString = "";
             String idString = "";
-            String dataLine;
             DataSet importData;
             DataTable importTable;
 

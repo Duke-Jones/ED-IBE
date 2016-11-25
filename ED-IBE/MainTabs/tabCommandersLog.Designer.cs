@@ -490,43 +490,43 @@
             this.toolStripMenuItem2,
             this.tsmiSendToEDSM});
             this.cmsLog.Name = "cmsLog";
-            this.cmsLog.Size = new System.Drawing.Size(208, 104);
+            this.cmsLog.Size = new System.Drawing.Size(240, 104);
             // 
             // copySystemnameToClipboardToolStripMenuItem
             // 
             this.copySystemnameToClipboardToolStripMenuItem.Name = "copySystemnameToClipboardToolStripMenuItem";
-            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.copySystemnameToClipboardToolStripMenuItem.Text = "Copy systemname to clipboard";
             this.copySystemnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
             // 
             // copyStationnameToClipboardToolStripMenuItem
             // 
             this.copyStationnameToClipboardToolStripMenuItem.Name = "copyStationnameToClipboardToolStripMenuItem";
-            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.copyStationnameToClipboardToolStripMenuItem.Text = "Copy stationname to clipboard";
             this.copyStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(236, 6);
             // 
             // tsmiRecalcJumpDistance
             // 
             this.tsmiRecalcJumpDistance.Name = "tsmiRecalcJumpDistance";
-            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(207, 22);
+            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(239, 22);
             this.tsmiRecalcJumpDistance.Text = "recalculate jump distance";
             this.tsmiRecalcJumpDistance.Click += new System.EventHandler(this.tsmiRecalcJumpDistance_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(236, 6);
             // 
             // tsmiSendToEDSM
             // 
             this.tsmiSendToEDSM.Name = "tsmiSendToEDSM";
-            this.tsmiSendToEDSM.Size = new System.Drawing.Size(207, 22);
+            this.tsmiSendToEDSM.Size = new System.Drawing.Size(239, 22);
             this.tsmiSendToEDSM.Text = "send log entry(s) to EDSM";
             this.tsmiSendToEDSM.Click += new System.EventHandler(this.tsmiSendToEDSM_Click);
             // 
@@ -552,7 +552,7 @@
             this.showAllLabel.IsLink = true;
             this.showAllLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.showAllLabel.Name = "showAllLabel";
-            this.showAllLabel.Size = new System.Drawing.Size(42, 17);
+            this.showAllLabel.Size = new System.Drawing.Size(53, 17);
             this.showAllLabel.Text = "Show &All";
             this.showAllLabel.Visible = false;
             // 
@@ -582,7 +582,7 @@
             this.bindNavCmdrsLog.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindNavCmdrsLog.Name = "bindNavCmdrsLog";
             this.bindNavCmdrsLog.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindNavCmdrsLog.Size = new System.Drawing.Size(202, 25);
+            this.bindNavCmdrsLog.Size = new System.Drawing.Size(207, 25);
             this.bindNavCmdrsLog.TabIndex = 51;
             this.bindNavCmdrsLog.Text = "bindingNavigator1";
             // 
@@ -598,8 +598,9 @@
             // 
             // bindingNavigatorCountItem
             // 
+            this.bindingNavigatorCountItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(28, 22);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(33, 22);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Elements in Commander\'s Log";
             // 
@@ -642,8 +643,9 @@
             // 
             this.bindingNavigatorPositionItem.AccessibleName = "Position";
             this.bindingNavigatorPositionItem.AutoSize = false;
+            this.bindingNavigatorPositionItem.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.bindingNavigatorPositionItem.Name = "bindingNavigatorPositionItem";
-            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 21);
+            this.bindingNavigatorPositionItem.Size = new System.Drawing.Size(50, 20);
             this.bindingNavigatorPositionItem.Text = "0";
             this.bindingNavigatorPositionItem.TextBoxTextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.bindingNavigatorPositionItem.ToolTipText = "Current log item";
