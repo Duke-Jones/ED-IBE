@@ -26,6 +26,8 @@ todo:
 
 done:
 
+  * visited station history now works correct
+-------------------------------------------------------------------------------------         
 v0.5.6
   * fixed behaviour when enter illegal values to text fields
   * showing of the 'n' last stations first is working again in comboboxes

@@ -4027,6 +4027,14 @@ namespace IBE.SQL
 
                             systemDataChanged = true;
                         }
+                        else
+                        {
+                            // update timestamp
+                            sqlString = String.Format("update tbVisitedSystems set time = {1} where system_id = {0};", 
+                                                      systemID.ToString(), 
+                                                      DBConnector.SQLDateTime(DateTime.UtcNow));
+                            Program.DBCon.Execute(sqlString);
+                        }
 
                         if((coordinates != null) && (coordinates.Valid))
                         {
@@ -4149,6 +4157,14 @@ namespace IBE.SQL
                                     station.visited = (sbyte)setVisitedType;
 
                                 stationDataChanged = true;
+                            }
+                            else
+                            {
+                                // update timestamp
+                                sqlString = String.Format("update tbVisitedStations set time = {1} where station_id = {0};", 
+                                                          stationID.ToString(), 
+                                                          DBConnector.SQLDateTime(DateTime.UtcNow));
+                                Program.DBCon.Execute(sqlString);
                             }
                         }
                         else
