@@ -629,20 +629,26 @@ namespace DataGridViewAutoFilter
         /// Updates the BindingSource.Filter value based on a user selection
         /// from the drop-down filter list. 
         /// </summary>
-        override protected void UpdateFilter()
+        override protected void UpdateFilter(Boolean onlyRefresh = false)
         {
-            // Continue only if the selection has changed.
-            if (filterWindow.FilterListBox.SelectedItem.ToString().Equals(selectedFilterValue))
+            if(!onlyRefresh)
             {
-                return;
-            }
+                // Continue only if the selection has changed.
+                if (filterWindow.FilterListBox.SelectedItem.ToString().Equals(selectedFilterValue))
+                {
+                    return;
+                }
 
-            // Store the new selection value. 
-            selectedFilterValue = filterWindow.FilterListBox.SelectedItem.ToString();
+                // Store the new selection value. 
+                selectedFilterValue = filterWindow.FilterListBox.SelectedItem.ToString();
+            }
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =
                 this.DataGridView.DataSource as IBindingListView;
+
+            if((data == null) && (Retriever == null))
+                return;
 
             Debug.Assert((data != null && data.SupportsFiltering) || (Retriever != null),
                 "DataSource is not an IBindingListView or does not support filtering");

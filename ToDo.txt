@@ -19,13 +19,17 @@ todo:
 * unhandled exception always shuts down
 
 * preset today/7 days for date filter cmdrs log
-* save filter settings
+* view system data after a jump
+* info filter : select a string and activate contains filter
 
 *************************************************************************************
 
 
 done:
 
+  * filter settings in Commander's Log are saved now
+  * mission events are now shown in the Commander's Log
+-------------------------------------------------------------------------------------         
   * visited station history now works correct
 -------------------------------------------------------------------------------------         
 v0.5.6

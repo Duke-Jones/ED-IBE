@@ -269,9 +269,24 @@ namespace IBE.SQL
                                                                                             currentColumn.Width.ToString(), 
                                                                                             currentColumn.FillWeight.ToString().Replace(",","."), 
                                                                                             currentColumn.MinimumWidth.ToString()));
+
+                                if(currentColumn.DefaultHeaderCellType.BaseType.Equals(typeof(DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)))
+                                    m_DBCon.setIniValue(m_InitGroup, string.Format("{0}_{1}_Filter", Parts.IDString, currentColumn.Name), ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString);
+
                             }
                             m_DBCon.setIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", SaveString.ToString());
                         }
+                    }
+                    else if(sender.GetType().BaseType == typeof(DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell))
+                    {
+                        var cbSender = (DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)sender;
+
+                        var cbGrid = (DataGridViewExt)cbSender.DataGridView;
+                        var Parts    = splitTag(cbGrid.Tag);    
+
+                        if(Parts != null)
+                            m_DBCon.setIniValue(m_InitGroup, string.Format("{0}_{1}_Filter", Parts.IDString, cbSender.OwningColumn.Name), cbSender.ColumnFilterString);
+
                     }
                     else if(sender.GetType() == typeof(SplitContainer))
                     {
@@ -530,10 +545,6 @@ namespace IBE.SQL
                             m_currentLoadingObject = null;
                         }
 
-                            //    SaveString.Append(String.Format("{0}/{1}/{2}/{3}/{4};", currentColumn.DisplayIndex, currentColumn.Width, currentColumn.Visible, currentColumn.FillWeight, currentColumn.AutoSizeMode));
-                            //}
-                            //m_DBCon.setIniValue(m_InitGroup, parts.IDString + "_ColumnSettings", SaveString.ToString());
-
                         String[] VisibilityStrings = null;
                         VisibilityStrings = m_DBCon.getIniValue(m_InitGroup, Parts.IDString + "_ColumnSettings", "").Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
                         Int32 ColumnIndex = 0;
@@ -571,8 +582,10 @@ namespace IBE.SQL
                                 }
                             }
 
-                            ColumnIndex++;
+                            if(currentColumn.DefaultHeaderCellType.BaseType.Equals(typeof(DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)))
+                                    ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString = m_DBCon.getIniValue(m_InitGroup, string.Format("{0}_{1}_Filter", Parts.IDString, currentColumn.Name), "");
 
+                            ColumnIndex++;
                         }
 
                         cbSender.ResumeLayout();

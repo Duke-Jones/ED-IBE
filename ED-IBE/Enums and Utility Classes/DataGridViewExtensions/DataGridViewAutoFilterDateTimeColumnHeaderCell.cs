@@ -81,6 +81,55 @@ namespace DataGridViewAutoFilter
             m_dtpAfter.Checked  = false;
         }
 
+        public override string ColumnFilterString
+        {
+            get
+            {
+                return String.Format("{0};{1};{2};{3}", m_dtpBefore.Value, m_dtpBefore.Checked, m_dtpAfter.Value, m_dtpAfter.Checked);
+            }
+            set
+            {
+                string[] parts;
+                parts = value.Split(new char[] { ';' });
+
+                if(parts.GetUpperBound(0) == 3)
+                {
+                    DateTime dtValue = DateTime.MinValue;
+                    Boolean  bValue  = false;
+
+                    if(DateTime.TryParse(parts[0], out dtValue))
+                    {
+                        m_dtpBefore.Value = dtValue;
+
+                        if (Boolean.TryParse(parts[1], out bValue))
+                            m_dtpBefore.Checked = bValue;
+                        else
+                            m_dtpBefore.Checked = false;
+                    }
+                    else
+                        m_dtpBefore.Value = DateTime.Now.Date + new TimeSpan(23,59,59);
+                        
+                    if(DateTime.TryParse(parts[2], out dtValue))
+                    {
+                        m_dtpAfter.Value = dtValue;
+                        if(Boolean.TryParse(parts[3], out bValue))
+                            m_dtpAfter.Checked = bValue;
+                        else
+                            m_dtpAfter.Checked = false;
+                    }
+                    else
+                        m_dtpAfter.Value    = new DateTime(2000, 1, 1, 0 , 0, 0);
+                }
+                else
+                {
+                    m_dtpBefore.Checked = false;
+                    m_dtpAfter.Checked  = false;
+                }
+
+                UpdateFilter(true);
+            }
+        }
+
         /// <summary>
         /// Creates an exact copy of this cell.
         /// </summary>
@@ -370,26 +419,31 @@ namespace DataGridViewAutoFilter
         /// Updates the BindingSource.Filter value based on a user selection
         /// from the drop-down filter list. 
         /// </summary>
-        override protected void UpdateFilter()
+        override protected void UpdateFilter(Boolean onlyRefresh = false)
         {
-            // Continue only if the selection has changed.
-            if(((filterWindow.dtpAfter.Checked  == m_dtpAfter.Checked) && (filterWindow.dtpAfter.Checked  ? filterWindow.dtpAfter.Value  == m_dtpAfter.Value  : true)) && 
-               ((filterWindow.dtpBefore.Checked == m_dtpAfter.Checked) && (filterWindow.dtpBefore.Checked ? filterWindow.dtpBefore.Value == m_dtpBefore.Value : true)))
+            if(!onlyRefresh)
             {
-                return;
+                // Continue only if the selection has changed.
+                if(((filterWindow.dtpAfter.Checked  == m_dtpAfter.Checked) && (filterWindow.dtpAfter.Checked  ? filterWindow.dtpAfter.Value  == m_dtpAfter.Value  : true)) && 
+                   ((filterWindow.dtpBefore.Checked == m_dtpAfter.Checked) && (filterWindow.dtpBefore.Checked ? filterWindow.dtpBefore.Value == m_dtpBefore.Value : true)))
+                {
+                    return;
+                }
+
+                // Store the new filter values
+                m_dtpBefore.Checked = filterWindow.dtpBefore.Checked;
+                m_dtpBefore.Value   = filterWindow.dtpBefore.Value;
+
+                m_dtpAfter.Checked  = filterWindow.dtpAfter.Checked;
+                m_dtpAfter.Value    = filterWindow.dtpAfter.Value;
             }
-
-            // Store the new filter values
-            m_dtpBefore.Checked = filterWindow.dtpBefore.Checked;
-            m_dtpBefore.Value   = filterWindow.dtpBefore.Value;
-
-            m_dtpAfter.Checked  = filterWindow.dtpAfter.Checked;
-            m_dtpAfter.Value    = filterWindow.dtpAfter.Value;
-
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =
                 this.DataGridView.DataSource as IBindingListView;
+
+            if((data == null) && (Retriever == null))
+                return;
 
             Debug.Assert((data != null && data.SupportsFiltering) || (Retriever != null),
                 "DataSource is not an IBindingListView or does not support filtering");

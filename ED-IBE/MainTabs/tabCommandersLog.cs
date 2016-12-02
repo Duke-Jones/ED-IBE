@@ -152,7 +152,19 @@ namespace IBE.MTCommandersLog
 
         private void FilterChanged_Event(object sender, DataGridViewAutoFilterHeaderCell.DataChangedEventArgs e)
         {
-            RefreshData();
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender, e))
+                {
+                    sortDataGridView((DataGridView)sender);
+                }
+
+                RefreshData();
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in FilterChanged_Event");
+            }
         }
 
         /// <summary>
@@ -172,7 +184,6 @@ namespace IBE.MTCommandersLog
                     
                     Program.MainForm.Cursor = Cursors.WaitCursor;
 
-                    dgvCommandersLog.RowCount = 0;
                     dgvCommandersLog.RowCount = m_DataSource.InitRetriever();
 
                     ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["eventtype"].HeaderCell).Retriever = m_DataSource.Retriever;
@@ -181,12 +192,15 @@ namespace IBE.MTCommandersLog
                     ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["notes"].HeaderCell).Retriever = m_DataSource.Retriever;
                     ((DataGridViewAutoFilterHeaderCell)dgvCommandersLog.Columns["time"].HeaderCell).Retriever = m_DataSource.Retriever;
 
+                    dgvCommandersLog.RowCount = m_DataSource.InitRetriever(true);
+
                     showRowInFields(new DataGridViewCellEventArgs(0,0));
 
                     SetNavigatorButtons(0);
 
                     m_FirstRowShown = true;
 
+                    RefreshData();
                     Program.MainForm.Cursor = oldCursor;
                 }
             }
@@ -1000,18 +1014,46 @@ namespace IBE.MTCommandersLog
 
         private void button1_Click(object sender, EventArgs e)
         {
+            try
+            {
+                String inputData = "";
+                String rawEventName = "";
+                Newtonsoft.Json.Linq.JToken journalEntry = null;
+                FileScanner.EDJournalScanner.JournalEvent identifiedEventType = FileScanner.EDJournalScanner.JournalEvent.Undefined;
 
+                if((InputBox.Show("Input eventdata", "", ref inputData) == DialogResult.OK) && (!String.IsNullOrWhiteSpace(inputData)))
+                {
+                    try
+                    {
+                        journalEntry = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JToken>(inputData);
 
-           // if(ml != null)
-           //     ml.Dispose();
+                        // identify the event
+                        rawEventName = journalEntry.Value<String>("event");
 
+                        if(rawEventName != null)
+                        {
+                            if(!Enum.TryParse<FileScanner.EDJournalScanner.JournalEvent>(rawEventName, out identifiedEventType))
+                            {
+                                identifiedEventType = FileScanner.EDJournalScanner.JournalEvent.Not_Supported;
 
-           //ml =  new MultiSelectHeaderList();
+                            }
 
-           // ml.Parent = this.dgvCommandersLog;
+                            journalEntry["timestamp"] = DateTime.UtcNow;
 
-           // ml.Location = new Point(10,10);
-
+                            FileScanner.EDJournalScanner.JournalEventArgs newJournalArgItem = new FileScanner.EDJournalScanner.JournalEventArgs() { EventType = identifiedEventType, Data = journalEntry, History = null };
+                            Program.JournalScanner.InjectJournalEvent(newJournalArgItem);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        CErr.processError(ex, "Error while parsing a injected journal event");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while creating test event");
+            }
         }
 
         private void bindingNavigatorMovePreviousItem_Click(object sender, EventArgs e)

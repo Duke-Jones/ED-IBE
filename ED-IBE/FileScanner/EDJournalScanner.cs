@@ -35,7 +35,11 @@ namespace IBE.FileScanner
             SupercruiseEntry,
             SupercruiseExit, 
             Scan,
-            Basedata
+            Basedata, 
+            MissionAccepted,
+            MissionAbandoned,
+            MissionCompleted,
+            MissionFailed
         }
 
 #endregion
@@ -499,6 +503,10 @@ namespace IBE.FileScanner
 
                                             case JournalEvent.Scan:
 
+                                            case JournalEvent.MissionAccepted:
+                                            case JournalEvent.MissionCompleted:
+                                            case JournalEvent.MissionAbandoned:
+                                            case JournalEvent.MissionFailed:
 
                                                 if(eventName == JournalEvent.Docked)
                                                     Debug.Print("stop");
@@ -777,6 +785,22 @@ namespace IBE.FileScanner
             catch (Exception ex)
             {
                 throw new Exception("Error while getting timevalue from filename", ex);
+            }
+        }
+
+        /// <summary>
+        /// injects a event from outside into the journal event handling
+        /// </summary>
+        /// <param name="newJournalArgItem"></param>
+        internal void InjectJournalEvent(JournalEventArgs newJournalArgItem)
+        {
+            try
+            {
+                JournalEventRecieved.Raise(this, newJournalArgItem);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while injecting a event", ex);
             }
         }
     }

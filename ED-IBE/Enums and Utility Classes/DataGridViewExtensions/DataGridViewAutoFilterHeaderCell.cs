@@ -97,6 +97,18 @@ namespace DataGridViewAutoFilter
             return new DataGridViewAutoFilterHeaderCell(this);
         }
 
+        public virtual string ColumnFilterString
+        {
+            get
+            {
+                throw new NotImplementedException("Property in inherited class is missing!");
+            }
+            set
+            {
+                throw new NotImplementedException("Property in inherited class is missing!");
+            }
+        }
+
         /// <summary>
         /// Called when the value of the DataGridView property changes
         /// in order to perform initialization that requires access to the 
@@ -642,7 +654,7 @@ namespace DataGridViewAutoFilter
         /// Updates the BindingSource.Filter value based on a user selection
         /// from the drop-down filter list. 
         /// </summary>
-        virtual protected void UpdateFilter()
+        virtual protected void UpdateFilter(Boolean onlyRefresh = false)
         {
             throw new NotImplementedException("UpdateFilter() missing");
         }
@@ -895,7 +907,21 @@ namespace DataGridViewAutoFilter
         /// </summary>
         protected Int32 dropDownListBoxMaxLinesValue = 20;
 
-        public IBE.Enums_and_Utility_Classes.DataRetriever Retriever { get; set; }
+        IBE.Enums_and_Utility_Classes.DataRetriever retriever;
+        public IBE.Enums_and_Utility_Classes.DataRetriever Retriever
+        {
+            get
+            {
+                return retriever;
+            }
+            set
+            {
+                retriever = value;
+
+                // inform retriever about the curent filter settings
+                UpdateFilter(true);
+            }
+        }
         public string RetrieverSQLSelect { get; set; }
 
 

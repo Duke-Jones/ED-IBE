@@ -470,6 +470,38 @@ namespace IBE.Enums_and_Utility_Classes
             if (timeSpan == TimeSpan.Zero) return dateTime; // Or could throw an ArgumentException
             return dateTime.AddTicks(-(dateTime.Ticks % timeSpan.Ticks));
         }
+
+        public static string ToReadableAgeString(this TimeSpan span)
+        {
+            return string.Format("{0:0}", span.Days / 365.25);
+        }
+
+        public static string ToReadableString(this TimeSpan span, Boolean withSeconds = false)
+        {
+            string formatted;
+
+            if(withSeconds)
+            {
+                formatted = string.Format("{0}{1}{2}{3}",
+                    span.Duration().Days > 0 ? string.Format("{0:0} day{1}, ", span.Days, span.Days == 1 ? String.Empty : "s") : string.Empty,
+                    span.Duration().Hours > 0 ? string.Format("{0:0} hour{1}, ", span.Hours, span.Hours == 1 ? String.Empty : "s") : string.Empty,
+                    span.Duration().Minutes > 0 ? string.Format("{0:0} minute{1}, ", span.Minutes, span.Minutes == 1 ? String.Empty : "s") : string.Empty,
+                    span.Duration().Seconds > 0 ? string.Format("{0:0} second{1}", span.Seconds, span.Seconds == 1 ? String.Empty : "s") : string.Empty);
+            }
+            else
+            {
+                formatted = string.Format("{0}{1}{2}",
+                    span.Duration().Days > 0 ? string.Format("{0:0} day{1}, ", span.Days, span.Days == 1 ? String.Empty : "s") : string.Empty,
+                    span.Duration().Hours > 0 ? string.Format("{0:0} hour{1}, ", span.Hours, span.Hours == 1 ? String.Empty : "s") : string.Empty,
+                    span.Duration().Minutes > 0 ? string.Format("{0:0} minute{1}, ", span.Minutes, span.Minutes == 1 ? String.Empty : "s") : string.Empty);
+            } 
+                       
+            if (formatted.EndsWith(", ")) formatted = formatted.Substring(0, formatted.Length - 2);
+
+            if (string.IsNullOrEmpty(formatted)) formatted = "0 seconds";
+
+            return formatted;
+        }
     }
 
     static class Extensions_IEnumerable

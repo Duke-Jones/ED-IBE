@@ -48,6 +48,9 @@
             this.lblPixelThreshold = new System.Windows.Forms.Label();
             this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cbAutoAdd_Liftoff = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_Touchdown = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_Scan = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_ReplaceVisited = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Marketdata = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Visited = new System.Windows.Forms.CheckBox();
@@ -87,9 +90,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtJournalPath = new System.Windows.Forms.TextBox();
             this.cmdJournalPath = new System.Windows.Forms.Button();
-            this.cbAutoAdd_Scan = new System.Windows.Forms.CheckBox();
-            this.cbAutoAdd_Touchdown = new System.Windows.Forms.CheckBox();
-            this.cbAutoAdd_Liftoff = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -296,6 +297,7 @@
             // 
             // groupBox10
             // 
+            this.groupBox10.Controls.Add(this.checkBox1);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Liftoff);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Touchdown);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Scan);
@@ -310,6 +312,42 @@
             this.groupBox10.TabIndex = 12;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
+            // 
+            // cbAutoAdd_Liftoff
+            // 
+            this.cbAutoAdd_Liftoff.AutoSize = true;
+            this.cbAutoAdd_Liftoff.Location = new System.Drawing.Point(32, 180);
+            this.cbAutoAdd_Liftoff.Name = "cbAutoAdd_Liftoff";
+            this.cbAutoAdd_Liftoff.Size = new System.Drawing.Size(93, 17);
+            this.cbAutoAdd_Liftoff.TabIndex = 7;
+            this.cbAutoAdd_Liftoff.Tag = "AutoAdd_Liftoff;true";
+            this.cbAutoAdd_Liftoff.Text = "\"Liftoff\"-Event";
+            this.cbAutoAdd_Liftoff.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Liftoff.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
+            // 
+            // cbAutoAdd_Touchdown
+            // 
+            this.cbAutoAdd_Touchdown.AutoSize = true;
+            this.cbAutoAdd_Touchdown.Location = new System.Drawing.Point(32, 157);
+            this.cbAutoAdd_Touchdown.Name = "cbAutoAdd_Touchdown";
+            this.cbAutoAdd_Touchdown.Size = new System.Drawing.Size(124, 17);
+            this.cbAutoAdd_Touchdown.TabIndex = 6;
+            this.cbAutoAdd_Touchdown.Tag = "AutoAdd_Touchdown;true";
+            this.cbAutoAdd_Touchdown.Text = "\"Touchdown\"-Event";
+            this.cbAutoAdd_Touchdown.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Touchdown.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
+            // 
+            // cbAutoAdd_Scan
+            // 
+            this.cbAutoAdd_Scan.AutoSize = true;
+            this.cbAutoAdd_Scan.Location = new System.Drawing.Point(32, 134);
+            this.cbAutoAdd_Scan.Name = "cbAutoAdd_Scan";
+            this.cbAutoAdd_Scan.Size = new System.Drawing.Size(92, 17);
+            this.cbAutoAdd_Scan.TabIndex = 5;
+            this.cbAutoAdd_Scan.Tag = "AutoAdd_Scan;true";
+            this.cbAutoAdd_Scan.Text = "\"Scan\"-Event";
+            this.cbAutoAdd_Scan.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_Scan.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoAdd_ReplaceVisited
             // 
@@ -768,41 +806,16 @@
             this.cmdJournalPath.UseVisualStyleBackColor = true;
             this.cmdJournalPath.Click += new System.EventHandler(this.cmdJournalPath_Click);
             // 
-            // cbAutoAdd_Scan
+            // checkBox1
             // 
-            this.cbAutoAdd_Scan.AutoSize = true;
-            this.cbAutoAdd_Scan.Location = new System.Drawing.Point(32, 134);
-            this.cbAutoAdd_Scan.Name = "cbAutoAdd_Scan";
-            this.cbAutoAdd_Scan.Size = new System.Drawing.Size(92, 17);
-            this.cbAutoAdd_Scan.TabIndex = 5;
-            this.cbAutoAdd_Scan.Tag = "AutoAdd_Scan;true";
-            this.cbAutoAdd_Scan.Text = "\"Scan\"-Event";
-            this.cbAutoAdd_Scan.UseVisualStyleBackColor = true;
-            this.cbAutoAdd_Scan.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
-            // 
-            // cbAutoAdd_Touchdown
-            // 
-            this.cbAutoAdd_Touchdown.AutoSize = true;
-            this.cbAutoAdd_Touchdown.Location = new System.Drawing.Point(32, 157);
-            this.cbAutoAdd_Touchdown.Name = "cbAutoAdd_Touchdown";
-            this.cbAutoAdd_Touchdown.Size = new System.Drawing.Size(124, 17);
-            this.cbAutoAdd_Touchdown.TabIndex = 6;
-            this.cbAutoAdd_Touchdown.Tag = "AutoAdd_Touchdown;true";
-            this.cbAutoAdd_Touchdown.Text = "\"Touchdown\"-Event";
-            this.cbAutoAdd_Touchdown.UseVisualStyleBackColor = true;
-            this.cbAutoAdd_Touchdown.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
-            // 
-            // cbAutoAdd_Liftoff
-            // 
-            this.cbAutoAdd_Liftoff.AutoSize = true;
-            this.cbAutoAdd_Liftoff.Location = new System.Drawing.Point(32, 180);
-            this.cbAutoAdd_Liftoff.Name = "cbAutoAdd_Liftoff";
-            this.cbAutoAdd_Liftoff.Size = new System.Drawing.Size(93, 17);
-            this.cbAutoAdd_Liftoff.TabIndex = 7;
-            this.cbAutoAdd_Liftoff.Tag = "AutoAdd_Liftoff;true";
-            this.cbAutoAdd_Liftoff.Text = "\"Liftoff\"-Event";
-            this.cbAutoAdd_Liftoff.UseVisualStyleBackColor = true;
-            this.cbAutoAdd_Liftoff.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(31, 203);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(148, 17);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Tag = "AutoAdd_MissionAccepted;true";
+            this.checkBox1.Text = "\"MissionAccepted\"-Event";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // IBESettingsView
             // 
@@ -920,5 +933,6 @@
         private System.Windows.Forms.CheckBox cbAutoAdd_Scan;
         private System.Windows.Forms.CheckBox cbAutoAdd_Liftoff;
         private System.Windows.Forms.CheckBox cbAutoAdd_Touchdown;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }

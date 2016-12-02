@@ -14,6 +14,7 @@ using IBE.SQL.Datasets;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
+using IBE.FileScanner;
 
 namespace IBE.MTCommandersLog
 {
@@ -97,13 +98,17 @@ namespace IBE.MTCommandersLog
         /// initialization of the dataretriever object (for DGV virtual mode)
         /// </summary>
         /// <returns></returns>
-        internal int InitRetriever()
+        internal int InitRetriever(Boolean getRowCount = false)
         {
             try
             {
-                retriever = new DataRetriever(Program.DBCon, table, _sqlColumnString, _sqlBaseString, "time", DBConnector.SQLSortOrder.desc, m_GUI.bindNavCmdrsLog, new dsEliteDB.vilogDataTable());
+                if(retriever == null)
+                    retriever = new DataRetriever(Program.DBCon, table, _sqlColumnString, _sqlBaseString, "time", DBConnector.SQLSortOrder.desc, m_GUI.bindNavCmdrsLog, new dsEliteDB.vilogDataTable());
 
-                return retriever.RowCount(true);
+                if(getRowCount)
+                    return retriever.RowCount(true);
+                else
+                    return 0;
             }
             catch (Exception ex)
             {
@@ -170,7 +175,6 @@ namespace IBE.MTCommandersLog
                 m_NoGuiNotifyAfterSave = value;
             }
         }
-
 
         /// <summary>
         /// prepares the values of the comoboboxes
@@ -557,6 +561,13 @@ namespace IBE.MTCommandersLog
         {
             try
             {
+                //NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
+                NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+
+                nfi = (NumberFormatInfo) nfi.Clone();
+                nfi.CurrencySymbol = "";
+                nfi.CurrencyDecimalDigits = 0;
+
                 switch (e.EventType)
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
@@ -794,7 +805,213 @@ namespace IBE.MTCommandersLog
                         }
                         break;
 
+                    case FileScanner.EDJournalScanner.JournalEvent.MissionAccepted:
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_MissionAccepted", true.ToString(), false))
+                        {
+                            TextHelper txtHelp = new TextHelper();
 
+                            Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                            System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                            System.Text.StringBuilder rings = new System.Text.StringBuilder();
+                         
+                            Int32 fullLength = 190;
+
+                            data.AppendLine(String.Format("{0} :   {1}   ( id : {2} )", txtHelp.FixedLength("Mission", usedFont, fullLength), System.Text.RegularExpressions.Regex.Replace(e.Data.Value<String>("Name"), "Mission_", "" , System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace("_name", "").Replace("_", " "), e.Data.Value<String>("MissionID")));
+                            data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Faction", usedFont, fullLength),  e.Data.Value<String>("Faction")));
+                            
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Commodity_Localised")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Commodity", usedFont, fullLength),  e.Data.Value<String>("Commodity_Localised")));
+                            else if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Commodity")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Commodity", usedFont, fullLength),  e.Data.Value<String>("Commodity")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Count")))
+                                data.AppendLine(String.Format("{0} :   {1} t", txtHelp.FixedLength("Count", usedFont, fullLength),  e.Data.Value<String>("Count")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Target")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Target", usedFont, fullLength),  e.Data.Value<String>("Target")));
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength),  e.Data.Value<String>("TargetType")));
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetFaction")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetFaction", usedFont, fullLength),  e.Data.Value<String>("TargetFaction")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Expiry")))
+                            {
+                                DateTime expTime = DateTime.ParseExact(e.Data.Value<String>("Expiry"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+                                data.AppendLine(String.Format("{0} :   {1:d} {1:t} ({2})", txtHelp.FixedLength("Expiry", usedFont, fullLength), expTime, (expTime - DateTime.Now).ToReadableString()));
+                            }
+                                
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("DestinationSystem")))
+                            {
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("DestinationStation")))
+                                    data.AppendLine(String.Format("{0} :   {2} / {1}", txtHelp.FixedLength("Destination", usedFont, fullLength),  
+                                                                                       e.Data.Value<String>("DestinationStation"), 
+                                                                                       e.Data.Value<String>("DestinationSystem")));
+                                else
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Destination", usedFont, fullLength),  e.Data.Value<String>("DestinationSystem")));
+                            }
+                            else if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("DestinationStation")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Destination", usedFont, fullLength),  e.Data.Value<String>("DestinationStation")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("PassengerCount")))
+                            {
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("PassengerCount", usedFont, fullLength),  e.Data.Value<String>("Passengers")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("PassengerVIPs")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("PassengerVIPs", usedFont, fullLength),  e.Data.Value<String>("Is VIP")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("PassengerWanted")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("PassengerWanted", usedFont, fullLength),  e.Data.Value<String>("Is wanted")));
+                                if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("PassenderType")))
+                                    data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("PassenderType", usedFont, fullLength),  e.Data.Value<String>("Type")));
+                            }
+
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      Program.actualCondition.Station, 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Mission Accepted", 
+                                      data.ToString());
+                        }
+
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.MissionCompleted:
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_MissionCompleted", true.ToString(), false))
+                        {
+                            TextHelper txtHelp = new TextHelper();
+
+                            Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                            System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                         
+                            Int32 fullLength = 190;
+
+                            data.AppendLine(String.Format("{0} :   {1}   ( id : {2} )", txtHelp.FixedLength("Mission", usedFont, fullLength), System.Text.RegularExpressions.Regex.Replace(e.Data.Value<String>("Name"), "Mission_", "" , System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace("_name", "").Replace("_", " "), e.Data.Value<String>("MissionID")));
+                            data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Faction", usedFont, fullLength),  e.Data.Value<String>("Faction")));
+                            
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Commodity_Localised")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Commodity", usedFont, fullLength),  e.Data.Value<String>("Commodity_Localised")));
+                            else if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Commodity")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Commodity", usedFont, fullLength),  e.Data.Value<String>("Commodity")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Count")))
+                                data.AppendLine(String.Format("{0} :   {1} t", txtHelp.FixedLength("Count", usedFont, fullLength),  e.Data.Value<String>("Count")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Target")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Target", usedFont, fullLength),  e.Data.Value<String>("Target")));
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength),  e.Data.Value<String>("TargetType")));
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetFaction")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetFaction", usedFont, fullLength),  e.Data.Value<String>("TargetFaction")));
+
+                            if (!String.IsNullOrWhiteSpace(e.Data.Value<String>("Reward")))
+                                data.AppendLine(String.Format("{0} :   {1} cr.", txtHelp.FixedLength("Reward", usedFont, fullLength),  e.Data.Value<Int32>("Reward")));
+
+
+                            if(e.Data.Value<Object>("CommodityReward") != null)
+                            {
+                                System.Text.StringBuilder commodityRewards = new System.Text.StringBuilder();
+
+                                foreach (JObject ring in e.Data.SelectTokens("CommodityReward.[*]"))
+                                {
+                                    if(commodityRewards.Length > 0 )
+                                        commodityRewards.Append(",");
+
+                                    commodityRewards.Append(String.Format("{1} t {0}", ring.SelectToken("Name"), ring.SelectToken("Count")));
+                                }
+
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Rewards", usedFont, fullLength), commodityRewards));
+                            }
+                                
+
+                            if (!String.IsNullOrWhiteSpace(e.Data.Value<String>("Donation")))
+                                data.AppendLine(String.Format("{0} :   {1} cr.", txtHelp.FixedLength("Donation", usedFont, fullLength),  e.Data.Value<Int32>("Donation")));
+
+                            if (e.Data.Value<Object>("PermitsAwarded") != null)
+                            {
+                                System.Text.StringBuilder permits = new System.Text.StringBuilder();
+
+                                foreach (JToken permitItem in e.Data.SelectTokens("PermitsAwarded.[*]"))
+                                {
+                                    if(permits.Length > 0 )
+                                        permits.Append(",");
+
+                                    permits.Append(permitItem.Value<String>());
+                                }
+
+                                data.AppendLine(String.Format("{0} :   {1} cr.", txtHelp.FixedLength("Permits", usedFont, fullLength), permits));
+                            }
+
+
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      Program.actualCondition.Station, 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Mission Completed", 
+                                      data.ToString());
+
+                        }
+
+                        break;
+                    case FileScanner.EDJournalScanner.JournalEvent.MissionFailed:
+
+                        if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_MissionFailed", true.ToString(), false))
+                        {
+                            TextHelper txtHelp = new TextHelper();
+
+                            Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                            System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                         
+                            Int32 fullLength = 190;
+
+                            data.AppendLine(String.Format("{0} :   {1}   ( id : {2} )", txtHelp.FixedLength("Mission", usedFont, fullLength), System.Text.RegularExpressions.Regex.Replace(e.Data.Value<String>("Name"), "Mission_", "" , System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace("_name", "").Replace("_", " "), e.Data.Value<String>("MissionID")));
+                            
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      Program.actualCondition.Station, 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Mission Failed", 
+                                      data.ToString());
+
+                        }
+                        break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.MissionAbandoned:
+
+                        if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_MissionAbandoned", true.ToString(), false))
+                        {
+                            TextHelper txtHelp = new TextHelper();
+
+                            Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                            System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                         
+                            Int32 fullLength = 190;
+
+                            data.AppendLine(String.Format("{0} :   {1}   ( id : {2} )", txtHelp.FixedLength("Mission", usedFont, fullLength), System.Text.RegularExpressions.Regex.Replace(e.Data.Value<String>("Name"), "Mission_", "" , System.Text.RegularExpressions.RegexOptions.IgnoreCase).Replace("_name", "").Replace("_", " "), e.Data.Value<String>("MissionID")));
+                            
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      Program.actualCondition.Station, 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Mission Abandoned", 
+                                      data.ToString());
+
+                        }
+
+                        break;
                 }
 
             }
@@ -803,7 +1020,6 @@ namespace IBE.MTCommandersLog
                 CErr.processError(ex, "Error while processing the JournalEventRecieved-event");
             }
         }
-
 
         void m_ExternalDataInterface_ExternalDataEvent(object sender, IBE.IBECompanion.DataEventBase.LocationChangedEventArgs e)
         {

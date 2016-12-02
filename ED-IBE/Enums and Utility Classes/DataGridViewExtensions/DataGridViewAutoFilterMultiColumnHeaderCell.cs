@@ -94,6 +94,40 @@ namespace DataGridViewAutoFilter
             return new DataGridViewAutoFilterMultiColumnHeaderCell(this);
         }
 
+        public override string ColumnFilterString
+        {
+            get
+            {
+                StringBuilder filterString = new StringBuilder();
+
+                if ((selectedFilterValue.Count == filters.Count) || (selectedFilterValue.Count == 0))
+                    selectedFilterValue.Clear();
+
+                foreach (String filterValue in selectedFilterValue)
+                {
+                    if (filterString.Length != 0)
+                        filterString.Append(";");
+
+                    filterString.Append(filterValue);
+                }
+
+                return filterString.ToString();
+            }
+            set
+            {
+                string[] parts;
+
+                selectedFilterValue.Clear();
+
+                parts = value.Split(new char[] { ';' },StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (String part in parts)
+                    selectedFilterValue.Add(part);
+
+                UpdateFilter(true);
+            }
+        }
+
         /// <summary>
         /// Resets the cached filter values if the filter has been removed.
         /// </summary>
@@ -645,20 +679,26 @@ namespace DataGridViewAutoFilter
         /// Updates the BindingSource.Filter value based on a user selection
         /// from the drop-down filter list. 
         /// </summary>
-        override protected void UpdateFilter()
+        override protected void UpdateFilter(Boolean onlyRefresh = false)
         {
-            // Continue only if the selection has changed.
-            if (filterWindow.SelectedValues.ContentEquals(selectedFilterValue))
+            if(!onlyRefresh)
             {
-                return;
-            }
+                // Continue only if the selection has changed.
+                if (filterWindow.SelectedValues.ContentEquals(selectedFilterValue))
+                {
+                    return;
+                }
 
-            // Store the new selection value. 
-            selectedFilterValue = filterWindow.SelectedValues;
+                // Store the new selection value. 
+                selectedFilterValue = filterWindow.SelectedValues;
+            }
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =
                 this.DataGridView.DataSource as IBindingListView;
+
+            if ((data == null) && (Retriever == null))
+                return;
 
             Debug.Assert((data != null && data.SupportsFiltering) || (Retriever != null),
                 "DataSource is not an IBindingListView or does not support filtering");

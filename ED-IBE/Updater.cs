@@ -156,6 +156,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 5, 6))
                         UpdateTo_0_5_6(ref foundError);
 
+                    if (dbVersion < new Version(0, 5, 7))
+                        UpdateTo_0_5_7(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -1618,6 +1621,159 @@ namespace IBE
             catch (Exception ex)
             {
                 throw new Exception("Error while updating to v0.5.6", ex);
+            }
+        }        
+
+        private static void UpdateTo_0_5_7(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.7...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                sqlString = "UPDATE tbEventType SET eventtype = 'Mission Accepted' WHERE eventtype = 'Accepted Mission';                                                \n" +
+                            "UPDATE tbEventType SET eventtype = 'Mission Completed' WHERE eventtype = 'Completed Mission';                                              \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (18, 'Mission Abandoned');                                          \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (19, 'Mission Failed');                                             \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n" +
+                            "  \n";
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.7...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.5.7", ex);
             }
         }        
 

@@ -89,6 +89,43 @@ namespace DataGridViewAutoFilter
             }
         }
 
+        public override string ColumnFilterString
+        {
+            get
+            {
+                return String.Format("{0};{1}", (UInt32)m_SelectedConstraintIndex, m_SelectedFilterText);
+            }
+            set
+            {
+                string[] parts;
+                Int32 intValue;
+                ConstraintValues cnstrValue = ConstraintValues.cv_filter_off;
+                String filterValue = "";
+
+                parts = value.Split(new char[] { ';' },2);
+
+                if(parts.GetUpperBound(0) == 1)
+                {
+                    filterValue = parts[1];
+
+                    if(filterValue != "")
+                    {
+                        if (Int32.TryParse(parts[0], out intValue))
+                        {
+                            if(Enum.IsDefined(typeof(ConstraintValues), intValue))
+                            {
+                                cnstrValue = (ConstraintValues)intValue;
+                            }
+                        }
+                    }
+                }
+
+                m_SelectedConstraintIndex = cnstrValue; 
+                m_SelectedFilterText      = filterValue;
+
+                UpdateFilter(true);
+            }
+        }
 
         #region drop-down list: Show/HideFilterControlBox, SetDropDownListBoxBounds, DropDownListBoxMaxHeightInternal
 
@@ -362,22 +399,28 @@ namespace DataGridViewAutoFilter
         /// Updates the BindingSource.Filter value based on a user selection
         /// from the drop-down filter list. 
         /// </summary>
-        override protected void UpdateFilter()
+        override protected void UpdateFilter(Boolean onlyRefresh = false)
         {
-            // Continue only if the selection has changed.
-            if ((filterWindow.cmbConstraint.SelectedIndex == (Int32)m_SelectedConstraintIndex) &&
-               (filterWindow.txtFilterText.Text.Equals(m_SelectedFilterText, StringComparison.InvariantCultureIgnoreCase)))
+            if(!onlyRefresh)
             {
-                return;
-            }
+                // Continue only if the selection has changed.
+                if ((filterWindow.cmbConstraint.SelectedIndex == (Int32)m_SelectedConstraintIndex) &&
+                   (filterWindow.txtFilterText.Text.Equals(m_SelectedFilterText, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    return;
+                }
 
-            // Store the new filter value
-            m_SelectedConstraintIndex = (ConstraintValues)filterWindow.cmbConstraint.SelectedIndex;
-            m_SelectedFilterText = filterWindow.txtFilterText.Text;
+                // Store the new filter value
+                m_SelectedConstraintIndex = (ConstraintValues)filterWindow.cmbConstraint.SelectedIndex;
+                m_SelectedFilterText = filterWindow.txtFilterText.Text;
+            }
 
             // Cast the data source to an IBindingListView.
             IBindingListView data =
                 this.DataGridView.DataSource as IBindingListView;
+
+            if((data == null) && (Retriever == null))
+                return;
 
             Debug.Assert((data != null && data.SupportsFiltering) || (Retriever != null),
                 "DataSource is not an IBindingListView or does not support filtering");
