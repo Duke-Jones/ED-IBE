@@ -73,5 +73,24 @@ namespace IBE.Enums_and_Utility_Classes
             ColumnSorted.Raise(this, EA);
         }
 
+        /// <summary>
+        /// resets the filter setting for each column of type 'DataGridViewAutoFilterHeaderCell'
+        /// </summary>
+        public void ResetAllFilters()
+        {
+            try
+            {
+                foreach (DataGridViewColumn currentColumn in this.Columns)
+                {
+                    if(currentColumn.DefaultHeaderCellType.BaseType.Equals(typeof(DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)))
+                        ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ResetFilter();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while resetting the filter settings", ex);
+            }
+        }
     }
 }

@@ -308,7 +308,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Resets the cached filter values if the filter has been removed.
         /// </summary>
-        protected virtual void ResetFilter()
+        public virtual void ResetFilter()
         {
             throw new NotImplementedException("ResetFilter() missing");
         }
@@ -391,6 +391,91 @@ namespace DataGridViewAutoFilter
                 }
                 ComboBoxRenderer.DrawDropDownButton(
                     graphics, buttonBounds, state);
+
+                Int32 pressedOffset = 0;
+                if (filterControlShowing)
+                {
+                    pressedOffset = 1;
+                }
+
+                
+
+                // If there is a filter in effect for the column, paint the 
+                // down arrow as an unfilled triangle. If there is no filter 
+                // in effect, paint the down arrow as a filled triangle.
+                if (filtered)
+                {
+                    
+                    
+                    buttonBounds.Width += 6;
+                    buttonBounds.Height += 7;
+                    buttonBounds.Offset(-2,-2);
+
+                    if(false)
+                    {
+                        Pen drawPen     = new Pen(Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor));
+                        graphics.DrawPolygon(drawPen, new Point[] {
+                            new Point(
+                                buttonBounds.Width / 2 + 
+                                    buttonBounds.Left - 1 + pressedOffset, 
+                                buttonBounds.Height * 3 / 4 + 
+                                    buttonBounds.Top - 1 + pressedOffset),
+                            new Point(
+                                buttonBounds.Width / 4 + 
+                                    buttonBounds.Left + pressedOffset,
+                                buttonBounds.Height / 2 + 
+                                    buttonBounds.Top - 1 + pressedOffset),
+                            new Point(
+                                buttonBounds.Width * 3 / 4 + 
+                                    buttonBounds.Left - 1 + pressedOffset,
+                                buttonBounds.Height / 2 + 
+                                    buttonBounds.Top - 1 + pressedOffset)
+                        });
+                    }
+                    else
+                    {
+                        Brush drawBrush = new SolidBrush(Program.Colors.GetColor(GUIColors.ColorNames.Marked_BackColor));
+
+                        graphics.FillPolygon(drawBrush, new Point[] {
+                            new Point(
+                                buttonBounds.Width / 2 + 
+                                    buttonBounds.Left - 1 + pressedOffset, 
+                                buttonBounds.Height * 3 / 4 + 
+                                    buttonBounds.Top - 1 + pressedOffset),
+                            new Point(
+                                buttonBounds.Width / 4 + 
+                                    buttonBounds.Left + pressedOffset,
+                                buttonBounds.Height / 2 + 
+                                    buttonBounds.Top - 1 + pressedOffset),
+                            new Point(
+                                buttonBounds.Width * 3 / 4 + 
+                                    buttonBounds.Left - 1 + pressedOffset,
+                                buttonBounds.Height / 2 + 
+                                    buttonBounds.Top - 1 + pressedOffset)
+                        });
+                    }
+                }
+
+                //else
+                //{
+                //    graphics.FillPolygon(SystemBrushes.ControlText, new Point[] {
+                //        new Point(
+                //            buttonBounds.Width / 2 + 
+                //                buttonBounds.Left - 1 + pressedOffset, 
+                //            buttonBounds.Height * 3 / 4 + 
+                //                buttonBounds.Top - 1 + pressedOffset),
+                //        new Point(
+                //            buttonBounds.Width / 4 + 
+                //                buttonBounds.Left + pressedOffset,
+                //            buttonBounds.Height / 2 + 
+                //                buttonBounds.Top - 1 + pressedOffset),
+                //        new Point(
+                //            buttonBounds.Width * 3 / 4 + 
+                //                buttonBounds.Left - 1 + pressedOffset,
+                //            buttonBounds.Height / 2 + 
+                //                buttonBounds.Top - 1 + pressedOffset)
+                //    });
+                //}
             }
             else
             {

@@ -26,7 +26,9 @@ todo:
 
 
 done:
-
+  
+  * optimization of filtering for grid columns
+-------------------------------------------------------------------------------------         
   * filter settings in Commander's Log are saved now
   * mission events are now shown in the Commander's Log
 -------------------------------------------------------------------------------------         

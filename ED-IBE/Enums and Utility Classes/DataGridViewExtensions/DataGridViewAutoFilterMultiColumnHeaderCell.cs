@@ -131,7 +131,7 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Resets the cached filter values if the filter has been removed.
         /// </summary>
-        override protected void ResetFilter()
+        override public void ResetFilter()
         {
             if (this.DataGridView == null) return;
             BindingSource source = this.DataGridView.DataSource as BindingSource;
@@ -140,6 +140,8 @@ namespace DataGridViewAutoFilter
                 filtered = false;
                 selectedFilterValue.Clear();
                 currentColumnFilter.Clear();
+
+                UpdateFilter(true);
             }
         }
 

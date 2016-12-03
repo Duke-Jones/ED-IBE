@@ -30,13 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(tabCommandersLog));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbCL_LogEdit = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -102,6 +102,7 @@
             this.credits_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notes = new DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn();
+            this.cmdFilterReset = new System.Windows.Forms.Button();
             this.gbCL_LogEdit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
@@ -490,43 +491,43 @@
             this.toolStripMenuItem2,
             this.tsmiSendToEDSM});
             this.cmsLog.Name = "cmsLog";
-            this.cmsLog.Size = new System.Drawing.Size(240, 104);
+            this.cmsLog.Size = new System.Drawing.Size(208, 104);
             // 
             // copySystemnameToClipboardToolStripMenuItem
             // 
             this.copySystemnameToClipboardToolStripMenuItem.Name = "copySystemnameToClipboardToolStripMenuItem";
-            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.copySystemnameToClipboardToolStripMenuItem.Text = "Copy systemname to clipboard";
             this.copySystemnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
             // 
             // copyStationnameToClipboardToolStripMenuItem
             // 
             this.copyStationnameToClipboardToolStripMenuItem.Name = "copyStationnameToClipboardToolStripMenuItem";
-            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
             this.copyStationnameToClipboardToolStripMenuItem.Text = "Copy stationname to clipboard";
             this.copyStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(236, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 6);
             // 
             // tsmiRecalcJumpDistance
             // 
             this.tsmiRecalcJumpDistance.Name = "tsmiRecalcJumpDistance";
-            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(239, 22);
+            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(207, 22);
             this.tsmiRecalcJumpDistance.Text = "recalculate jump distance";
             this.tsmiRecalcJumpDistance.Click += new System.EventHandler(this.tsmiRecalcJumpDistance_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(236, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 6);
             // 
             // tsmiSendToEDSM
             // 
             this.tsmiSendToEDSM.Name = "tsmiSendToEDSM";
-            this.tsmiSendToEDSM.Size = new System.Drawing.Size(239, 22);
+            this.tsmiSendToEDSM.Size = new System.Drawing.Size(207, 22);
             this.tsmiSendToEDSM.Text = "send log entry(s) to EDSM";
             this.tsmiSendToEDSM.Click += new System.EventHandler(this.tsmiSendToEDSM_Click);
             // 
@@ -552,7 +553,7 @@
             this.showAllLabel.IsLink = true;
             this.showAllLabel.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.showAllLabel.Name = "showAllLabel";
-            this.showAllLabel.Size = new System.Drawing.Size(53, 17);
+            this.showAllLabel.Size = new System.Drawing.Size(42, 17);
             this.showAllLabel.Text = "Show &All";
             this.showAllLabel.Visible = false;
             // 
@@ -701,14 +702,14 @@
             this.credits_total,
             this.distance,
             this.notes});
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle14;
             this.dgvCommandersLog.DoubleBuffer = true;
             this.dgvCommandersLog.Location = new System.Drawing.Point(3, 207);
             this.dgvCommandersLog.Name = "dgvCommandersLog";
@@ -726,8 +727,8 @@
             // time
             // 
             this.time.DataPropertyName = "time";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.time.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.time.DefaultCellStyle = dataGridViewCellStyle8;
             this.time.HeaderText = "Time";
             this.time.Name = "time";
             this.time.ReadOnly = true;
@@ -777,8 +778,8 @@
             // cargovolume
             // 
             this.cargovolume.DataPropertyName = "cargovolume";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle9;
             this.cargovolume.HeaderText = "Volume";
             this.cargovolume.Name = "cargovolume";
             this.cargovolume.ReadOnly = true;
@@ -787,8 +788,8 @@
             // credits_transaction
             // 
             this.credits_transaction.DataPropertyName = "credits_transaction";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle10;
             this.credits_transaction.HeaderText = "Transaction";
             this.credits_transaction.Name = "credits_transaction";
             this.credits_transaction.ReadOnly = true;
@@ -797,10 +798,10 @@
             // credits_total
             // 
             this.credits_total.DataPropertyName = "credits_total";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle4.Format = "N0";
-            dataGridViewCellStyle4.NullValue = null;
-            this.credits_total.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle11.Format = "N0";
+            dataGridViewCellStyle11.NullValue = null;
+            this.credits_total.DefaultCellStyle = dataGridViewCellStyle11;
             this.credits_total.HeaderText = "Cr. total";
             this.credits_total.Name = "credits_total";
             this.credits_total.ReadOnly = true;
@@ -808,10 +809,10 @@
             // distance
             // 
             this.distance.DataPropertyName = "distance";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle5.Format = "N1";
-            dataGridViewCellStyle5.NullValue = null;
-            this.distance.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle12.Format = "N1";
+            dataGridViewCellStyle12.NullValue = null;
+            this.distance.DefaultCellStyle = dataGridViewCellStyle12;
             this.distance.HeaderText = "Distance";
             this.distance.Name = "distance";
             this.distance.ReadOnly = true;
@@ -820,16 +821,29 @@
             // 
             this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.notes.DataPropertyName = "notes";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.notes.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.notes.DefaultCellStyle = dataGridViewCellStyle13;
             this.notes.HeaderText = "notes";
             this.notes.Name = "notes";
             this.notes.ReadOnly = true;
             this.notes.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
+            // cmdFilterReset
+            // 
+            this.cmdFilterReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdFilterReset.Enabled = false;
+            this.cmdFilterReset.Location = new System.Drawing.Point(1108, 180);
+            this.cmdFilterReset.Name = "cmdFilterReset";
+            this.cmdFilterReset.Size = new System.Drawing.Size(91, 23);
+            this.cmdFilterReset.TabIndex = 52;
+            this.cmdFilterReset.Text = "Reset All Filters";
+            this.cmdFilterReset.UseVisualStyleBackColor = false;
+            this.cmdFilterReset.Click += new System.EventHandler(this.cmdFilterReset_Click);
+            // 
             // tabCommandersLog
             // 
+            this.Controls.Add(this.cmdFilterReset);
             this.Controls.Add(this.bindNavCmdrsLog);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.gbCL_LogEdit);
@@ -921,5 +935,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn distance;
         private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn notes;
+        private System.Windows.Forms.Button cmdFilterReset;
     }
 }

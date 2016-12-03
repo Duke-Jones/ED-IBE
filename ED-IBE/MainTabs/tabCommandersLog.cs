@@ -272,7 +272,8 @@ namespace IBE.MTCommandersLog
                 
                 //if(e.RowIndex == 650)
                 //    Debug.Print("Stop");
-
+               
+                
                 if ((e.RowIndex >= minPageStart) && (e.RowIndex <= maxPageEnd))
                 {
                     //Debug.Print("Erste Zeile : " + dgvCommandersLog.FirstDisplayedScrollingRowIndex + ", Zeilendaten angefragt: " + e.RowIndex + ", erste sinnvolle Zeile : " + minPageStart + ", letzte sinnvolle Zeile : " + maxPageEnd);
@@ -340,8 +341,8 @@ namespace IBE.MTCommandersLog
                     // force refresh
                     if(m_FirstRowShown)
                     {
-                        m_DataSource.Retriever.MemoryCache.Clear();
                         dgvCommandersLog.RowCount  = 0;
+                        m_DataSource.Retriever.MemoryCache.Clear();
                         dgvCommandersLog.RowCount  = m_DataSource.Retriever.RowCount(true);
                         dgvCommandersLog.Invalidate();
                     
@@ -355,6 +356,8 @@ namespace IBE.MTCommandersLog
                         catch{}
 
                         SetNavigatorButtons(currentRow);
+
+                        cmdFilterReset.Enabled = (m_DataSource.Retriever.Filter.Count > 0);
                     }
                 }
             }
@@ -1140,5 +1143,26 @@ namespace IBE.MTCommandersLog
             }
         }
 
+        private void cmdFilterReset_Click(object sender, EventArgs e)
+        {
+            Cursor oldCursor = Cursor;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+
+                dgvCommandersLog.ResetAllFilters();
+                m_GUIInterface.saveSetting(dgvCommandersLog, e);
+
+                RefreshData();
+
+                Cursor = oldCursor;
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldCursor;
+                CErr.processError(ex, "Error in cmdFilterReset_Click");
+            }
+        }
     }
 }

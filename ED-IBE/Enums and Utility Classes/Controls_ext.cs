@@ -442,4 +442,8 @@ namespace System.Windows.Forms
             return isOk;
         }
     }
+    public class ButtonExt : Button
+    {
+
+    }
 }

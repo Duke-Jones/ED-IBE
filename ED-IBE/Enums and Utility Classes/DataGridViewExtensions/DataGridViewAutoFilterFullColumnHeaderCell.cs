@@ -20,7 +20,7 @@ namespace DataGridViewAutoFilter
     public class DataGridViewAutoFilterFullColumnHeaderCell : DataGridViewAutoFilterHeaderCell
     {
         /// <summary>
-        /// The ListBox used for all drop-down lists. 
+        /// The filterwindow used for setting filter values
         /// </summary>
         private FullTextHeader filterWindow;
 
@@ -30,11 +30,6 @@ namespace DataGridViewAutoFilter
         /// </summary>
         private System.Collections.Specialized.OrderedDictionary filters =
             new System.Collections.Specialized.OrderedDictionary();
-
-        /// <summary>
-        /// The complete filter string currently in effect for the owning column. 
-        /// </summary>
-        private List<String> currentColumnFilter = new List<String>();
 
         internal enum ConstraintValues
         {
@@ -78,14 +73,18 @@ namespace DataGridViewAutoFilter
         /// <summary>
         /// Resets the cached filter values if the filter has been removed.
         /// </summary>
-        override protected void ResetFilter()
+        override public void ResetFilter()
         {
             if (this.DataGridView == null) return;
             BindingSource source = this.DataGridView.DataSource as BindingSource;
             if (source == null || String.IsNullOrEmpty(source.Filter))
             {
                 filtered = false;
-                currentColumnFilter.Clear();
+
+                m_SelectedConstraintIndex = ConstraintValues.cv_filter_off; 
+                m_SelectedFilterText      = "";
+
+                UpdateFilter(true);
             }
         }
 

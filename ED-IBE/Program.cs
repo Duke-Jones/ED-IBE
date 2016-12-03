@@ -75,6 +75,7 @@ namespace IBE
 
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
+                        
 
                         Init();
 
