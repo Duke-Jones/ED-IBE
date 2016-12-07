@@ -102,7 +102,6 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.label93 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
             this.label91 = new System.Windows.Forms.Label();
@@ -981,7 +980,6 @@
             // 
             // tabHelpAndChangeLog
             // 
-            this.tabHelpAndChangeLog.Controls.Add(this.listBox1);
             this.tabHelpAndChangeLog.Controls.Add(this.label93);
             this.tabHelpAndChangeLog.Controls.Add(this.label92);
             this.tabHelpAndChangeLog.Controls.Add(this.label91);
@@ -1004,13 +1002,6 @@
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(120, 95);
-            this.listBox1.TabIndex = 0;
             // 
             // label93
             // 
@@ -2680,6 +2671,7 @@
             this.gradientButton1.StartColor = System.Drawing.SystemColors.ButtonHighlight;
             this.gradientButton1.TabIndex = 78;
             this.gradientButton1.Text = "gradientButton1";
+            this.gradientButton1.Visible = false;
             // 
             // Form1
             // 
@@ -2995,7 +2987,6 @@
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
         private System.Windows.Forms.GradientButton gradientButton1;
-        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

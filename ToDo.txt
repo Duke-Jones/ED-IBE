@@ -27,10 +27,14 @@ todo:
 
 done:
   
+            
+  * added events "MissionFailed" and "LoadGame" for Commander's Log
+  * text of disabled buttons is now visible, even if using changed colors  
+-------------------------------------------------------------------------------------         
   * optimization of filtering for grid columns
 -------------------------------------------------------------------------------------         
   * filter settings in Commander's Log are saved now
-  * mission events are now shown in the Commander's Log
+  * some mission events are now shown in the Commander's Log
 -------------------------------------------------------------------------------------         
   * visited station history now works correct
 -------------------------------------------------------------------------------------         
