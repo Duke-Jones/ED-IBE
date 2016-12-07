@@ -48,8 +48,8 @@
             this.tbUsername = new System.Windows.Forms.TextBox();
             this.rbUserID = new System.Windows.Forms.RadioButton();
             this.txtCmdrsName = new System.Windows.Forms.TextBox();
-            this.cmdRemoveTrusted = new System.Windows.Forms.Button();
-            this.cmdAddTrusted = new System.Windows.Forms.Button();
+            this.cmdRemoveTrusted = new System.Windows.Forms.ButtonExt();
+            this.cmdAddTrusted = new System.Windows.Forms.ButtonExt();
             this.label2 = new System.Windows.Forms.Label();
             this.dgvTrustedSenders = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.colSenderName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,8 +62,8 @@
             this.lblSenderStatus = new System.Windows.Forms.Label();
             this.pbSenderStatus = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.cmdStopSender = new System.Windows.Forms.Button();
-            this.cmdStartSender = new System.Windows.Forms.Button();
+            this.cmdStopSender = new System.Windows.Forms.ButtonExt();
+            this.cmdStartSender = new System.Windows.Forms.ButtonExt();
             this.cbEDDNAutoSend = new System.Windows.Forms.CheckBox();
             this.tabRecieve = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -85,8 +85,8 @@
             this.cbSpoolImplausibleToFile = new System.Windows.Forms.CheckBox();
             this.cbSpoolEddnToFile = new System.Windows.Forms.CheckBox();
             this.cbImportEDDN = new System.Windows.Forms.CheckBox();
-            this.cmdStopListening = new System.Windows.Forms.Button();
-            this.cmdStartListening = new System.Windows.Forms.Button();
+            this.cmdStopListening = new System.Windows.Forms.ButtonExt();
+            this.cmdStartListening = new System.Windows.Forms.ButtonExt();
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
@@ -906,9 +906,9 @@
         private System.Windows.Forms.CheckBox cbSpoolEddnToFile;
         private System.Windows.Forms.CheckBox cbImportEDDN;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Button cmdStopListening;
+        private System.Windows.Forms.ButtonExt cmdStopListening;
         public System.Windows.Forms.TextBox tbEDDNOutput;
-        private System.Windows.Forms.Button cmdStartListening;
+        private System.Windows.Forms.ButtonExt cmdStartListening;
         private System.Windows.Forms.Timer tmrRefresh;
         private System.Windows.Forms.Label lblListenerStatus;
         private System.Windows.Forms.PictureBox pbListenerStatus;
@@ -929,8 +929,8 @@
         private System.Windows.Forms.Label lblSenderStatus;
         private System.Windows.Forms.PictureBox pbSenderStatus;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button cmdStopSender;
-        private System.Windows.Forms.Button cmdStartSender;
+        private System.Windows.Forms.ButtonExt cmdStopSender;
+        private System.Windows.Forms.ButtonExt cmdStartSender;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TabControl tbcStatistics;
         private System.Windows.Forms.TabPage tabBySoftware;
@@ -941,8 +941,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolTip toolTip1;
         private IBE.Enums_and_Utility_Classes.DataGridViewExt dgvTrustedSenders;
-        private System.Windows.Forms.Button cmdRemoveTrusted;
-        private System.Windows.Forms.Button cmdAddTrusted;
+        private System.Windows.Forms.ButtonExt cmdRemoveTrusted;
+        private System.Windows.Forms.ButtonExt cmdAddTrusted;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSenderName;
         private System.Windows.Forms.TabPage tabByMessageType;
         private System.Windows.Forms.TextBox tbEddnStatsMT;

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmdOk = new System.Windows.Forms.Button();
-            this.cmdClear = new System.Windows.Forms.Button();
+            this.cmdOk = new System.Windows.Forms.ButtonExt();
+            this.cmdClear = new System.Windows.Forms.ButtonExt();
             this.cmbConstraint = new System.Windows.Forms.ComboBox();
             this.txtFilterText = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
@@ -96,8 +96,8 @@
         }
 
         #endregion
-        internal System.Windows.Forms.Button cmdOk;
-        private System.Windows.Forms.Button cmdClear;
+        internal System.Windows.Forms.ButtonExt cmdOk;
+        private System.Windows.Forms.ButtonExt cmdClear;
         internal System.Windows.Forms.ComboBox cmbConstraint;
         internal System.Windows.Forms.TextBox txtFilterText;
     }

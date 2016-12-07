@@ -38,8 +38,8 @@ namespace IBE.EDDB_Data
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EDCommodityListView));
-            this.cmdCancel = new System.Windows.Forms.Button();
-            this.cmdOk = new System.Windows.Forms.Button();
+            this.cmdCancel = new System.Windows.Forms.ButtonExt();
+            this.cmdOk = new System.Windows.Forms.ButtonExt();
             this.dgvWarnlevels = new System.Windows.Forms.DataGridView();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -234,8 +234,8 @@ namespace IBE.EDDB_Data
 
         #endregion
 
-        private System.Windows.Forms.Button cmdCancel;
-        private System.Windows.Forms.Button cmdOk;
+        private System.Windows.Forms.ButtonExt cmdCancel;
+        private System.Windows.Forms.ButtonExt cmdOk;
         private System.Windows.Forms.DataGridView dgvWarnlevels;
         private DataGridViewTextBoxColumn Id;
         private DataGridViewTextBoxColumn CName;

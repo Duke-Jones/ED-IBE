@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmdOk = new System.Windows.Forms.Button();
-            this.cmdClear = new System.Windows.Forms.Button();
+            this.cmdOk = new System.Windows.Forms.ButtonExt();
+            this.cmdClear = new System.Windows.Forms.ButtonExt();
             this.dtpAfter = new System.Windows.Forms.DateTimePicker();
             this.dtpBefore = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
@@ -147,8 +147,8 @@
         }
 
         #endregion
-        internal System.Windows.Forms.Button cmdOk;
-        private System.Windows.Forms.Button cmdClear;
+        internal System.Windows.Forms.ButtonExt cmdOk;
+        private System.Windows.Forms.ButtonExt cmdClear;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         internal System.Windows.Forms.DateTimePicker dtpAfter;

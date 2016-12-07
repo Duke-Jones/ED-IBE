@@ -5224,6 +5224,24 @@ namespace IBE.SQL
             }
         }
 
+        public object GetShipname(string shipIdString)
+        {
+            try
+            {
+                String shipName = Program.DBCon.Execute<String>("SELECT name FROM tbshipyardbase" +
+                                                                " where symbol = " + DBConnector.SQLAEscape(shipIdString));
+
+                if(String.IsNullOrWhiteSpace(shipName))
+                    shipName = shipIdString;
+
+                return shipName;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting the name of a ship from idstring", ex);
+            }
+        }
+
         /// <summary>
         /// returns a single log entry identified by its timestamp
         /// </summary>

@@ -39,7 +39,8 @@ namespace IBE.FileScanner
             MissionAccepted,
             MissionAbandoned,
             MissionCompleted,
-            MissionFailed
+            MissionFailed,
+            LoadGame
         }
 
 #endregion
@@ -508,6 +509,12 @@ namespace IBE.FileScanner
                                             case JournalEvent.MissionAbandoned:
                                             case JournalEvent.MissionFailed:
 
+                                            case JournalEvent.LoadGame:
+
+
+                                                /*******************************************************/
+                                                /***************       send events    ******************/
+                                                /*******************************************************/
                                                 if(eventName == JournalEvent.Docked)
                                                     Debug.Print("stop");
 

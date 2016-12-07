@@ -1164,5 +1164,9 @@ namespace IBE.MTCommandersLog
                 CErr.processError(ex, "Error in cmdFilterReset_Click");
             }
         }
+
+        private void dgvCommandersLog_CellLeave(object sender, DataGridViewCellEventArgs e)
+        {
+        }
     }
 }

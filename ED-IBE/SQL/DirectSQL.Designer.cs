@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DirectSQL));
             this.txtCommand = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.cmdExecute = new System.Windows.Forms.Button();
+            this.cmdExecute = new System.Windows.Forms.ButtonExt();
             this.dgvResults = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.txtAnswer = new System.Windows.Forms.TextBox();
-            this.cmdExit = new System.Windows.Forms.Button();
+            this.cmdExit = new System.Windows.Forms.ButtonExt();
             this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.SuspendLayout();
@@ -138,10 +138,10 @@
 
         private System.Windows.Forms.TextBox txtCommand;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button cmdExecute;
+        private System.Windows.Forms.ButtonExt cmdExecute;
         private IBE.Enums_and_Utility_Classes.DataGridViewExt dgvResults;
         private System.Windows.Forms.TextBox txtAnswer;
-        private System.Windows.Forms.Button cmdExit;
+        private System.Windows.Forms.ButtonExt cmdExit;
         private System.Windows.Forms.Label label2;
     }
 }

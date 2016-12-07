@@ -1012,6 +1012,46 @@ namespace IBE.MTCommandersLog
                         }
 
                         break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.LoadGame:
+
+                        if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_LoadGame", true.ToString(), false))
+                        {
+                            TextHelper txtHelp = new TextHelper();
+
+                            Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                            System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                         
+                            Int32 fullLength = 190;
+
+                            data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Cmdr.", usedFont, fullLength), e.Data.Value<String>("Commander")));
+                            data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Ship", usedFont, fullLength), Program.Data.GetShipname(e.Data.Value<String>("Ship"))));
+
+                            String group = "";
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Group")))
+                                group = String.Format(" \"{0}\"", e.Data.Value<String>("Group"));
+
+                            data.AppendLine(String.Format("{0} :   {1}{2}", txtHelp.FixedLength("Mode", usedFont, fullLength), e.Data.Value<String>("GameMode"), group));
+                            data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Credits", usedFont, fullLength), e.Data.Value<Int32>("Credits")));
+
+                            if(e.Data.Value<Int32>("Loan") > 0)
+                                data.AppendLine(String.Format("{0} :   {1}{2}", txtHelp.FixedLength("Loan", usedFont, fullLength), e.Data.Value<Int32>("Loan"), group));
+                            
+                            SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                                      Program.actualCondition.System,
+                                      Program.actualCondition.Station, 
+                                      "", 
+                                      "", 
+                                      0, 
+                                      0, 
+                                      Program.CompanionIO.SGetCreditsTotal(), 
+                                      "Load Game", 
+                                      data.ToString());
+
+                        }
+
+                        break;
                 }
 
             }

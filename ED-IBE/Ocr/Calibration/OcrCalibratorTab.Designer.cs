@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btn_calibrate = new System.Windows.Forms.Button();
+            this.btn_calibrate = new System.Windows.Forms.ButtonExt();
             this.pb_calibratorBox = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tb_resolution = new System.Windows.Forms.TextBox();
@@ -46,7 +46,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pb_calibratorMagnifier = new System.Windows.Forms.PictureBox();
-            this.btn_calibration_reset = new System.Windows.Forms.Button();
+            this.btn_calibration_reset = new System.Windows.Forms.ButtonExt();
             ((System.ComponentModel.ISupportInitialize)(this.pb_calibratorBox)).BeginInit();
             this.pl_calibrationWindow.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_example)).BeginInit();
@@ -284,7 +284,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btn_calibrate;
+        private System.Windows.Forms.ButtonExt btn_calibrate;
         private System.Windows.Forms.PictureBox pb_calibratorBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tb_resolution;
@@ -301,7 +301,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.PictureBox pb_calibratorMagnifier;
-        private System.Windows.Forms.Button btn_calibration_reset;
+        private System.Windows.Forms.ButtonExt btn_calibration_reset;
         public System.Windows.Forms.Label lblWarning;
 
 

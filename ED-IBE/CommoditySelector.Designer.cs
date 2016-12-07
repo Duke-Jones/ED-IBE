@@ -37,10 +37,10 @@
             this.tbcommodityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
             this.tbcommodityTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tbcommodityTableAdapter();
-            this.cmdOK = new System.Windows.Forms.Button();
-            this.cmdCancel = new System.Windows.Forms.Button();
-            this.cmdClearAll = new System.Windows.Forms.Button();
-            this.cmdInvert = new System.Windows.Forms.Button();
+            this.cmdOK = new System.Windows.Forms.ButtonExt();
+            this.cmdCancel = new System.Windows.Forms.ButtonExt();
+            this.cmdClearAll = new System.Windows.Forms.ButtonExt();
+            this.cmdInvert = new System.Windows.Forms.ButtonExt();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dgvCommodities = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,7 +58,7 @@
             this.pwlsupplyselllowDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pwlsupplysellhighDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.israreDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.cmdClear = new System.Windows.Forms.Button();
+            this.cmdClear = new System.Windows.Forms.ButtonExt();
             this.label1 = new System.Windows.Forms.Label();
             this.txtSearchString = new System.Windows.Forms.TextBox();
             this.cbOnlySelected = new System.Windows.Forms.CheckBox();
@@ -388,8 +388,8 @@
         private SQL.Datasets.dsEliteDB dsEliteDB;
         private System.Windows.Forms.BindingSource tbcommodityBindingSource;
         private SQL.Datasets.dsEliteDBTableAdapters.tbcommodityTableAdapter tbcommodityTableAdapter;
-        private System.Windows.Forms.Button cmdOK;
-        private System.Windows.Forms.Button cmdCancel;
+        private System.Windows.Forms.ButtonExt cmdOK;
+        private System.Windows.Forms.ButtonExt cmdCancel;
         private System.Windows.Forms.CheckBox cbOnlySelected;
         private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn is_Selected;
@@ -408,9 +408,9 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn israreDataGridViewCheckBoxColumn;
         private System.Windows.Forms.TextBox txtSearchString;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button cmdClear;
+        private System.Windows.Forms.ButtonExt cmdClear;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button cmdInvert;
-        private System.Windows.Forms.Button cmdClearAll;
+        private System.Windows.Forms.ButtonExt cmdInvert;
+        private System.Windows.Forms.ButtonExt cmdClearAll;
     }
 }

@@ -1228,6 +1228,9 @@ namespace IBE
         {
             try
             {
+
+                gradientButton1.Enabled = Debugger.IsAttached;
+
                 enableToolStripMenuItem.Checked = Program.DBCon.getIniValue<Boolean>("Debug",   "extLog_Journal", false.ToString(), false);
                 debugToolStripMenuItem.Visible = enableToolStripMenuItem.Checked;
 
@@ -3591,11 +3594,6 @@ namespace IBE
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void exportListOfVisitedSystemsToolStripMenuItem_Click(object sender, EventArgs e)

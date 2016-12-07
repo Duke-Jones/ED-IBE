@@ -45,7 +45,7 @@ namespace IBE
             this.tbEditOcrResultsDemandLevel = new System.Windows.Forms.TextBox();
             this.tbEditOcrResultsSupplyLevel = new System.Windows.Forms.TextBox();
             this.tbEditOcrResultsSupply = new System.Windows.Forms.TextBox();
-            this.bEditOcrResultsOK = new System.Windows.Forms.Button();
+            this.bEditOcrResultsOK = new System.Windows.Forms.ButtonExt();
             this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.Systemname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Stationname = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,7 +61,7 @@ namespace IBE
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.implausible = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pbEditOcrResultsOriginalImage = new System.Windows.Forms.PictureBox();
-            this.cmdWarnLevels = new System.Windows.Forms.Button();
+            this.cmdWarnLevels = new System.Windows.Forms.ButtonExt();
             this.cbOnlyImplausible = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbEditOcrResultsOriginalImage)).BeginInit();
@@ -357,10 +357,10 @@ namespace IBE
         private System.Windows.Forms.TextBox tbEditOcrResultsDemandLevel;
         private System.Windows.Forms.TextBox tbEditOcrResultsSupplyLevel;
         private System.Windows.Forms.TextBox tbEditOcrResultsSupply;
-        private System.Windows.Forms.Button bEditOcrResultsOK;
+        private System.Windows.Forms.ButtonExt bEditOcrResultsOK;
         private System.Windows.Forms.CheckBox cbOnlyImplausible;
         private DataGridViewExt dgvData;
-        private System.Windows.Forms.Button cmdWarnLevels;
+        private System.Windows.Forms.ButtonExt cmdWarnLevels;
         private System.Windows.Forms.DataGridViewTextBoxColumn Systemname;
         private System.Windows.Forms.DataGridViewTextBoxColumn Stationname;
         private System.Windows.Forms.DataGridViewTextBoxColumn Commodity;

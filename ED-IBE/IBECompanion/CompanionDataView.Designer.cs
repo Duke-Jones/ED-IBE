@@ -37,14 +37,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.txtVerficationCode = new System.Windows.Forms.TextBox();
             this.txtStatus = new System.Windows.Forms.TextBox();
-            this.cmdConnect = new System.Windows.Forms.Button();
-            this.cmdVerify = new System.Windows.Forms.Button();
+            this.cmdConnect = new System.Windows.Forms.ButtonExt();
+            this.cmdVerify = new System.Windows.Forms.ButtonExt();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cmdClear = new System.Windows.Forms.Button();
+            this.cmdClear = new System.Windows.Forms.ButtonExt();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.cmdClose = new System.Windows.Forms.Button();
+            this.cmdClose = new System.Windows.Forms.ButtonExt();
             this.label5 = new System.Windows.Forms.Label();
-            this.cmdToClipBoard = new System.Windows.Forms.Button();
+            this.cmdToClipBoard = new System.Windows.Forms.ButtonExt();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -242,14 +242,14 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtVerficationCode;
         private System.Windows.Forms.TextBox txtStatus;
-        private System.Windows.Forms.Button cmdConnect;
-        private System.Windows.Forms.Button cmdVerify;
+        private System.Windows.Forms.ButtonExt cmdConnect;
+        private System.Windows.Forms.ButtonExt cmdVerify;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button cmdClose;
+        private System.Windows.Forms.ButtonExt cmdClose;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button cmdClear;
-        private System.Windows.Forms.Button cmdToClipBoard;
+        private System.Windows.Forms.ButtonExt cmdClear;
+        private System.Windows.Forms.ButtonExt cmdToClipBoard;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }

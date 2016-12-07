@@ -187,6 +187,9 @@
     <Compile Include="Enums and Utility Classes\DataGridViewExtensions\SingleSelectHeaderList.designer.cs">
       <DependentUpon>SingleSelectHeaderList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Enums and Utility Classes\GradientButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Enums and Utility Classes\Point3Dbl.cs" />
     <Compile Include="Enums and Utility Classes\sqlLikeStringExtension.cs" />
     <Compile Include="Enums and Utility Classes\TextHelper.cs" />

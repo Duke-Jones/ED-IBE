@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.ButtonExt();
             this.tbEditSystem = new System.Windows.Forms.TextBox();
             this.tbEditStation = new System.Windows.Forms.TextBox();
             this.nEditSell = new System.Windows.Forms.NumericUpDown();
@@ -48,7 +48,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.ButtonExt();
             this.tbEditFilename = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.cbEditCommodityName = new System.Windows.Forms.ComboBox();
@@ -344,7 +344,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ButtonExt button1;
         private System.Windows.Forms.TextBox tbEditSystem;
         private System.Windows.Forms.TextBox tbEditStation;
         private System.Windows.Forms.NumericUpDown nEditSell;
@@ -364,7 +364,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ButtonExt button2;
         private System.Windows.Forms.TextBox tbEditFilename;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox cbEditCommodityName;

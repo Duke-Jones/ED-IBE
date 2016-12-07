@@ -1295,7 +1295,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.6');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.7');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;
@@ -1315,14 +1315,17 @@ INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (6, 'Docked');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (7, 'Took Off');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (8, 'Saved Game');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (9, 'Loaded Game');
-INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (10, 'Accepted Mission');
-INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (11, 'Completed Mission');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (10, 'Mission Accepted ');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (11, 'Mission Completed');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (12, 'Other');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (13, 'Resurrect');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (14, 'Died');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (15, 'Touchdown');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (16, 'Liftoff');
 INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (17, 'Scan');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (18, 'Mission Abandoned');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (19, 'Mission Failed');
+INSERT INTO `elite_db`.`tbEventType` (`id`, `eventtype`) VALUES (20, 'Load Game');
 
 COMMIT;
 

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.FilterListBox = new System.Windows.Forms.CheckedListBox();
-            this.cmdOk = new System.Windows.Forms.Button();
-            this.cmdInvert = new System.Windows.Forms.Button();
-            this.cmdAll = new System.Windows.Forms.Button();
+            this.cmdOk = new System.Windows.Forms.ButtonExt();
+            this.cmdInvert = new System.Windows.Forms.ButtonExt();
+            this.cmdAll = new System.Windows.Forms.ButtonExt();
             this.SuspendLayout();
             // 
             // FilterListBox
@@ -96,9 +96,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button cmdInvert;
+        private System.Windows.Forms.ButtonExt cmdInvert;
         internal System.Windows.Forms.CheckedListBox FilterListBox;
-        internal System.Windows.Forms.Button cmdOk;
-        private System.Windows.Forms.Button cmdAll;
+        internal System.Windows.Forms.ButtonExt cmdOk;
+        private System.Windows.Forms.ButtonExt cmdAll;
     }
 }

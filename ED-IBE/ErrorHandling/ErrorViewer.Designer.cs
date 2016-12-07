@@ -34,11 +34,11 @@
             this.lblErrorInfo = new System.Windows.Forms.Label();
             this.txtErrorDetail = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.cmdShutdown = new System.Windows.Forms.Button();
-            this.cmdDumpfile = new System.Windows.Forms.Button();
-            this.cmdIgnore = new System.Windows.Forms.Button();
+            this.cmdShutdown = new System.Windows.Forms.ButtonExt();
+            this.cmdDumpfile = new System.Windows.Forms.ButtonExt();
+            this.cmdIgnore = new System.Windows.Forms.ButtonExt();
             this.lblLogDestination = new System.Windows.Forms.Label();
-            this.cmdOpenLocation = new System.Windows.Forms.Button();
+            this.cmdOpenLocation = new System.Windows.Forms.ButtonExt();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -178,10 +178,10 @@
         private System.Windows.Forms.Label lblErrorInfo;
         private System.Windows.Forms.TextBox txtErrorDetail;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button cmdShutdown;
-        private System.Windows.Forms.Button cmdDumpfile;
-        private System.Windows.Forms.Button cmdIgnore;
+        private System.Windows.Forms.ButtonExt cmdShutdown;
+        private System.Windows.Forms.ButtonExt cmdDumpfile;
+        private System.Windows.Forms.ButtonExt cmdIgnore;
         private System.Windows.Forms.Label lblLogDestination;
-        private System.Windows.Forms.Button cmdOpenLocation;
+        private System.Windows.Forms.ButtonExt cmdOpenLocation;
     }
 }

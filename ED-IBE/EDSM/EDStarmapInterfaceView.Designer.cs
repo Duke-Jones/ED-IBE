@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EDStarmapInterfaceView));
             this.label5 = new System.Windows.Forms.Label();
-            this.cmdClose = new System.Windows.Forms.Button();
+            this.cmdClose = new System.Windows.Forms.ButtonExt();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtAccountstatus = new System.Windows.Forms.TextBox();
-            this.cmdClear = new System.Windows.Forms.Button();
-            this.cmdSave = new System.Windows.Forms.Button();
+            this.cmdClear = new System.Windows.Forms.ButtonExt();
+            this.cmdSave = new System.Windows.Forms.ButtonExt();
             this.label2 = new System.Windows.Forms.Label();
             this.txtAPIKey = new System.Windows.Forms.TextBox();
             this.txtServerstatus = new System.Windows.Forms.TextBox();
@@ -232,15 +232,15 @@
 
         #endregion
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button cmdClose;
+        private System.Windows.Forms.ButtonExt cmdClose;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button cmdClear;
+        private System.Windows.Forms.ButtonExt cmdClear;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtAPIKey;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtCmdrName;
         private System.Windows.Forms.TextBox txtServerstatus;
-        private System.Windows.Forms.Button cmdSave;
+        private System.Windows.Forms.ButtonExt cmdSave;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtAccountstatus;
         private System.Windows.Forms.GroupBox gbSettings;

@@ -30,24 +30,24 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(tabCommandersLog));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gbCL_LogEdit = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.cmdInjectEvent = new System.Windows.Forms.ButtonExt();
             this.label3 = new System.Windows.Forms.Label();
             this.txtLogDistance = new System.Windows.Forms.TextBoxDoubleB();
             this.label2 = new System.Windows.Forms.Label();
-            this.cmdCL_DeleteEntry = new System.Windows.Forms.Button();
-            this.cmdCL_Cancel = new System.Windows.Forms.Button();
-            this.cmdCL_EditEntry = new System.Windows.Forms.Button();
+            this.cmdCL_DeleteEntry = new System.Windows.Forms.ButtonExt();
+            this.cmdCL_Cancel = new System.Windows.Forms.ButtonExt();
+            this.cmdCL_EditEntry = new System.Windows.Forms.ButtonExt();
             this.label94 = new System.Windows.Forms.Label();
             this.label95 = new System.Windows.Forms.Label();
-            this.cmdCL_PrepareNew = new System.Windows.Forms.Button();
+            this.cmdCL_PrepareNew = new System.Windows.Forms.ButtonExt();
             this.cbLogSystemName = new System.Windows.Forms.ComboBox_ro();
             this.dtpLogEventDate = new System.Windows.Forms.DateTimePicker_ro();
             this.label21 = new System.Windows.Forms.Label();
@@ -55,7 +55,7 @@
             this.tbLogNotes = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.cbLogCargoAction = new System.Windows.Forms.ComboBox_ro();
-            this.cmdCL_Save = new System.Windows.Forms.Button();
+            this.cmdCL_Save = new System.Windows.Forms.ButtonExt();
             this.cbLogStationName = new System.Windows.Forms.ComboBox_ro();
             this.nbLogQuantity = new System.Windows.Forms.NumericUpDown_ro();
             this.label39 = new System.Windows.Forms.Label();
@@ -90,6 +90,7 @@
             this.bindingNavigatorMoveNextItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorMoveLastItem = new System.Windows.Forms.ToolStripButton();
             this.bindingNavigatorSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.cmdFilterReset = new System.Windows.Forms.ButtonExt();
             this.dgvCommandersLog = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.time = new DataGridViewAutoFilter.DataGridViewAutoFilterDateTimeTextBoxColumn();
             this.systemname = new DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn();
@@ -102,7 +103,6 @@
             this.credits_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.distance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.notes = new DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn();
-            this.cmdFilterReset = new System.Windows.Forms.Button();
             this.gbCL_LogEdit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbLogQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nbTransactionAmount)).BeginInit();
@@ -118,7 +118,7 @@
             // 
             this.gbCL_LogEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbCL_LogEdit.Controls.Add(this.button1);
+            this.gbCL_LogEdit.Controls.Add(this.cmdInjectEvent);
             this.gbCL_LogEdit.Controls.Add(this.label3);
             this.gbCL_LogEdit.Controls.Add(this.txtLogDistance);
             this.gbCL_LogEdit.Controls.Add(this.label2);
@@ -154,15 +154,16 @@
             this.gbCL_LogEdit.TabStop = false;
             this.gbCL_LogEdit.Text = "Current Data";
             // 
-            // button1
+            // cmdInjectEvent
             // 
-            this.button1.Location = new System.Drawing.Point(268, 114);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 51;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.cmdInjectEvent.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdInjectEvent.Location = new System.Drawing.Point(268, 114);
+            this.cmdInjectEvent.Name = "cmdInjectEvent";
+            this.cmdInjectEvent.Size = new System.Drawing.Size(107, 23);
+            this.cmdInjectEvent.TabIndex = 51;
+            this.cmdInjectEvent.Text = "Inject Test Event";
+            this.cmdInjectEvent.UseVisualStyleBackColor = true;
+            this.cmdInjectEvent.Click += new System.EventHandler(this.button1_Click);
             // 
             // label3
             // 
@@ -197,6 +198,7 @@
             // cmdCL_DeleteEntry
             // 
             this.cmdCL_DeleteEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCL_DeleteEntry.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCL_DeleteEntry.Enabled = false;
             this.cmdCL_DeleteEntry.Location = new System.Drawing.Point(1061, 114);
             this.cmdCL_DeleteEntry.Name = "cmdCL_DeleteEntry";
@@ -209,6 +211,7 @@
             // cmdCL_Cancel
             // 
             this.cmdCL_Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCL_Cancel.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCL_Cancel.Location = new System.Drawing.Point(1061, 62);
             this.cmdCL_Cancel.Name = "cmdCL_Cancel";
             this.cmdCL_Cancel.Size = new System.Drawing.Size(134, 23);
@@ -220,6 +223,7 @@
             // cmdCL_EditEntry
             // 
             this.cmdCL_EditEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCL_EditEntry.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCL_EditEntry.Location = new System.Drawing.Point(1061, 36);
             this.cmdCL_EditEntry.Name = "cmdCL_EditEntry";
             this.cmdCL_EditEntry.Size = new System.Drawing.Size(134, 23);
@@ -249,6 +253,7 @@
             // cmdCL_PrepareNew
             // 
             this.cmdCL_PrepareNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCL_PrepareNew.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCL_PrepareNew.Location = new System.Drawing.Point(1061, 10);
             this.cmdCL_PrepareNew.Name = "cmdCL_PrepareNew";
             this.cmdCL_PrepareNew.Size = new System.Drawing.Size(134, 23);
@@ -339,6 +344,7 @@
             // cmdCL_Save
             // 
             this.cmdCL_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdCL_Save.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCL_Save.Location = new System.Drawing.Point(1061, 88);
             this.cmdCL_Save.Name = "cmdCL_Save";
             this.cmdCL_Save.Size = new System.Drawing.Size(134, 23);
@@ -462,7 +468,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(433, 18);
+            this.label1.Location = new System.Drawing.Point(437, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 13);
             this.label1.TabIndex = 44;
@@ -681,6 +687,19 @@
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
             this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // cmdFilterReset
+            // 
+            this.cmdFilterReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdFilterReset.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdFilterReset.Enabled = false;
+            this.cmdFilterReset.Location = new System.Drawing.Point(1108, 180);
+            this.cmdFilterReset.Name = "cmdFilterReset";
+            this.cmdFilterReset.Size = new System.Drawing.Size(91, 23);
+            this.cmdFilterReset.TabIndex = 52;
+            this.cmdFilterReset.Text = "Reset All Filters";
+            this.cmdFilterReset.UseVisualStyleBackColor = false;
+            this.cmdFilterReset.Click += new System.EventHandler(this.cmdFilterReset_Click);
+            // 
             // dgvCommandersLog
             // 
             this.dgvCommandersLog.AllowUserToAddRows = false;
@@ -702,24 +721,24 @@
             this.credits_total,
             this.distance,
             this.notes});
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCommandersLog.DefaultCellStyle = dataGridViewCellStyle7;
             this.dgvCommandersLog.DoubleBuffer = true;
             this.dgvCommandersLog.Location = new System.Drawing.Point(3, 207);
             this.dgvCommandersLog.Name = "dgvCommandersLog";
-            this.dgvCommandersLog.ReadOnly = true;
             this.dgvCommandersLog.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvCommandersLog.RowTemplate.Height = 33;
             this.dgvCommandersLog.Size = new System.Drawing.Size(1202, 409);
             this.dgvCommandersLog.TabIndex = 44;
             this.dgvCommandersLog.Tag = "CommandersLog;1";
             this.dgvCommandersLog.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.dgvCommandersLog_ColumnSorted);
+            this.dgvCommandersLog.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCommandersLog_CellLeave);
             this.dgvCommandersLog.SelectionChanged += new System.EventHandler(this.dgvCommandersLog_SelectionChanged);
             this.dgvCommandersLog.Click += new System.EventHandler(this.dgvCommandersLog_Click);
             this.dgvCommandersLog.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvCommandersLog_KeyDown);
@@ -727,11 +746,10 @@
             // time
             // 
             this.time.DataPropertyName = "time";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.time.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.time.DefaultCellStyle = dataGridViewCellStyle1;
             this.time.HeaderText = "Time";
             this.time.Name = "time";
-            this.time.ReadOnly = true;
             this.time.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.time.Width = 70;
             // 
@@ -741,7 +759,6 @@
             this.systemname.DataPropertyName = "systemname";
             this.systemname.HeaderText = "System";
             this.systemname.Name = "systemname";
-            this.systemname.ReadOnly = true;
             this.systemname.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // stationname
@@ -750,7 +767,6 @@
             this.stationname.DataPropertyName = "stationname";
             this.stationname.HeaderText = "Station";
             this.stationname.Name = "stationname";
-            this.stationname.ReadOnly = true;
             this.stationname.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // eventtype
@@ -758,7 +774,6 @@
             this.eventtype.DataPropertyName = "eventtype";
             this.eventtype.HeaderText = "Event";
             this.eventtype.Name = "eventtype";
-            this.eventtype.ReadOnly = true;
             this.eventtype.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // action
@@ -766,80 +781,61 @@
             this.action.DataPropertyName = "cargoaction";
             this.action.HeaderText = "Action";
             this.action.Name = "action";
-            this.action.ReadOnly = true;
             // 
             // loccommodity
             // 
             this.loccommodity.DataPropertyName = "loccommodity";
             this.loccommodity.HeaderText = "Commodity";
             this.loccommodity.Name = "loccommodity";
-            this.loccommodity.ReadOnly = true;
             // 
             // cargovolume
             // 
             this.cargovolume.DataPropertyName = "cargovolume";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.cargovolume.DefaultCellStyle = dataGridViewCellStyle2;
             this.cargovolume.HeaderText = "Volume";
             this.cargovolume.Name = "cargovolume";
-            this.cargovolume.ReadOnly = true;
             this.cargovolume.Width = 70;
             // 
             // credits_transaction
             // 
             this.credits_transaction.DataPropertyName = "credits_transaction";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            this.credits_transaction.DefaultCellStyle = dataGridViewCellStyle3;
             this.credits_transaction.HeaderText = "Transaction";
             this.credits_transaction.Name = "credits_transaction";
-            this.credits_transaction.ReadOnly = true;
             this.credits_transaction.Width = 70;
             // 
             // credits_total
             // 
             this.credits_total.DataPropertyName = "credits_total";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle11.Format = "N0";
-            dataGridViewCellStyle11.NullValue = null;
-            this.credits_total.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = null;
+            this.credits_total.DefaultCellStyle = dataGridViewCellStyle4;
             this.credits_total.HeaderText = "Cr. total";
             this.credits_total.Name = "credits_total";
-            this.credits_total.ReadOnly = true;
             // 
             // distance
             // 
             this.distance.DataPropertyName = "distance";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
-            dataGridViewCellStyle12.Format = "N1";
-            dataGridViewCellStyle12.NullValue = null;
-            this.distance.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
+            dataGridViewCellStyle5.Format = "N1";
+            dataGridViewCellStyle5.NullValue = null;
+            this.distance.DefaultCellStyle = dataGridViewCellStyle5;
             this.distance.HeaderText = "Distance";
             this.distance.Name = "distance";
-            this.distance.ReadOnly = true;
             // 
             // notes
             // 
             this.notes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.notes.DataPropertyName = "notes";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.notes.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.notes.DefaultCellStyle = dataGridViewCellStyle6;
             this.notes.HeaderText = "notes";
             this.notes.Name = "notes";
-            this.notes.ReadOnly = true;
             this.notes.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            // 
-            // cmdFilterReset
-            // 
-            this.cmdFilterReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmdFilterReset.Enabled = false;
-            this.cmdFilterReset.Location = new System.Drawing.Point(1108, 180);
-            this.cmdFilterReset.Name = "cmdFilterReset";
-            this.cmdFilterReset.Size = new System.Drawing.Size(91, 23);
-            this.cmdFilterReset.TabIndex = 52;
-            this.cmdFilterReset.Text = "Reset All Filters";
-            this.cmdFilterReset.UseVisualStyleBackColor = false;
-            this.cmdFilterReset.Click += new System.EventHandler(this.cmdFilterReset_Click);
             // 
             // tabCommandersLog
             // 
@@ -871,15 +867,15 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gbCL_LogEdit;
-        private System.Windows.Forms.Button cmdCL_Cancel;
-        private System.Windows.Forms.Button cmdCL_EditEntry;
+        private System.Windows.Forms.ButtonExt cmdCL_Cancel;
+        private System.Windows.Forms.ButtonExt cmdCL_EditEntry;
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.Label label95;
-        public System.Windows.Forms.Button cmdCL_PrepareNew;
+        public System.Windows.Forms.ButtonExt cmdCL_PrepareNew;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TextBox tbLogNotes;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Button cmdCL_Save;
+        private System.Windows.Forms.ButtonExt cmdCL_Save;
         private System.Windows.Forms.NumericUpDown_ro nbLogQuantity;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label22;
@@ -895,7 +891,7 @@
         internal System.Windows.Forms.ComboBox_ro cbLogStationName;
         internal System.Windows.Forms.ComboBox_ro cbLogCargoName;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button cmdCL_DeleteEntry;
+        private System.Windows.Forms.ButtonExt cmdCL_DeleteEntry;
         private System.Windows.Forms.Label label3;
         internal System.Windows.Forms.TextBoxDoubleB txtLogDistance;
         private System.Windows.Forms.Label label2;
@@ -911,7 +907,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel filterStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel showAllLabel;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ButtonExt cmdInjectEvent;
         internal System.Windows.Forms.BindingNavigator bindNavCmdrsLog;
         private System.Windows.Forms.ToolStripButton bindingNavigatorAddNewItem;
         private System.Windows.Forms.ToolStripLabel bindingNavigatorCountItem;
@@ -935,6 +931,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn credits_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn distance;
         private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn notes;
-        private System.Windows.Forms.Button cmdFilterReset;
+        private System.Windows.Forms.ButtonExt cmdFilterReset;
     }
 }

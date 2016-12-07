@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUIColorsView));
-            this.cmdClose = new System.Windows.Forms.Button();
+            this.cmdClose = new System.Windows.Forms.ButtonExt();
             this.label1 = new System.Windows.Forms.Label();
             this.cbActivated = new System.Windows.Forms.CheckBox();
-            this.cmdResetColors = new System.Windows.Forms.Button();
+            this.cmdResetColors = new System.Windows.Forms.ButtonExt();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.paColor_0 = new System.Windows.Forms.Panel();
@@ -221,9 +221,9 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Panel paColor_0;
         private System.Windows.Forms.PictureBox pbColor_0;
-        private System.Windows.Forms.Button cmdClose;
+        private System.Windows.Forms.ButtonExt cmdClose;
         private System.Windows.Forms.Label lblColorName_0;
-        private System.Windows.Forms.Button cmdResetColors;
+        private System.Windows.Forms.ButtonExt cmdResetColors;
         private System.Windows.Forms.CheckBox cbActivated;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;

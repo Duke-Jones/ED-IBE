@@ -28,8 +28,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FilterTest));
             this.nudCutoffValue = new System.Windows.Forms.NumericUpDown();
-            this.cmdSaveClose = new System.Windows.Forms.Button();
-            this.cmdClose = new System.Windows.Forms.Button();
+            this.cmdSaveClose = new System.Windows.Forms.ButtonExt();
+            this.cmdClose = new System.Windows.Forms.ButtonExt();
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.paPicturePanel = new System.Windows.Forms.Panel();
             this.pbPicture = new System.Windows.Forms.PictureBox();
@@ -261,8 +261,8 @@
         #endregion
 
         private System.Windows.Forms.NumericUpDown nudCutoffValue;
-        private System.Windows.Forms.Button cmdSaveClose;
-        private System.Windows.Forms.Button cmdClose;
+        private System.Windows.Forms.ButtonExt cmdSaveClose;
+        private System.Windows.Forms.ButtonExt cmdClose;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
         private System.Windows.Forms.Panel paPicturePanel;
         private System.Windows.Forms.PictureBox pbPicture;

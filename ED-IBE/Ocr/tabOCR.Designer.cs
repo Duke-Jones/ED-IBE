@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.bManualLoadImage = new System.Windows.Forms.Button();
+            this.bManualLoadImage = new System.Windows.Forms.ButtonExt();
             this.lblScreenshotsQueued = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.ButtonExt();
             this.pbStation = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.pbTrimmed = new System.Windows.Forms.PictureBox();
@@ -39,13 +39,13 @@
             this.pbOriginalImage = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.bIgnoreTrash = new System.Windows.Forms.Button();
-            this.bClearOcrOutput = new System.Windows.Forms.Button();
-            this.bEditResults = new System.Windows.Forms.Button();
+            this.bIgnoreTrash = new System.Windows.Forms.ButtonExt();
+            this.bClearOcrOutput = new System.Windows.Forms.ButtonExt();
+            this.bEditResults = new System.Windows.Forms.ButtonExt();
             this.cbAutoImport = new System.Windows.Forms.CheckBox();
             this.cbDeleteScreenshotOnImport = new System.Windows.Forms.CheckBox();
             this.cbStartOCROnLoad = new System.Windows.Forms.CheckBox();
-            this.cmdHint = new System.Windows.Forms.Button();
+            this.cmdHint = new System.Windows.Forms.ButtonExt();
             this.label36 = new System.Windows.Forms.Label();
             this.label35 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             this.label32 = new System.Windows.Forms.Label();
             this.tbOcrSystemName = new System.Windows.Forms.TextBox();
             this.tbFinalOcrOutput = new System.Windows.Forms.TextBox();
-            this.bContinueOcr = new System.Windows.Forms.Button();
+            this.bContinueOcr = new System.Windows.Forms.ButtonExt();
             this.tbConfidence = new System.Windows.Forms.TextBox();
             this.tbCommoditiesOcrOutput = new System.Windows.Forms.TextBox();
             this.pbOcrCurrent = new System.Windows.Forms.PictureBox();
@@ -421,9 +421,9 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button bManualLoadImage;
+        private System.Windows.Forms.ButtonExt bManualLoadImage;
         private System.Windows.Forms.Label lblScreenshotsQueued;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ButtonExt button2;
         private System.Windows.Forms.PictureBox pbStation;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.PictureBox pbTrimmed;
@@ -431,13 +431,13 @@
         public System.Windows.Forms.PictureBox pbOriginalImage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button bIgnoreTrash;
-        private System.Windows.Forms.Button bClearOcrOutput;
-        private System.Windows.Forms.Button bEditResults;
+        private System.Windows.Forms.ButtonExt bIgnoreTrash;
+        private System.Windows.Forms.ButtonExt bClearOcrOutput;
+        private System.Windows.Forms.ButtonExt bEditResults;
         private System.Windows.Forms.CheckBox cbAutoImport;
         private System.Windows.Forms.CheckBox cbDeleteScreenshotOnImport;
         private System.Windows.Forms.CheckBox cbStartOCROnLoad;
-        private System.Windows.Forms.Button cmdHint;
+        private System.Windows.Forms.ButtonExt cmdHint;
         private System.Windows.Forms.Label label36;
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.Label label34;
@@ -445,7 +445,7 @@
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.TextBox tbOcrSystemName;
         private System.Windows.Forms.TextBox tbFinalOcrOutput;
-        private System.Windows.Forms.Button bContinueOcr;
+        private System.Windows.Forms.ButtonExt bContinueOcr;
         private System.Windows.Forms.TextBox tbConfidence;
         private System.Windows.Forms.TextBox tbCommoditiesOcrOutput;
         private System.Windows.Forms.PictureBox pbOcrCurrent;

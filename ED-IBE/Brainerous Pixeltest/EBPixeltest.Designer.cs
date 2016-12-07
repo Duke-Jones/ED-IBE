@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EBPixeltest));
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.ButtonExt();
             this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -88,7 +88,7 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.ButtonExt btnOK;
         private System.Windows.Forms.Label label1;
     }
 }

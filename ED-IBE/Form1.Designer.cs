@@ -102,6 +102,7 @@
             this.tbCurrentSystemFromLogs = new System.Windows.Forms.TextBox();
             this.tabCtrlMain = new System.Windows.Forms.TabControl();
             this.tabHelpAndChangeLog = new System.Windows.Forms.TabPage();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.label93 = new System.Windows.Forms.Label();
             this.label92 = new System.Windows.Forms.Label();
             this.label91 = new System.Windows.Forms.Label();
@@ -249,6 +250,7 @@
             this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
             this.label8 = new System.Windows.Forms.Label();
             this.tbCurrentBodyinfoFromLogs = new System.Windows.Forms.TextBox();
+            this.gradientButton1 = new System.Windows.Forms.GradientButton();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
@@ -979,6 +981,7 @@
             // 
             // tabHelpAndChangeLog
             // 
+            this.tabHelpAndChangeLog.Controls.Add(this.listBox1);
             this.tabHelpAndChangeLog.Controls.Add(this.label93);
             this.tabHelpAndChangeLog.Controls.Add(this.label92);
             this.tabHelpAndChangeLog.Controls.Add(this.label91);
@@ -1001,6 +1004,13 @@
             this.tabHelpAndChangeLog.TabIndex = 9;
             this.tabHelpAndChangeLog.Text = "Help and Changelog";
             this.tabHelpAndChangeLog.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(120, 95);
+            this.listBox1.TabIndex = 0;
             // 
             // label93
             // 
@@ -2660,12 +2670,24 @@
             this.tbCurrentBodyinfoFromLogs.Size = new System.Drawing.Size(255, 20);
             this.tbCurrentBodyinfoFromLogs.TabIndex = 76;
             // 
+            // gradientButton1
+            // 
+            this.gradientButton1.BorderStyle = System.Windows.Forms.Border3DStyle.Raised;
+            this.gradientButton1.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.gradientButton1.Location = new System.Drawing.Point(704, 97);
+            this.gradientButton1.Name = "gradientButton1";
+            this.gradientButton1.Size = new System.Drawing.Size(99, 38);
+            this.gradientButton1.StartColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.gradientButton1.TabIndex = 78;
+            this.gradientButton1.Text = "gradientButton1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 746);
+            this.Controls.Add(this.gradientButton1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.tbCurrentBodyinfoFromLogs);
             this.Controls.Add(this.StatusStrip1);
@@ -2972,6 +2994,8 @@
         private System.Windows.Forms.ToolStripMenuItem exportListOfVisitedSystemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
+        private System.Windows.Forms.GradientButton gradientButton1;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

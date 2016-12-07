@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using IBE.Enums_and_Utility_Classes;
-
+using System.Drawing.Drawing2D;
 
 namespace System.Windows.Forms
 {
@@ -444,6 +444,154 @@ namespace System.Windows.Forms
     }
     public class ButtonExt : Button
     {
+        Color disabledTextColor = Color.DimGray;
+
+        public Color DisabledTextColor
+        {
+            get
+            {
+                return disabledTextColor;
+            }
+            set
+            {
+                disabledTextColor = value;
+            }
+        }
+
+        protected override void OnPaint(PaintEventArgs pevent)
+        {
+           base.OnPaint(pevent);
+
+            LinearGradientBrush br = new LinearGradientBrush(ClientRectangle, Color.White, Color.White, LinearGradientMode.Vertical);
+
+			//ColorBlend cb = new ColorBlend();
+			//cb.Colors = GetFillBlend()
+			//cb.Positions = ColorFillBlend.iPoint
+			//'MsgBox(cb.Colors.Length & cb.Positions.Length)
+			//br.InterpolationColors = cb
+
+			//pevent.Graphics.FillPath(br, )
+
+            if((!this.Enabled) && (!this.UseVisualStyleBackColor))
+            {
+                pevent.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                pevent.Graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+               
+
+                // Draw the string to screen
+                StringFormat drawFormat     = GetStringFormatFromContentAllignment(this.TextAlign);
+                
+                drawFormat.FormatFlags      = StringFormatFlags.LineLimit;
+                drawFormat.FormatFlags      |= StringFormatFlags.FitBlackBox;
+                
+                Rectangle textBlock         = new Rectangle(ClientRectangle.X + 2, ClientRectangle.Y + 2, ClientRectangle.Width - 4, ClientRectangle.Height - 4);
+                //g.DrawString(this.Text, this.Font, Brushes.White, textBlock, drawFormat);
+                //pevent.Graphics.DrawString(this.Text, this.Font, new SolidBrush(disabledTextColor), textBlock, drawFormat);
+                
+                TextRenderer.DrawText(pevent.Graphics, Text, Font,textBlock, disabledTextColor, BackColor, GetTextFormatFlagsFromContentAllignment(this.TextAlign) |  TextFormatFlags.WordBreak);
+
+                if(Text.StartsWith("Export Market"))
+                    Diagnostics.Debug.Print("");
+
+
+                //SizeF sf = pevent.Graphics.MeasureString(this.Text, this.Font, 
+                //                                         this.Width);
+                //Point ThePoint = new Point();
+                //ThePoint.X = (int)((this.Width / 2) - (sf.Width / 2));
+                //ThePoint.Y = (int)((this.Height / 2) - (sf.Height / 2));
+                //pevent.Graphics.DrawString(this.Text, Font, 
+                //          new SolidBrush(disabledTextColor), ThePoint);
+            }
+             else if(Text.StartsWith("Export Market"))
+                    Diagnostics.Debug.Print("");
+        }
+
+        private TextFormatFlags GetTextFormatFlagsFromContentAllignment(ContentAlignment ca)
+        {
+            TextFormatFlags format;
+
+            switch (ca)
+            {
+                case ContentAlignment.TopCenter:
+                    format = TextFormatFlags.Top | TextFormatFlags.HorizontalCenter;
+                    break;
+                case ContentAlignment.TopLeft:
+                    format = TextFormatFlags.Top | TextFormatFlags.Left;
+                    break;
+                case ContentAlignment.TopRight:
+                    format = TextFormatFlags.Top | TextFormatFlags.Right;
+                    break;
+                case ContentAlignment.MiddleCenter:
+                    format = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter;
+                    break;
+                case ContentAlignment.MiddleLeft:
+                    format = TextFormatFlags.VerticalCenter | TextFormatFlags.Left;
+                    break;
+                case ContentAlignment.MiddleRight:
+                    format = TextFormatFlags.VerticalCenter | TextFormatFlags.Right;
+                    break;
+                case ContentAlignment.BottomCenter:
+                    format = TextFormatFlags.Bottom | TextFormatFlags.HorizontalCenter;
+                    break;
+                case ContentAlignment.BottomLeft:
+                    format = TextFormatFlags.Bottom | TextFormatFlags.Left;
+                    break;
+                case ContentAlignment.BottomRight:
+                    format = TextFormatFlags.Bottom | TextFormatFlags.Right;
+                    break;
+                default:
+                    format = TextFormatFlags.Default;
+                    break;
+            }
+
+            return format;
+        }
+
+        private StringFormat GetStringFormatFromContentAllignment(ContentAlignment ca)
+        {
+            StringFormat format = new StringFormat();
+            switch (ca)
+            {
+                case ContentAlignment.TopCenter:
+                    format.Alignment = StringAlignment.Near;
+                    format.LineAlignment = StringAlignment.Center;
+                    break;
+                case ContentAlignment.TopLeft:
+                    format.Alignment = StringAlignment.Near;
+                    format.LineAlignment = StringAlignment.Near;
+                    break;
+                case ContentAlignment.TopRight:
+                    format.Alignment = StringAlignment.Near;
+                    format.LineAlignment = StringAlignment.Far;
+                    break;
+                case ContentAlignment.MiddleCenter:
+                    format.Alignment = StringAlignment.Center;
+                    format.LineAlignment = StringAlignment.Center;
+                    break;
+                case ContentAlignment.MiddleLeft:
+                    format.Alignment = StringAlignment.Center;
+                    format.LineAlignment = StringAlignment.Near;
+                    break;
+                case ContentAlignment.MiddleRight:
+                    format.Alignment = StringAlignment.Center;
+                    format.LineAlignment = StringAlignment.Far;
+                    break;
+                case ContentAlignment.BottomCenter:
+                    format.Alignment = StringAlignment.Far;
+                    format.LineAlignment = StringAlignment.Center;
+                    break;
+                case ContentAlignment.BottomLeft:
+                    format.Alignment = StringAlignment.Far;
+                    format.LineAlignment = StringAlignment.Near;
+                    break;
+                case ContentAlignment.BottomRight:
+                    format.Alignment = StringAlignment.Far;
+                    format.LineAlignment = StringAlignment.Far;
+                    break;
+            }
+            return format;
+        }
+
 
     }
 }

@@ -33,10 +33,10 @@
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.gbTesseract = new System.Windows.Forms.GroupBox();
             this.txtOCRTraineddataFile = new System.Windows.Forms.TextBox();
-            this.cmdSelectTraineddataFile = new System.Windows.Forms.Button();
+            this.cmdSelectTraineddataFile = new System.Windows.Forms.ButtonExt();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.cmdFilter = new System.Windows.Forms.Button();
+            this.cmdFilter = new System.Windows.Forms.ButtonExt();
             this.label50 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
             this.txtGUIColorCutoffLevel = new System.Windows.Forms.TextBoxInt32();
@@ -48,6 +48,7 @@
             this.lblPixelThreshold = new System.Windows.Forms.Label();
             this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cbAutoAdd_MissionAccepted = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Liftoff = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Touchdown = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Scan = new System.Windows.Forms.CheckBox();
@@ -62,13 +63,13 @@
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.cbAutoActivateSystemTab = new System.Windows.Forms.CheckBox();
             this.cbAutoActivateOCRTab = new System.Windows.Forms.CheckBox();
-            this.button6 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.ButtonExt();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label25 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.txtSQLConnectionPort = new System.Windows.Forms.TextBoxInt32();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.cmdChangeSQLPort = new System.Windows.Forms.Button();
+            this.cmdChangeSQLPort = new System.Windows.Forms.ButtonExt();
             this.label7 = new System.Windows.Forms.Label();
             this.gbVNCTest = new System.Windows.Forms.GroupBox();
             this.cbActivateVNC = new System.Windows.Forms.CheckBox();
@@ -86,11 +87,14 @@
             this.gbDataInterface = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.txtGamePath = new System.Windows.Forms.TextBox();
-            this.cmdGamePath = new System.Windows.Forms.Button();
+            this.cmdGamePath = new System.Windows.Forms.ButtonExt();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtJournalPath = new System.Windows.Forms.TextBox();
-            this.cmdJournalPath = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cmdJournalPath = new System.Windows.Forms.ButtonExt();
+            this.cbAutoAdd_MissionCompleted = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_MissionFailed = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_MissionAbandoned = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_LoadGame = new System.Windows.Forms.CheckBox();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -145,6 +149,7 @@
             // 
             // cmdSelectTraineddataFile
             // 
+            this.cmdSelectTraineddataFile.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdSelectTraineddataFile.Location = new System.Drawing.Point(346, 30);
             this.cmdSelectTraineddataFile.Name = "cmdSelectTraineddataFile";
             this.cmdSelectTraineddataFile.Size = new System.Drawing.Size(176, 23);
@@ -177,6 +182,7 @@
             // 
             // cmdFilter
             // 
+            this.cmdFilter.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdFilter.Location = new System.Drawing.Point(350, 107);
             this.cmdFilter.Name = "cmdFilter";
             this.cmdFilter.Size = new System.Drawing.Size(176, 23);
@@ -297,7 +303,11 @@
             // 
             // groupBox10
             // 
-            this.groupBox10.Controls.Add(this.checkBox1);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_LoadGame);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_MissionAbandoned);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_MissionFailed);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_MissionCompleted);
+            this.groupBox10.Controls.Add(this.cbAutoAdd_MissionAccepted);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Liftoff);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Touchdown);
             this.groupBox10.Controls.Add(this.cbAutoAdd_Scan);
@@ -312,6 +322,17 @@
             this.groupBox10.TabIndex = 12;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
+            // 
+            // cbAutoAdd_MissionAccepted
+            // 
+            this.cbAutoAdd_MissionAccepted.AutoSize = true;
+            this.cbAutoAdd_MissionAccepted.Location = new System.Drawing.Point(31, 203);
+            this.cbAutoAdd_MissionAccepted.Name = "cbAutoAdd_MissionAccepted";
+            this.cbAutoAdd_MissionAccepted.Size = new System.Drawing.Size(148, 17);
+            this.cbAutoAdd_MissionAccepted.TabIndex = 8;
+            this.cbAutoAdd_MissionAccepted.Tag = "AutoAdd_MissionAccepted;true";
+            this.cbAutoAdd_MissionAccepted.Text = "\"MissionAccepted\"-Event";
+            this.cbAutoAdd_MissionAccepted.UseVisualStyleBackColor = true;
             // 
             // cbAutoAdd_Liftoff
             // 
@@ -478,6 +499,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button6.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button6.Location = new System.Drawing.Point(32, 80);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
@@ -548,6 +570,7 @@
             // 
             // cmdChangeSQLPort
             // 
+            this.cmdChangeSQLPort.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdChangeSQLPort.Location = new System.Drawing.Point(139, 22);
             this.cmdChangeSQLPort.Name = "cmdChangeSQLPort";
             this.cmdChangeSQLPort.Size = new System.Drawing.Size(55, 23);
@@ -766,6 +789,7 @@
             // cmdGamePath
             // 
             this.cmdGamePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdGamePath.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdGamePath.Location = new System.Drawing.Point(383, 36);
             this.cmdGamePath.Name = "cmdGamePath";
             this.cmdGamePath.Size = new System.Drawing.Size(102, 23);
@@ -798,6 +822,7 @@
             // cmdJournalPath
             // 
             this.cmdJournalPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmdJournalPath.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdJournalPath.Location = new System.Drawing.Point(383, 36);
             this.cmdJournalPath.Name = "cmdJournalPath";
             this.cmdJournalPath.Size = new System.Drawing.Size(102, 23);
@@ -806,16 +831,50 @@
             this.cmdJournalPath.UseVisualStyleBackColor = true;
             this.cmdJournalPath.Click += new System.EventHandler(this.cmdJournalPath_Click);
             // 
-            // checkBox1
+            // cbAutoAdd_MissionCompleted
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(31, 203);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(148, 17);
-            this.checkBox1.TabIndex = 8;
-            this.checkBox1.Tag = "AutoAdd_MissionAccepted;true";
-            this.checkBox1.Text = "\"MissionAccepted\"-Event";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_MissionCompleted.AutoSize = true;
+            this.cbAutoAdd_MissionCompleted.Location = new System.Drawing.Point(31, 226);
+            this.cbAutoAdd_MissionCompleted.Name = "cbAutoAdd_MissionCompleted";
+            this.cbAutoAdd_MissionCompleted.Size = new System.Drawing.Size(152, 17);
+            this.cbAutoAdd_MissionCompleted.TabIndex = 9;
+            this.cbAutoAdd_MissionCompleted.Tag = "AutoAdd_MissionCompleted;true";
+            this.cbAutoAdd_MissionCompleted.Text = "\"MissionCompleted\"-Event";
+            this.cbAutoAdd_MissionCompleted.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_MissionCompleted.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // cbAutoAdd_MissionFailed
+            // 
+            this.cbAutoAdd_MissionFailed.AutoSize = true;
+            this.cbAutoAdd_MissionFailed.Location = new System.Drawing.Point(31, 249);
+            this.cbAutoAdd_MissionFailed.Name = "cbAutoAdd_MissionFailed";
+            this.cbAutoAdd_MissionFailed.Size = new System.Drawing.Size(130, 17);
+            this.cbAutoAdd_MissionFailed.TabIndex = 10;
+            this.cbAutoAdd_MissionFailed.Tag = "AutoAdd_MissionFailed;true";
+            this.cbAutoAdd_MissionFailed.Text = "\"MissionFailed\"-Event";
+            this.cbAutoAdd_MissionFailed.UseVisualStyleBackColor = true;
+            // 
+            // cbAutoAdd_MissionAbandoned
+            // 
+            this.cbAutoAdd_MissionAbandoned.AutoSize = true;
+            this.cbAutoAdd_MissionAbandoned.Location = new System.Drawing.Point(31, 272);
+            this.cbAutoAdd_MissionAbandoned.Name = "cbAutoAdd_MissionAbandoned";
+            this.cbAutoAdd_MissionAbandoned.Size = new System.Drawing.Size(157, 17);
+            this.cbAutoAdd_MissionAbandoned.TabIndex = 11;
+            this.cbAutoAdd_MissionAbandoned.Tag = "AutoAdd_MissionAbandoned;true";
+            this.cbAutoAdd_MissionAbandoned.Text = "\"MissionAbandoned\"-Event";
+            this.cbAutoAdd_MissionAbandoned.UseVisualStyleBackColor = true;
+            // 
+            // cbAutoAdd_LoadGame
+            // 
+            this.cbAutoAdd_LoadGame.AutoSize = true;
+            this.cbAutoAdd_LoadGame.Location = new System.Drawing.Point(31, 295);
+            this.cbAutoAdd_LoadGame.Name = "cbAutoAdd_LoadGame";
+            this.cbAutoAdd_LoadGame.Size = new System.Drawing.Size(119, 17);
+            this.cbAutoAdd_LoadGame.TabIndex = 12;
+            this.cbAutoAdd_LoadGame.Tag = "AutoAdd_LoadGame;true";
+            this.cbAutoAdd_LoadGame.Text = "\"LoadGame\"-Event";
+            this.cbAutoAdd_LoadGame.UseVisualStyleBackColor = true;
             // 
             // IBESettingsView
             // 
@@ -875,7 +934,7 @@
 
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.Button cmdFilter;
+        private System.Windows.Forms.ButtonExt cmdFilter;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.TextBoxInt32 txtGUIColorCutoffLevel;
@@ -887,7 +946,7 @@
         private System.Windows.Forms.Label lblPixelThreshold;
         private System.Windows.Forms.TextBoxDouble txtOCRPixelThreshold;
         private System.Windows.Forms.TextBox txtOCRTraineddataFile;
-        private System.Windows.Forms.Button cmdSelectTraineddataFile;
+        private System.Windows.Forms.ButtonExt cmdSelectTraineddataFile;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.CheckBox cbAutoAdd_ReplaceVisited;
@@ -901,7 +960,7 @@
         private System.Windows.Forms.GroupBox groupBox12;
         private System.Windows.Forms.CheckBox cbAutoActivateSystemTab;
         private System.Windows.Forms.CheckBox cbAutoActivateOCRTab;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.ButtonExt button6;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.ComboBoxInt32 cmbVisitedFilter;
@@ -911,7 +970,7 @@
         private System.Windows.Forms.GroupBox gbDataInterface;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox txtGamePath;
-        private System.Windows.Forms.Button cmdGamePath;
+        private System.Windows.Forms.ButtonExt cmdGamePath;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.RadioButton rbNoDistanceToStarConsider;
         private System.Windows.Forms.RadioButton rbNoDistanceToStarIgnore;
@@ -919,7 +978,7 @@
         private System.Windows.Forms.RadioButton rbNoLandingPadSizeConsider;
         private System.Windows.Forms.RadioButton rbNoLandingPadSizeIgnore;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button cmdChangeSQLPort;
+        private System.Windows.Forms.ButtonExt cmdChangeSQLPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBoxInt32 txtSQLConnectionPort;
         private System.Windows.Forms.GroupBox groupBox13;
@@ -929,10 +988,14 @@
         private System.Windows.Forms.CheckBox cbActivateVNC;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtJournalPath;
-        private System.Windows.Forms.Button cmdJournalPath;
+        private System.Windows.Forms.ButtonExt cmdJournalPath;
         private System.Windows.Forms.CheckBox cbAutoAdd_Scan;
         private System.Windows.Forms.CheckBox cbAutoAdd_Liftoff;
         private System.Windows.Forms.CheckBox cbAutoAdd_Touchdown;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox cbAutoAdd_MissionAccepted;
+        private System.Windows.Forms.CheckBox cbAutoAdd_MissionAbandoned;
+        private System.Windows.Forms.CheckBox cbAutoAdd_MissionFailed;
+        private System.Windows.Forms.CheckBox cbAutoAdd_MissionCompleted;
+        private System.Windows.Forms.CheckBox cbAutoAdd_LoadGame;
     }
 }

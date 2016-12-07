@@ -31,8 +31,8 @@ namespace IBE.EDDB_Data
         /// </summary>
         private void InitializeComponent()
         {
-            this.cmdCancel = new System.Windows.Forms.Button();
-            this.cmdOk = new System.Windows.Forms.Button();
+            this.cmdCancel = new System.Windows.Forms.ButtonExt();
+            this.cmdOk = new System.Windows.Forms.ButtonExt();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -58,7 +58,7 @@ namespace IBE.EDDB_Data
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.cmdCommodity = new System.Windows.Forms.ComboBox();
-            this.cmdFullList = new System.Windows.Forms.Button();
+            this.cmdFullList = new System.Windows.Forms.ButtonExt();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();

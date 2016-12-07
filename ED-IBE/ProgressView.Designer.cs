@@ -30,7 +30,7 @@
         {
             this.lblProgress = new System.Windows.Forms.Label();
             this.lblInfotext = new System.Windows.Forms.Label();
-            this.cmdCancel = new System.Windows.Forms.Button();
+            this.cmdCancel = new System.Windows.Forms.ButtonExt();
             this.ProgressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
@@ -102,7 +102,7 @@
 
         internal System.Windows.Forms.Label lblProgress;
         internal System.Windows.Forms.Label lblInfotext;
-        internal System.Windows.Forms.Button cmdCancel;
+        internal System.Windows.Forms.ButtonExt cmdCancel;
         internal System.Windows.Forms.ProgressBar ProgressBar1;
     }
 }

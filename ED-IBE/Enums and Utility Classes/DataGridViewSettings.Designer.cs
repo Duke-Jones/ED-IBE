@@ -33,8 +33,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.cmdOk = new System.Windows.Forms.Button();
-            this.cmdCancel = new System.Windows.Forms.Button();
+            this.cmdOk = new System.Windows.Forms.ButtonExt();
+            this.cmdCancel = new System.Windows.Forms.ButtonExt();
             this.dgvColumns = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCaption = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -187,8 +187,8 @@
         #endregion
 
         private DataGridViewExt dgvColumns;
-        private System.Windows.Forms.Button cmdOk;
-        private System.Windows.Forms.Button cmdCancel;
+        private System.Windows.Forms.ButtonExt cmdOk;
+        private System.Windows.Forms.ButtonExt cmdCancel;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCaption;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDisplayIndex;

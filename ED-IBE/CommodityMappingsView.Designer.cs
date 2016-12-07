@@ -35,8 +35,8 @@ namespace IBE
             this.dsEliteDB = new IBE.SQL.Datasets.dsEliteDB();
             this.tbdnmapcommodityBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tbdnmap_commodityTableAdapter = new IBE.SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter();
-            this.cmdOK = new System.Windows.Forms.Button();
-            this.cmdCancel = new System.Windows.Forms.Button();
+            this.cmdOK = new System.Windows.Forms.ButtonExt();
+            this.cmdCancel = new System.Windows.Forms.ButtonExt();
             this.dgvMappings = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.companionNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.companionAdditionDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -156,8 +156,8 @@ namespace IBE
         #endregion
 
         private DataGridViewExt dgvMappings;
-        private System.Windows.Forms.Button cmdCancel;
-        private System.Windows.Forms.Button cmdOK;
+        private System.Windows.Forms.ButtonExt cmdCancel;
+        private System.Windows.Forms.ButtonExt cmdOK;
         private SQL.Datasets.dsEliteDB dsEliteDB;
         private SQL.Datasets.dsEliteDBTableAdapters.tbdnmap_commodityTableAdapter tbdnmap_commodityTableAdapter;
         private System.Windows.Forms.BindingSource tbdnmapcommodityBindingSource;
