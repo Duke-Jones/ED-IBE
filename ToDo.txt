@@ -21,13 +21,21 @@ todo:
 * preset today/7 days for date filter cmdrs log
 * view system data after a jump
 * info filter : select a string and activate contains filter
+* remeber last files analysed from eddb: if already analysed do directly the import of 20ly prices
+* routing trading: find best stations on a route
 
 *************************************************************************************
 
 
 done:
   
-            
+
+  * added switch on settings windows for switching splash screen in the background by default
+  * it's now possible to start ED-IBE in the background
+  * fix: sometimes crashes when change the quick decision switch for commodity upload to EDDN
+  * fix: rare crash when refreshing Commander's Log with filtered data
+-------------------------------------------------------------------------------------         
+v0.5.7
   * added events "MissionFailed" and "LoadGame" for Commander's Log
   * text of disabled buttons is now visible, even if using changed colors  
 -------------------------------------------------------------------------------------         

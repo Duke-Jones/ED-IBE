@@ -48,6 +48,10 @@
             this.lblPixelThreshold = new System.Windows.Forms.Label();
             this.txtOCRPixelThreshold = new System.Windows.Forms.TextBoxDouble();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cbAutoAdd_LoadGame = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_MissionAbandoned = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_MissionFailed = new System.Windows.Forms.CheckBox();
+            this.cbAutoAdd_MissionCompleted = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_MissionAccepted = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Liftoff = new System.Windows.Forms.CheckBox();
             this.cbAutoAdd_Touchdown = new System.Windows.Forms.CheckBox();
@@ -57,7 +61,6 @@
             this.cbAutoAdd_Visited = new System.Windows.Forms.CheckBox();
             this.label49 = new System.Windows.Forms.Label();
             this.cbAutoAdd_JumpedTo = new System.Windows.Forms.CheckBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label48 = new System.Windows.Forms.Label();
             this.cmbLanguage = new System.Windows.Forms.ComboBox();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
@@ -68,7 +71,6 @@
             this.label25 = new System.Windows.Forms.Label();
             this.cmbVisitedFilter = new System.Windows.Forms.ComboBoxInt32();
             this.txtSQLConnectionPort = new System.Windows.Forms.TextBoxInt32();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.cmdChangeSQLPort = new System.Windows.Forms.ButtonExt();
             this.label7 = new System.Windows.Forms.Label();
             this.gbVNCTest = new System.Windows.Forms.GroupBox();
@@ -91,18 +93,14 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtJournalPath = new System.Windows.Forms.TextBox();
             this.cmdJournalPath = new System.Windows.Forms.ButtonExt();
-            this.cbAutoAdd_MissionCompleted = new System.Windows.Forms.CheckBox();
-            this.cbAutoAdd_MissionFailed = new System.Windows.Forms.CheckBox();
-            this.cbAutoAdd_MissionAbandoned = new System.Windows.Forms.CheckBox();
-            this.cbAutoAdd_LoadGame = new System.Windows.Forms.CheckBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.cbAutoMinimize = new System.Windows.Forms.CheckBox();
             this.groupBox6.SuspendLayout();
             this.gbTesseract.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            this.groupBox8.SuspendLayout();
             this.groupBox12.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.gbVNCTest.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox13.SuspendLayout();
@@ -111,6 +109,7 @@
             this.gbDataInterface.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox14.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox6
@@ -316,12 +315,57 @@
             this.groupBox10.Controls.Add(this.cbAutoAdd_Visited);
             this.groupBox10.Controls.Add(this.label49);
             this.groupBox10.Controls.Add(this.cbAutoAdd_JumpedTo);
-            this.groupBox10.Location = new System.Drawing.Point(12, 12);
+            this.groupBox10.Location = new System.Drawing.Point(12, 188);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(385, 499);
+            this.groupBox10.Size = new System.Drawing.Size(385, 392);
             this.groupBox10.TabIndex = 12;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Commander\'s Log";
+            // 
+            // cbAutoAdd_LoadGame
+            // 
+            this.cbAutoAdd_LoadGame.AutoSize = true;
+            this.cbAutoAdd_LoadGame.Location = new System.Drawing.Point(31, 295);
+            this.cbAutoAdd_LoadGame.Name = "cbAutoAdd_LoadGame";
+            this.cbAutoAdd_LoadGame.Size = new System.Drawing.Size(119, 17);
+            this.cbAutoAdd_LoadGame.TabIndex = 12;
+            this.cbAutoAdd_LoadGame.Tag = "AutoAdd_LoadGame;true";
+            this.cbAutoAdd_LoadGame.Text = "\"LoadGame\"-Event";
+            this.cbAutoAdd_LoadGame.UseVisualStyleBackColor = true;
+            // 
+            // cbAutoAdd_MissionAbandoned
+            // 
+            this.cbAutoAdd_MissionAbandoned.AutoSize = true;
+            this.cbAutoAdd_MissionAbandoned.Location = new System.Drawing.Point(31, 272);
+            this.cbAutoAdd_MissionAbandoned.Name = "cbAutoAdd_MissionAbandoned";
+            this.cbAutoAdd_MissionAbandoned.Size = new System.Drawing.Size(157, 17);
+            this.cbAutoAdd_MissionAbandoned.TabIndex = 11;
+            this.cbAutoAdd_MissionAbandoned.Tag = "AutoAdd_MissionAbandoned;true";
+            this.cbAutoAdd_MissionAbandoned.Text = "\"MissionAbandoned\"-Event";
+            this.cbAutoAdd_MissionAbandoned.UseVisualStyleBackColor = true;
+            // 
+            // cbAutoAdd_MissionFailed
+            // 
+            this.cbAutoAdd_MissionFailed.AutoSize = true;
+            this.cbAutoAdd_MissionFailed.Location = new System.Drawing.Point(31, 249);
+            this.cbAutoAdd_MissionFailed.Name = "cbAutoAdd_MissionFailed";
+            this.cbAutoAdd_MissionFailed.Size = new System.Drawing.Size(130, 17);
+            this.cbAutoAdd_MissionFailed.TabIndex = 10;
+            this.cbAutoAdd_MissionFailed.Tag = "AutoAdd_MissionFailed;true";
+            this.cbAutoAdd_MissionFailed.Text = "\"MissionFailed\"-Event";
+            this.cbAutoAdd_MissionFailed.UseVisualStyleBackColor = true;
+            // 
+            // cbAutoAdd_MissionCompleted
+            // 
+            this.cbAutoAdd_MissionCompleted.AutoSize = true;
+            this.cbAutoAdd_MissionCompleted.Location = new System.Drawing.Point(31, 226);
+            this.cbAutoAdd_MissionCompleted.Name = "cbAutoAdd_MissionCompleted";
+            this.cbAutoAdd_MissionCompleted.Size = new System.Drawing.Size(152, 17);
+            this.cbAutoAdd_MissionCompleted.TabIndex = 9;
+            this.cbAutoAdd_MissionCompleted.Tag = "AutoAdd_MissionCompleted;true";
+            this.cbAutoAdd_MissionCompleted.Text = "\"MissionCompleted\"-Event";
+            this.cbAutoAdd_MissionCompleted.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_MissionCompleted.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // cbAutoAdd_MissionAccepted
             // 
@@ -427,21 +471,10 @@
             this.cbAutoAdd_JumpedTo.UseVisualStyleBackColor = true;
             this.cbAutoAdd_JumpedTo.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.label48);
-            this.groupBox8.Controls.Add(this.cmbLanguage);
-            this.groupBox8.Location = new System.Drawing.Point(403, 12);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(501, 45);
-            this.groupBox8.TabIndex = 13;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Language";
-            // 
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(8, 16);
+            this.label48.Location = new System.Drawing.Point(29, 80);
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(255, 13);
             this.label48.TabIndex = 1;
@@ -451,7 +484,7 @@
             // 
             this.cmbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbLanguage.FormattingEnabled = true;
-            this.cmbLanguage.Location = new System.Drawing.Point(269, 13);
+            this.cmbLanguage.Location = new System.Drawing.Point(290, 77);
             this.cmbLanguage.Name = "cmbLanguage";
             this.cmbLanguage.Size = new System.Drawing.Size(75, 21);
             this.cmbLanguage.TabIndex = 0;
@@ -463,9 +496,9 @@
             this.groupBox12.Controls.Add(this.cbAutoActivateSystemTab);
             this.groupBox12.Controls.Add(this.cbAutoActivateOCRTab);
             this.groupBox12.Controls.Add(this.button6);
-            this.groupBox12.Location = new System.Drawing.Point(403, 380);
+            this.groupBox12.Location = new System.Drawing.Point(403, 329);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(501, 132);
+            this.groupBox12.Size = new System.Drawing.Size(501, 251);
             this.groupBox12.TabIndex = 14;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Other";
@@ -500,7 +533,7 @@
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button6.DisabledTextColor = System.Drawing.Color.DimGray;
-            this.button6.Location = new System.Drawing.Point(32, 80);
+            this.button6.Location = new System.Drawing.Point(11, 186);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(226, 23);
             this.button6.TabIndex = 2;
@@ -544,7 +577,7 @@
             // 
             // txtSQLConnectionPort
             // 
-            this.txtSQLConnectionPort.Location = new System.Drawing.Point(70, 24);
+            this.txtSQLConnectionPort.Location = new System.Drawing.Point(133, 114);
             this.txtSQLConnectionPort.MaxValue = null;
             this.txtSQLConnectionPort.MinValue = null;
             this.txtSQLConnectionPort.Name = "txtSQLConnectionPort";
@@ -554,24 +587,10 @@
             this.toolTip1.SetToolTip(this.txtSQLConnectionPort, "connection port for the mysql-server (restart required)");
             this.txtSQLConnectionPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSQLConnectionPort_KeyPress);
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.cmdChangeSQLPort);
-            this.groupBox4.Controls.Add(this.label7);
-            this.groupBox4.Controls.Add(this.txtSQLConnectionPort);
-            this.groupBox4.Location = new System.Drawing.Point(12, 517);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(329, 63);
-            this.groupBox4.TabIndex = 71;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "SQL-Server";
-            this.toolTip1.SetToolTip(this.groupBox4, "To resolve conflicts with other tools you can change \r\nthe port for the sql-commu" +
-        "nication. Restart is required!");
-            // 
             // cmdChangeSQLPort
             // 
             this.cmdChangeSQLPort.DisabledTextColor = System.Drawing.Color.DimGray;
-            this.cmdChangeSQLPort.Location = new System.Drawing.Point(139, 22);
+            this.cmdChangeSQLPort.Location = new System.Drawing.Point(202, 112);
             this.cmdChangeSQLPort.Name = "cmdChangeSQLPort";
             this.cmdChangeSQLPort.Size = new System.Drawing.Size(55, 23);
             this.cmdChangeSQLPort.TabIndex = 19;
@@ -583,11 +602,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(34, 27);
+            this.label7.Location = new System.Drawing.Point(29, 117);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(32, 13);
+            this.label7.Size = new System.Drawing.Size(98, 13);
             this.label7.TabIndex = 18;
-            this.label7.Text = "Port :";
+            this.label7.Text = "MySQL using Port :";
             this.toolTip1.SetToolTip(this.label7, "To resolve conflicts with other tools you can change ");
             // 
             // gbVNCTest
@@ -624,7 +643,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.cmbVisitedFilter);
             this.groupBox1.Controls.Add(this.label25);
-            this.groupBox1.Location = new System.Drawing.Point(403, 63);
+            this.groupBox1.Location = new System.Drawing.Point(403, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(501, 169);
             this.groupBox1.TabIndex = 65;
@@ -769,7 +788,7 @@
             // 
             this.groupBox3.Controls.Add(this.txtGamePath);
             this.groupBox3.Controls.Add(this.cmdGamePath);
-            this.groupBox3.Location = new System.Drawing.Point(405, 238);
+            this.groupBox3.Location = new System.Drawing.Point(405, 187);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(499, 65);
             this.groupBox3.TabIndex = 69;
@@ -802,7 +821,7 @@
             // 
             this.groupBox2.Controls.Add(this.txtJournalPath);
             this.groupBox2.Controls.Add(this.cmdJournalPath);
-            this.groupBox2.Location = new System.Drawing.Point(405, 309);
+            this.groupBox2.Location = new System.Drawing.Point(405, 258);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(499, 65);
             this.groupBox2.TabIndex = 70;
@@ -831,63 +850,46 @@
             this.cmdJournalPath.UseVisualStyleBackColor = true;
             this.cmdJournalPath.Click += new System.EventHandler(this.cmdJournalPath_Click);
             // 
-            // cbAutoAdd_MissionCompleted
+            // groupBox14
             // 
-            this.cbAutoAdd_MissionCompleted.AutoSize = true;
-            this.cbAutoAdd_MissionCompleted.Location = new System.Drawing.Point(31, 226);
-            this.cbAutoAdd_MissionCompleted.Name = "cbAutoAdd_MissionCompleted";
-            this.cbAutoAdd_MissionCompleted.Size = new System.Drawing.Size(152, 17);
-            this.cbAutoAdd_MissionCompleted.TabIndex = 9;
-            this.cbAutoAdd_MissionCompleted.Tag = "AutoAdd_MissionCompleted;true";
-            this.cbAutoAdd_MissionCompleted.Text = "\"MissionCompleted\"-Event";
-            this.cbAutoAdd_MissionCompleted.UseVisualStyleBackColor = true;
-            this.cbAutoAdd_MissionCompleted.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.groupBox14.Controls.Add(this.cmdChangeSQLPort);
+            this.groupBox14.Controls.Add(this.label48);
+            this.groupBox14.Controls.Add(this.label7);
+            this.groupBox14.Controls.Add(this.cmbLanguage);
+            this.groupBox14.Controls.Add(this.txtSQLConnectionPort);
+            this.groupBox14.Controls.Add(this.cbAutoMinimize);
+            this.groupBox14.Location = new System.Drawing.Point(12, 12);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(385, 170);
+            this.groupBox14.TabIndex = 73;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "General";
             // 
-            // cbAutoAdd_MissionFailed
+            // cbAutoMinimize
             // 
-            this.cbAutoAdd_MissionFailed.AutoSize = true;
-            this.cbAutoAdd_MissionFailed.Location = new System.Drawing.Point(31, 249);
-            this.cbAutoAdd_MissionFailed.Name = "cbAutoAdd_MissionFailed";
-            this.cbAutoAdd_MissionFailed.Size = new System.Drawing.Size(130, 17);
-            this.cbAutoAdd_MissionFailed.TabIndex = 10;
-            this.cbAutoAdd_MissionFailed.Tag = "AutoAdd_MissionFailed;true";
-            this.cbAutoAdd_MissionFailed.Text = "\"MissionFailed\"-Event";
-            this.cbAutoAdd_MissionFailed.UseVisualStyleBackColor = true;
-            // 
-            // cbAutoAdd_MissionAbandoned
-            // 
-            this.cbAutoAdd_MissionAbandoned.AutoSize = true;
-            this.cbAutoAdd_MissionAbandoned.Location = new System.Drawing.Point(31, 272);
-            this.cbAutoAdd_MissionAbandoned.Name = "cbAutoAdd_MissionAbandoned";
-            this.cbAutoAdd_MissionAbandoned.Size = new System.Drawing.Size(157, 17);
-            this.cbAutoAdd_MissionAbandoned.TabIndex = 11;
-            this.cbAutoAdd_MissionAbandoned.Tag = "AutoAdd_MissionAbandoned;true";
-            this.cbAutoAdd_MissionAbandoned.Text = "\"MissionAbandoned\"-Event";
-            this.cbAutoAdd_MissionAbandoned.UseVisualStyleBackColor = true;
-            // 
-            // cbAutoAdd_LoadGame
-            // 
-            this.cbAutoAdd_LoadGame.AutoSize = true;
-            this.cbAutoAdd_LoadGame.Location = new System.Drawing.Point(31, 295);
-            this.cbAutoAdd_LoadGame.Name = "cbAutoAdd_LoadGame";
-            this.cbAutoAdd_LoadGame.Size = new System.Drawing.Size(119, 17);
-            this.cbAutoAdd_LoadGame.TabIndex = 12;
-            this.cbAutoAdd_LoadGame.Tag = "AutoAdd_LoadGame;true";
-            this.cbAutoAdd_LoadGame.Text = "\"LoadGame\"-Event";
-            this.cbAutoAdd_LoadGame.UseVisualStyleBackColor = true;
+            this.cbAutoMinimize.AutoSize = true;
+            this.cbAutoMinimize.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbAutoMinimize.Location = new System.Drawing.Point(32, 42);
+            this.cbAutoMinimize.Name = "cbAutoMinimize";
+            this.cbAutoMinimize.Size = new System.Drawing.Size(192, 17);
+            this.cbAutoMinimize.TabIndex = 1;
+            this.cbAutoMinimize.Tag = "AutoMinimize;false";
+            this.cbAutoMinimize.Text = "auto-minimize splashscreen on start";
+            this.cbAutoMinimize.ThreeState = true;
+            this.cbAutoMinimize.UseVisualStyleBackColor = true;
+            this.cbAutoMinimize.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // IBESettingsView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.ClientSize = new System.Drawing.Size(911, 586);
+            this.Controls.Add(this.groupBox14);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.gbVNCTest);
-            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.gbDataInterface);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox12);
-            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox10);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -905,12 +907,8 @@
             this.groupBox11.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.gbVNCTest.ResumeLayout(false);
             this.gbVNCTest.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -926,6 +924,8 @@
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -954,7 +954,6 @@
         private System.Windows.Forms.CheckBox cbAutoAdd_Visited;
         private System.Windows.Forms.Label label49;
         private System.Windows.Forms.CheckBox cbAutoAdd_JumpedTo;
-        private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.ComboBox cmbLanguage;
         private System.Windows.Forms.GroupBox groupBox12;
@@ -977,7 +976,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton rbNoLandingPadSizeConsider;
         private System.Windows.Forms.RadioButton rbNoLandingPadSizeIgnore;
-        private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.ButtonExt cmdChangeSQLPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBoxInt32 txtSQLConnectionPort;
@@ -997,5 +995,7 @@
         private System.Windows.Forms.CheckBox cbAutoAdd_MissionFailed;
         private System.Windows.Forms.CheckBox cbAutoAdd_MissionCompleted;
         private System.Windows.Forms.CheckBox cbAutoAdd_LoadGame;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.CheckBox cbAutoMinimize;
     }
 }

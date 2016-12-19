@@ -22,10 +22,9 @@ namespace IBE
             pictureBox1.Image = SystemIcons.Error.ToBitmap();
         }
 
-        public void ShowDialog(Exception ex, string infotext)
+        public void ShowDialog(Exception ex, string infotext, Boolean ignoreAllowed)
         {
             string Info;
-            Boolean oldValue = true;
             _LogPath = Program.GetDataPath("Logs");
             SingleThreadLogger _logger = new SingleThreadLogger(ThreadLoggerType.Exception, _LogPath, true);
             Exception currentException = ex;
@@ -34,25 +33,31 @@ namespace IBE
 
             _logger.Log(errorMessage);
 
+            cmdIgnore.Visible = ignoreAllowed;
+
             txtErrorDetail.Text = errorMessage;
             lblErrorInfo.Text = infotext;
             lblLogDestination.Text = string.Format("(Logfile : {0})", _logger.logPathName);
             txtErrorDetail.SelectionStart = 0;
             txtErrorDetail.SelectionLength = 0;
 
-            if (!Program.SplashScreen.IsDisposed)
-            {
-                oldValue = Program.SplashScreen.TopMost;
-                Program.SplashScreen.TopMost = false;
-            }
 
-            this.ShowDialog();
+            SplashScreenForm.SetTopmost(false);
+            if(SplashScreenForm.GetPrimaryGUI(Program.MainForm).InvokeRequired)
+                SplashScreenForm.GetPrimaryGUI(Program.MainForm).Invoke(new ShowDialogInvokedDelegate(ShowDialogInvoked), ex, infotext);
+            else
+                ShowDialogInvoked(ex, infotext);
+                
+            
+            SplashScreenForm.SetTopmost(true);
 
+        }
 
-            if (!Program.SplashScreen.IsDisposed)
-            {
-                Program.SplashScreen.TopMost = oldValue;
-            }
+        public delegate void ShowDialogInvokedDelegate(Exception ex, string infotext);
+
+        public void ShowDialogInvoked(Exception ex, string infotext)
+        {
+            this.ShowDialog(SplashScreenForm.GetPrimaryGUI(Program.MainForm));
         }
 
         public static String GetErrorMessage(ref string infotext, Exception currentException)

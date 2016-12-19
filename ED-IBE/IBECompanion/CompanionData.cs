@@ -92,16 +92,15 @@ namespace IBE.IBECompanion
                             {
                                 CompanionStatus = LoginStatus.NotSet;
 
-                                if(!Program.SplashScreen.IsDisposed)
-                                    Program.SplashScreen.TopMost = false;
+                                SplashScreenForm.SetTopmost(false);
 
-                                MessageBox.Show("Warning: can't connect to companion server : <" + loginResult.Status.ToString() + ">", 
+                                MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                                "Warning: can't connect to companion server : <" + loginResult.Status.ToString() + ">", 
                                                 "Companion Interface",  
                                                 MessageBoxButtons.OK, 
                                                 MessageBoxIcon.Exclamation);
 
-                                if(!Program.SplashScreen.IsDisposed)
-                                    Program.SplashScreen.TopMost = true;
+                                SplashScreenForm.SetTopmost(true);
                             }
                             else
                             {

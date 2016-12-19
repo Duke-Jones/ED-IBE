@@ -63,16 +63,14 @@ namespace IBE
             {
                 if ((configuration == null) || (configuration.Network.VerboseLogging != 1))
                 {
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = false;
+                    SplashScreenForm.SetTopmost(false);
 
                     var setLog =
-                        MessageBox.Show(
+                        MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                             "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
                             "Set verbose logging?", MessageBoxButtons.YesNo);
 
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = true;
+                    SplashScreenForm.SetTopmost(true);
 
                     if (setLog == DialogResult.Yes)
                     {
@@ -111,24 +109,21 @@ namespace IBE
                         {
                             doc.Save(appConfigFilePath);
 
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = false;
+                            SplashScreenForm.SetTopmost(false);
 
-                            MessageBox.Show(
+                            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                 fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.");
 
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = true;
+                            SplashScreenForm.SetTopmost(true);
                         }
                         catch (Exception ex)
                         {
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = false;
+                            SplashScreenForm.SetTopmost(false);
 
-                            MessageBox.Show("I can't save the file (no permission). Please set the 'VorboseLogging' manually.", "Can't write", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                            "I can't save the file (no permission). Please set the 'VorboseLogging' manually.", "Can't write", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = true;
+                            SplashScreenForm.SetTopmost(true);
                         }
 
                     }
@@ -232,14 +227,13 @@ namespace IBE
                             delta = DateTime.Now - lastTry_Displaydata;
                             if (delta.TotalMilliseconds > 1000)
                             {
-                                if(!Program.SplashScreen.IsDisposed)
-                                    Program.SplashScreen.TopMost = false;
+                                SplashScreenForm.SetTopmost(false);
 
                                 // ignore this if it was asked before
-                                MBResult = MessageBox.Show(String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
+                                MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm), 
+                                                           String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
 
-                                if(!Program.SplashScreen.IsDisposed)
-                                    Program.SplashScreen.TopMost = true;
+                                SplashScreenForm.SetTopmost(true);
 
                                 if (MBResult == DialogResult.Abort)
                                 {

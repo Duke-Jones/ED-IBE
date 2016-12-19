@@ -79,7 +79,6 @@ namespace IBE
                         Init();
 
                         Program.MainForm = new Form1();
-
                         Application.Run(Program.MainForm);
 
                         Cleanup();
@@ -121,14 +120,13 @@ namespace IBE
             if (ex == null)
                 return;
 
-            if(!Program.SplashScreen.IsDisposed)
-                Program.SplashScreen.TopMost = false;
+            SplashScreenForm.SetTopmost(false);
 
             CErr.processError(ex, "Unhandled Exception");
             // ExceptionPolicy.HandleException(ex, "Default Policy");
-            CreateMiniDump(FileName);
-            MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"" + FileName + "\" has been created in your data directory.  \r\n\r\nPlease place this in a file-sharing service such as SendSpace, Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive or send e mail to Duke.Jones@gmx.de.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
-            Application.Exit();
+            //CreateMiniDump(FileName);
+            //MessageBox.Show("Fatal error.\r\n\r\nA dump file (\"" + FileName + "\" has been created in your data directory.  \r\n\r\nPlease place this in a file-sharing service such as SendSpace, Google Drive or Dropbox, then link to the file in the Frontier forums or on the GitHub archive or send e mail to Duke.Jones@gmx.de.  This will allow the developers to fix this problem.  \r\n\r\nThanks, and sorry about the crash...");
+            //Application.Exit();
         }
 
         // From http://brakertech.com/howto-c-generate-dump-file-on-crash/
@@ -278,6 +276,15 @@ namespace IBE
 #endif
         public static System.Threading.Thread               VNCServerThread;
 
+		/// <summary>
+		/// Starts the splash screen on a separate thread
+		/// </summary>
+		static public void StartSplash()
+		{
+			Program.SplashScreen = new SplashScreenForm();
+			Application.Run(SplashScreen);
+		}
+
         /// <summary>
         /// starts the initialization of the global objects
         /// </summary>
@@ -288,8 +295,10 @@ namespace IBE
             {
                 if(!m_initDone)
                 { 
-                    Program.SplashScreen = new SplashScreenForm();
-                    Program.SplashScreen.Show();
+			        Thread splashThread = new Thread(new ThreadStart(StartSplash));
+			        splashThread.Start();
+
+                    Thread.Sleep(1000);
 
                     Program.SplashScreen.Logger = MainLog;
 
@@ -350,6 +359,9 @@ namespace IBE
                     
                     /* perform updates */
                     Updater.DBUpdate();
+
+                    if(DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoMinimize", false.ToString(), false))
+                        Program.SplashScreen.AutoMinimizeAsync();
 
                     Program.SplashScreen.InfoAdd("preparing global objects...");
 

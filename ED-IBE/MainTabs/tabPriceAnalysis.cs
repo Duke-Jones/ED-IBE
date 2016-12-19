@@ -2048,7 +2048,7 @@ namespace IBE.MTPriceAnalysis
                         detailPanel       = paStationDetail2;
                     }
 
-                    if(currentDGV.RowCount > 0)
+                    if((currentDGV.CurrentRow != null) && (currentDGV.RowCount > 0))
                     {
                         commodityInfo = (SQL.Datasets.dsEliteDB.tmpa_s2s_stationdataRow)((DataRowView)currentDGV.CurrentRow.DataBoundItem).Row;
                         stationInfo   = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])Program.Data.BaseData.visystemsandstations.Select("StationID=" + commodityInfo.Station_ID);

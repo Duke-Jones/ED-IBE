@@ -163,20 +163,14 @@ namespace IBE
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
                     {
-                        Boolean oldValue = false;
-                        if(!Program.SplashScreen.IsDisposed)
-                        {
-                            oldValue = Program.SplashScreen.TopMost;
-                            Program.SplashScreen.TopMost = false;
-                        }
-                        MessageBox.Show("Critical : There was errors during updating the database to the current version.\n" +
+                        SplashScreenForm.SetTopmost(false);
+
+                        MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                        "Critical : There was errors during updating the database to the current version.\n" +
                                         "Please save current logs form the <Logs> subdirectory and send them to the developer !", 
                                         "Updating Database",  MessageBoxButtons.OK, MessageBoxIcon.Error) ;
 
-                        if(!Program.SplashScreen.IsDisposed)
-                        {
-                            Program.SplashScreen.TopMost = oldValue;
-                        }
+                        SplashScreenForm.SetTopmost(true);
                     }
                 }
                 else
@@ -250,13 +244,12 @@ namespace IBE
         {
             // there was a bug while writing default files with special characters like '\'
             Program.IniFile.SetValue("DB_Connection", "TimeOut", "10000");
-            if (!Program.SplashScreen.IsDisposed)
-                Program.SplashScreen.TopMost = false;
+            SplashScreenForm.SetTopmost(false);
 
-            MessageBox.Show("DB-Timeoutsetting changed. Please restart ED-IBE", "Restart required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                            "DB-Timeoutsetting changed. Please restart ED-IBE", "Restart required", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            if (!Program.SplashScreen.IsDisposed)
-                Program.SplashScreen.TopMost = true;
+            SplashScreenForm.SetTopmost(true);
         }
         private static void UpdateTo_0_1_5()
         {
@@ -1775,12 +1768,11 @@ namespace IBE
                         Program.SplashScreen.InfoAdd("importing master data...");
                         Thread.Sleep(1500);
 
-                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.InfoTarget = Program.SplashScreen;
 
                         await DataIO.StartMasterImport(Program.GetDataPath("Data"));
 
-                        if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = false;
+                        SplashScreenForm.SetTopmost(false);
 
                         MessageBox.Show(parent, "Do you want to get a starters data kit ?\r\n\r\n" +
                                                 "You will get the existing market data from all stations in\r\n" +
@@ -1793,8 +1785,7 @@ namespace IBE
                                                 MessageBoxButtons.OK, 
                                                 MessageBoxIcon.Information);
 
-                        if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = true;
+                        SplashScreenForm.SetTopmost(true);
 
                         DataIO.Close();
                         DataIO.Dispose();
@@ -1807,8 +1798,7 @@ namespace IBE
                 else if(m_OldDBVersion < m_NewDBVersion)
                 { 
                     // new version installed
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = false;
+                   SplashScreenForm.SetTopmost(false);
 
                     var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied files ?", 
                                                           "Update master data", 
@@ -1816,8 +1806,7 @@ namespace IBE
                                                           MessageBoxIcon.Question, 
                                                           MessageBoxDefaultButton.Button1);
 
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = true;
+                    SplashScreenForm.SetTopmost(true);
 
                     if(dResult ==  System.Windows.Forms.DialogResult.Yes)
                     {
@@ -1826,7 +1815,7 @@ namespace IBE
                         Program.SplashScreen.InfoAdd("updating master data...");
                         Thread.Sleep(1500);
 
-                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.InfoTarget = Program.SplashScreen;
 
                         await DataIO.StartMasterUpdate(Program.GetDataPath("Data"));
 
@@ -1844,8 +1833,7 @@ namespace IBE
                         if(  Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoListen", false.ToString(), false) && 
                            (!Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend",   false.ToString(), false)))
                         {
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = false;
+                            SplashScreenForm.SetTopmost(false);
 
                             if(MessageBox.Show(parent, "You decided to recieve data from the EDDN permanently\r\n" +
                                                        "but not to send to EDDN.\r\n\r\n" +
@@ -1863,8 +1851,7 @@ namespace IBE
                                     Program.EDDNComm.ActivateSender();
                             }
 
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = true;
+                            SplashScreenForm.SetTopmost(true);
 
                         }
                     }
@@ -1913,7 +1900,7 @@ namespace IBE
 
                         Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...");
 
-                        DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                        DataIO.InfoTarget = Program.SplashScreen;
 
                         await DataIO.StartFDevIDImport(Program.GetDataPath("Data"));
 
@@ -1931,25 +1918,21 @@ namespace IBE
                         {
                             Program.DBCon.setIniValue("EDDN", "AutoSend", true.ToString());
 
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = false;
+                            SplashScreenForm.SetTopmost(false);
 
                             MessageBox.Show(parent, "EDDN sender activated once, please check if not wanted.", 
                                                        "EDDN Network", 
                                                        MessageBoxButtons.OK, 
                                                        MessageBoxIcon.Question);
 
-                            if(!Program.SplashScreen.IsDisposed)
-                                Program.SplashScreen.TopMost = true;
-
+                            SplashScreenForm.SetTopmost(true);
 
                         }
                     }
 
                     if (m_NewDBVersion == new Version(0,5,5,0))
                     {
-                        if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = false;
+                        SplashScreenForm.SetTopmost(false);
 
                         MessageBox.Show(parent, "In 'Data->Import&Export' you will find a new button 'Delete unused system data' in the lower right corner.\n" +
                                                 "I recommend to use this function at least one time (especially if you already used ED-IBE before v0.5.0)", 
@@ -1957,9 +1940,7 @@ namespace IBE
                                                 MessageBoxButtons.OK, 
                                                 MessageBoxIcon.Information);
 
-                        if(!Program.SplashScreen.IsDisposed)
-                            Program.SplashScreen.TopMost = true;
-
+                        SplashScreenForm.SetTopmost(true);
                     }
 
                 }

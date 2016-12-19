@@ -20,6 +20,7 @@ using IBE.SQL;
 using IBE.MTCommandersLog;
 using IBE.MTPriceAnalysis;
 using IBE.Ocr;
+using System.Threading;
 
 namespace IBE
 {
@@ -384,13 +385,11 @@ namespace IBE
 
             while (true)
             {
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
+                SplashScreenForm.SetTopmost(false);
 
-                var dialogResult = dialog.ShowDialog();
+                var dialogResult = dialog.ShowDialog(SplashScreenForm.GetPrimaryGUI(Program.MainForm));
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = true;
+                SplashScreenForm.SetTopmost(true);
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -413,16 +412,14 @@ namespace IBE
                 else
                     return null;
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
+                SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(
+                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel);
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = true;
+                SplashScreenForm.SetTopmost(true);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Environment.Exit(-1);
@@ -439,13 +436,12 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
+                SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show("Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.OKCancel);
+                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                           "Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.OKCancel);
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = true;
+                SplashScreenForm.SetTopmost(true);
 
                 if (MBResult != System.Windows.Forms.DialogResult.Cancel)
                     path = getProductPathManually();
@@ -520,13 +516,12 @@ namespace IBE
 
                     }
 
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = false;
+                    SplashScreenForm.SetTopmost(false);
 
-                    var MBResult = MsgBox.Show("Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
+                    var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                               "Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
 
-                    if(!Program.SplashScreen.IsDisposed)
-                        Program.SplashScreen.TopMost = true;
+                    SplashScreenForm.SetTopmost(true);
 
                     if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                         Environment.Exit(-1);
@@ -552,13 +547,11 @@ namespace IBE
 
             while (true)
             {
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
+                SplashScreenForm.SetTopmost(false);
 
-                var dialogResult = dialog.ShowDialog();
+                var dialogResult = dialog.ShowDialog(SplashScreenForm.GetPrimaryGUI(Program.MainForm));
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = true;
+                SplashScreenForm.SetTopmost(true);
 
                 if (dialogResult == DialogResult.OK)
                 {
@@ -569,15 +562,13 @@ namespace IBE
                     }
                 }
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
+                SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(
+                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                     "Hm, that doesn't seem right, " + dialog.SelectedPath +
                     " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = true;
+                SplashScreenForm.SetTopmost(true);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -595,13 +586,12 @@ namespace IBE
             //Automatic failed, Ask user to find it manually
             if (path == null)
             {
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = false;
+                SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(@"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
+                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                           @"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
 
-                if(!Program.SplashScreen.IsDisposed)
-                    Program.SplashScreen.TopMost = true;
+                SplashScreenForm.SetTopmost(true);
 
                 if (MBResult == System.Windows.Forms.DialogResult.Cancel)
                     Application.Exit();
@@ -1228,7 +1218,7 @@ namespace IBE
         {
             try
             {
-
+                this.Visible = false;
                 gradientButton1.Enabled = Debugger.IsAttached;
 
                 enableToolStripMenuItem.Checked = Program.DBCon.getIniValue<Boolean>("Debug",   "extLog_Journal", false.ToString(), false);
@@ -1298,7 +1288,7 @@ namespace IBE
                 st.Start();
 
                 // *******************************************************************
-                await Updater.DoSpecial(this);
+                await Updater.DoSpecial(SplashScreenForm.GetPrimaryGUI(Program.MainForm));
                 // *******************************************************************
 
                 if (Program.DBCon.getIniValue<Boolean>("EDDN", "AutoListen", false.ToString(), false))
@@ -1321,7 +1311,7 @@ namespace IBE
                     // import new edcd data if available
                     var DataIO = new frmDataIO();
 
-                    DataIO.InfoTarget = Program.SplashScreen.SplashInfo;
+                    DataIO.InfoTarget = Program.SplashScreen;
 
                     DataIO.StartEDCDCheck();
 
@@ -1358,12 +1348,14 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("init sequence finished !");
                 Program.SplashScreen.CloseDelayed();
 
+                this.Visible = true;
+
             }
             catch (Exception ex)
             {
-                this.Enabled = true;
-                CErr.processError(ex, "Error in Form_Shown");
-                Program.SplashScreen.Close();
+                CErr.processError(ex, "Error in Form_Shown", false);
+                Program.SplashScreen.CloseImmediately();
+                this.Close();
             }
         }
         private Boolean CheckUpdateExists(out Version newVersion, out string newInfo, Boolean onlyConsiderNew = false)
@@ -1405,46 +1397,51 @@ namespace IBE
         /// </summary>
         public void SetQuickDecisionSwitch()
         {
-            try
-            { 
-
-                if (Program.EDDNComm.SenderIsActivated)
-                {
-                    cbEDDNOverride.Enabled = true;
-
-                    String decValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold", false);
-
-                    switch (decValue)
+            if(cbEDDNOverride.InvokeRequired)
+            {
+                cbEDDNOverride.Invoke(new MethodInvoker(SetQuickDecisionSwitch));
+            }
+            else
+            {
+                try
+                { 
+                    if (Program.EDDNComm.SenderIsActivated)
                     {
-                        case "Send":
-                            cbEDDNOverride.Checked = true;
-                            break;
+                        cbEDDNOverride.Enabled = true;
 
-                        case "NotSend":
-                            cbEDDNOverride.Checked = false;
-                            break;
+                        String decValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold", false);
 
-                        case "Hold":
-                            cbEDDNOverride.Checked = Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString(), false);
-                            break;
+                        switch (decValue)
+                        {
+                            case "Send":
+                                cbEDDNOverride.Checked = true;
+                                break;
 
-                        default:
-                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold");
-                            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString());
-                            cbEDDNOverride.Checked = false;
-                            break;
+                            case "NotSend":
+                                cbEDDNOverride.Checked = false;
+                                break;
+
+                            case "Hold":
+                                cbEDDNOverride.Checked = Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString(), false);
+                                break;
+
+                            default:
+                                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold");
+                                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString());
+                                cbEDDNOverride.Checked = false;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        cbEDDNOverride.Checked = false;
+                        cbEDDNOverride.Enabled = false;
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    cbEDDNOverride.Checked = false;
-                    cbEDDNOverride.Enabled = false;
+                    CErr.processError(ex, "Error while setting the quick decision switch");
                 }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error while setting the quick decision switch", ex);
             }
         }
 
@@ -3675,6 +3672,11 @@ namespace IBE
         private void pbStatus_IsLanded_DoubleClick(object sender, EventArgs e)
         {
             debugToolStripMenuItem.Visible = true;
+        }
+
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Int32.Parse("dsfsd");
         }
 
         private void txtEventInfo_DropDownClosed(object sender, EventArgs e)

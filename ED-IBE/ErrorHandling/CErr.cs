@@ -11,13 +11,18 @@ namespace IBE
     {
         static public void processError(Exception ex)
         {
-            processError(ex, "");
+            processError(ex, "", true);
         }
 
         static public void processError(Exception ex, string Infotext)
         {
+            processError(ex, Infotext, true);
+        }
+
+        static public void processError(Exception ex, string Infotext, Boolean ignoreAllowed)
+        {
             ErrorViewer errViewer = new ErrorViewer();
-            errViewer.ShowDialog(ex, Infotext);
+            errViewer.ShowDialog(ex, Infotext, ignoreAllowed);
         }
 
         internal static string getErrorString(Exception ex)

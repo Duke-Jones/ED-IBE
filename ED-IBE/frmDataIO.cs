@@ -18,9 +18,25 @@ namespace IBE
         public const String        DB_GROUPNAME                    = "DataIO";
 
         public delegate void DelTextParam(String text);
-        private readonly SynchronizationContext synchronizationContext;
+        private readonly SynchronizationContext localSynchronizationContext;
+        private SynchronizationContext InfoTargetSynchronizationContext;
+        private SynchronizationContext usedSynchronizationContext;
 
-        public ListBox InfoTarget { get; set; }                 // allows to redirect the progress info to another listbox
+        SplashScreenForm m_InfoTarget;
+
+        public SplashScreenForm InfoTarget
+        {
+            get
+            {
+                return m_InfoTarget;
+            }
+            set
+            {
+                m_InfoTarget = value;
+            }
+        }                 // allows to redirect the progress info to another listbox
+
+
         private Boolean m_DataImportHappened = false; 
 
         private Boolean m_GotNewEDCDFiles;
@@ -77,10 +93,11 @@ namespace IBE
         public frmDataIO()
         {
             InitializeComponent();
-            synchronizationContext = SynchronizationContext.Current;
+
+            localSynchronizationContext = SynchronizationContext.Current;
 
             this.Load             += frmDataIO_Load;
-            this.InfoTarget        = null;
+            m_InfoTarget        = null;
 
             // https://api.github.com/repos/EDCD/FDevIDs/commits?commodity.csv
             m_DownLoader = new WebClient();
@@ -110,7 +127,7 @@ namespace IBE
             try
             {
 
-                synchronizationContext.Send(new SendOrPostCallback(o =>
+                localSynchronizationContext.Send(new SendOrPostCallback(o =>
                 {
                     cmdImportOldData.Enabled                        = (!Program.Data.OldDataImportDone) && (Boolean)o;
                     cmdImportCommandersLog.Enabled                  = (Boolean)o;
@@ -320,11 +337,16 @@ namespace IBE
             {
                 ListBox destination;
 
-                synchronizationContext.Send(new SendOrPostCallback(o =>
+                if(InfoTarget != null)
+                    usedSynchronizationContext = InfoTarget.ThreadSynchronizationContext;
+                else
+                     usedSynchronizationContext = localSynchronizationContext;
+
+                usedSynchronizationContext.Send(new SendOrPostCallback(o =>
                 {
-                    if (InfoTarget != null)
+                    if (m_InfoTarget != null)
                     {
-                        destination     = InfoTarget;
+                        destination     = m_InfoTarget.InfoTarget;
                         e.AddSeparator  = false;
                     }
                     else
