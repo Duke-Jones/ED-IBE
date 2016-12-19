@@ -269,6 +269,9 @@ namespace System.Windows.Forms
         [System.ComponentModel.Browsable(true)]
         public int? MaxValue { get; set; }
 
+        [System.ComponentModel.Browsable(true), System.ComponentModel.DefaultValue(0)]
+        public Int32 DefaultValue { get; set; }
+
         /// <summary>
         ///  checks if the value is within its borders
         /// </summary>
@@ -289,7 +292,20 @@ namespace System.Windows.Forms
             else
                 isOk = false;
             
+            if(! isOk)
+                this.Text = DefaultValue.ToString();
+
             return isOk;
+        }
+        public int Int32Value
+        {
+            get
+            {
+                if(this.checkValue())
+                    return Int32.Parse(this.Text);
+                else
+                    return DefaultValue;                    
+            }
         }
     }
 

@@ -487,13 +487,24 @@ namespace IBE
                             if(RNData)
                                 FileName = @"Data\" + FileName;
 
+
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
-                                Program.Data.ImportCommoditiesFromFile(Path.Combine(sourcePath, FileName));
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
-                                Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodities...<OK>", NewLine = true});
-                                stationOrCommodityImport = true;
+                                String existingHash = Program.DBCon.getIniValue<String>("ImportFileMD5", FileName, "");
+                                String currentHash  = BitConverter.ToString(System.Security.Cryptography.MD5.Create().ComputeHash(File.ReadAllBytes(Path.Combine(sourcePath, FileName)))).Replace("-", "");
+
+                                if(String.IsNullOrWhiteSpace(existingHash) || (existingHash != currentHash))
+                                {
+                                    Program.Data.ImportCommoditiesFromFile(Path.Combine(sourcePath, FileName));
+                                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcategory.TableName);
+                                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodities...<OK>", NewLine = true});
+                                    stationOrCommodityImport = true;
+                                    Program.DBCon.setIniValue("ImportFileMD5", FileName, currentHash);
+                                }
+                                else
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File skipped (already imported) : " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
+
                             }
                             else
                             {
@@ -650,11 +661,21 @@ namespace IBE
 
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
-                                Program.Data.ImportSystems(Path.Combine(sourcePath, FileName));
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import populated systems...<OK>", NewLine = true});
-                                stationOrCommodityImport = true;
+                                String existingHash = Program.DBCon.getIniValue<String>("ImportFileMD5", FileName, "");
+                                String currentHash  = BitConverter.ToString(System.Security.Cryptography.MD5.Create().ComputeHash(File.ReadAllBytes(Path.Combine(sourcePath, FileName)))).Replace("-", "");
+
+                                if(String.IsNullOrWhiteSpace(existingHash) || (existingHash != currentHash))
+                                {
+                                    Program.Data.ImportSystems(Path.Combine(sourcePath, FileName));
+                                    //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems.TableName);
+                                    //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbsystems_org.TableName);
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import populated systems...<OK>", NewLine = true});
+                                    stationOrCommodityImport = true;
+                                    Program.DBCon.setIniValue("ImportFileMD5", FileName, currentHash);
+                                }
+                                else
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File skipped (already imported) : " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
+
                             }
                             else
                             {
@@ -672,11 +693,20 @@ namespace IBE
 
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
-                                Program.Data.ImportStations(Path.Combine(sourcePath, FileName), false);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
-                                //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
-                                Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import stations...<OK>", NewLine = true});
-                                stationOrCommodityImport = true;
+                                String existingHash = Program.DBCon.getIniValue<String>("ImportFileMD5", FileName, "");
+                                String currentHash  = BitConverter.ToString(System.Security.Cryptography.MD5.Create().ComputeHash(File.ReadAllBytes(Path.Combine(sourcePath, FileName)))).Replace("-", "");
+
+                                if(String.IsNullOrWhiteSpace(existingHash) || (existingHash != currentHash))
+                                {
+                                    Program.Data.ImportStations(Path.Combine(sourcePath, FileName), false);
+                                    //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations.TableName);
+                                    //Program.Data.PrepareBaseTables(Program.Data.BaseData.tbstations_org.TableName);
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import stations...<OK>", NewLine = true});
+                                    stationOrCommodityImport = true;
+                                    Program.DBCon.setIniValue("ImportFileMD5", FileName, currentHash);
+                                }
+                                else
+                                    Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Info="File skipped (already imported) : " + FileName, CurrentValue= 1, TotalValue=1, ForceRefresh=true });
                             }
                             else
                             {
@@ -1049,7 +1079,7 @@ namespace IBE
                             cantImport = true;
                         }
                         else
-                            importParams = new PriceImportParameters() { Radius = 20, SystemID = Program.actualCondition.System_ID.Value};
+                            importParams = new PriceImportParameters() { Radius = txtBubbleSize.Int32Value, SystemID = Program.actualCondition.System_ID.Value};
 
                     }
                 }

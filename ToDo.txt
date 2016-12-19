@@ -16,12 +16,10 @@ todo:
 
 * direct selection of the local station
 * call EDSM/EDDB directly
-* unhandled exception always shuts down
 
 * preset today/7 days for date filter cmdrs log
 * view system data after a jump
 * info filter : select a string and activate contains filter
-* remeber last files analysed from eddb: if already analysed do directly the import of 20ly prices
 * routing trading: find best stations on a route
 
 *************************************************************************************
@@ -30,8 +28,13 @@ todo:
 done:
   
 
-  * added switch on settings windows for switching splash screen in the background by default
+  * size of import bubble can be changed if wanted (default is still 20 ly)
+  * prices from EDDB can now imported multiple times (for example on different locations for the bubble import)
+    without checking all system- and station-data again (MD5 of files is saved after first import)
+-------------------------------------------------------------------------------------         
+  * added switch on settings window for switching splash screen to the background by default
   * it's now possible to start ED-IBE in the background
+  * unhandled exceptions no longer terminate the program
   * fix: sometimes crashes when change the quick decision switch for commodity upload to EDDN
   * fix: rare crash when refreshing Commander's Log with filtered data
 -------------------------------------------------------------------------------------         
