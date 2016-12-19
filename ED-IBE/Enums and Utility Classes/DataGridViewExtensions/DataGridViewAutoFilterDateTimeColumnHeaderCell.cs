@@ -532,14 +532,14 @@ namespace DataGridViewAutoFilter
                 StringBuilder filterString = new StringBuilder();
 
                 if(m_dtpBefore.Checked)
-                    filterString.AppendFormat("({0} <= {1})", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLDate(m_dtpBefore.Value));
+                    filterString.AppendFormat("({0} <= {1})", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLDateTime(m_dtpBefore.Value));
 
                 if(m_dtpAfter.Checked)
                 {
                     if(m_dtpBefore.Checked)
                         filterString.Append(" and ");
 
-                    filterString.AppendFormat("({0} >= {1})", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLDate(m_dtpAfter.Value));
+                    filterString.AppendFormat("({0} >= {1})", this.OwningColumn.DataPropertyName, IBE.SQL.DBConnector.SQLDateTime(m_dtpAfter.Value));
                 }
 
                 if(filterString.Length > 0)

@@ -27,7 +27,9 @@ todo:
 
 done:
   
-
+  * date filter now also takes the time into account
+  * Commander's Log: new context menu for quick filtering by cell content
+-------------------------------------------------------------------------------------         
   * size of import bubble can be changed if wanted (default is still 20 ly)
   * prices from EDDB can now imported multiple times (for example on different locations for the bubble import)
     without checking all system- and station-data again (MD5 of files is saved after first import)
@@ -36,7 +38,7 @@ done:
   * it's now possible to start ED-IBE in the background
   * unhandled exceptions no longer terminate the program
   * fix: sometimes crashes when change the quick decision switch for commodity upload to EDDN
-  * fix: rare crash when refreshing Commander's Log with filtered data
+  * fix: sometimes crashes when refreshing Commander's Log with filtered data
 -------------------------------------------------------------------------------------         
 v0.5.7
   * added events "MissionFailed" and "LoadGame" for Commander's Log

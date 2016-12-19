@@ -39,6 +39,8 @@ namespace IBE.MTCommandersLog
         private DBGuiInterface      m_GUIInterface;
         private DataGridView        m_ClickedDGV;
         private MouseEventArgs      m_ClickedDGVArgs;
+        private Object              m_CurrentCellValue = null;
+        private DataGridViewTextBoxEditingControl editingControl;
 
         /// <summary>
         /// Constructor
@@ -114,7 +116,7 @@ namespace IBE.MTCommandersLog
 
                 // preparing the datagridview                
                 dgvCommandersLog.VirtualMode              = true;
-                dgvCommandersLog.ReadOnly                 = true;
+                dgvCommandersLog.ReadOnly                 = false;
                 dgvCommandersLog.AllowUserToAddRows       = false;
                 dgvCommandersLog.AllowUserToOrderColumns  = false;
 
@@ -706,12 +708,11 @@ namespace IBE.MTCommandersLog
             try
             {
                 m_ClickedDGVArgs = (MouseEventArgs)e;
+                m_ClickedDGV     = (DataGridView)sender;
+                hit              = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
 
                 if(m_ClickedDGVArgs.Button == System.Windows.Forms.MouseButtons.Right)
                 { 
-                    m_ClickedDGV    = (DataGridView)sender;
-                    hit             = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
-
                     if (hit.Type == DataGridViewHitTestType.TopLeftHeader)
                     {
                         DataGridViewSettings Tool = new DataGridViewSettings();
@@ -723,6 +724,33 @@ namespace IBE.MTCommandersLog
                     }
                     else if (hit.Type == DataGridViewHitTestType.Cell)
                     {
+                        filterColumWithThisContentToolStripMenuItem.Visible = false;
+                        filterFromHereToolStripMenuItem.Visible = false;
+                        filterToHereToolStripMenuItem.Visible = false;
+                        toolStripMenuItem3.Visible = false;
+
+                        if(dgvCommandersLog.Columns[hit.ColumnIndex].HeaderCell.GetType().BaseType.Equals(typeof(DataGridViewAutoFilterHeaderCell)))
+                        {
+                            DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes cellType = ((DataGridViewAutoFilterTextBoxColumn)dgvCommandersLog.Columns[hit.ColumnIndex]).ColumnFilterType;
+                            switch (cellType)
+                            {
+                                case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.SingleSelect:
+                                case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.MultiSelect:
+                                    filterColumWithThisContentToolStripMenuItem.Visible = true;
+                                    toolStripMenuItem3.Visible = true;
+                                    break;
+                                case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.FullTextSelect:
+                                    filterColumWithThisContentToolStripMenuItem.Visible = true;
+                                    toolStripMenuItem3.Visible = true;
+                                    break;
+                                case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.DateTimeSelect:
+                                    filterFromHereToolStripMenuItem.Visible = true;
+                                    filterToHereToolStripMenuItem.Visible = true;
+                                    toolStripMenuItem3.Visible = true;
+                                    break;
+                            }
+                        }
+                            
                         cmsLog.Show(m_ClickedDGV, m_ClickedDGVArgs.Location);
                     }
                 }
@@ -1165,8 +1193,156 @@ namespace IBE.MTCommandersLog
             }
         }
 
+        private void filterColumToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataGridView.HitTestInfo hit;
+            DataGridViewColumn currentColumn;
+            Cursor oldCursor = this.Cursor;
+            Boolean filterChanged = false;
+
+            try
+            {
+                hit = m_ClickedDGV.HitTest(m_ClickedDGVArgs.X, m_ClickedDGVArgs.Y);
+
+                if(m_ClickedDGV.Equals(dgvCommandersLog))
+                {
+                    currentColumn = dgvCommandersLog.Columns[hit.ColumnIndex];
+
+                    if(currentColumn.DefaultHeaderCellType.BaseType.Equals(typeof(DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)))
+                    {
+                        DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes cellType = ((DataGridViewAutoFilterTextBoxColumn)currentColumn).ColumnFilterType;
+
+                        switch (cellType)
+                        {
+                            case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.SingleSelect:
+                                ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString = 
+                                                            String.Format("{0}", 
+                                                            dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value);
+                                filterChanged = true;
+                                break;
+                            case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.MultiSelect:
+                                ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString = 
+                                                            String.Format("{0}", 
+                                                            dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value);
+                                filterChanged = true;
+                                break;
+                            case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.FullTextSelect:
+                                if(dgvCommandersLog.IsCurrentCellInEditMode)
+                                {
+                                    ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString = 
+                                                                String.Format("{0:d};{1}", 
+                                                                DataGridViewAutoFilterFullColumnHeaderCell.ConstraintValues.cv_contains, 
+                                                                editingControl.SelectedText);
+                                }
+                                else
+                                {
+                                    ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString = 
+                                                                String.Format("{0:d};{1}", 
+                                                                DataGridViewAutoFilterFullColumnHeaderCell.ConstraintValues.cv_equals, 
+                                                                dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value);
+                                }
+
+                                filterChanged = true;
+
+                                break;
+                            case DataGridViewAutoFilterTextBoxColumn.ColumnFilterTypes.DateTimeSelect:
+                                List<String> activeFilter = ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString.Split(new char[] {';'}).ToList();
+
+                                if(((ToolStripMenuItem)sender).Equals(filterToHereToolStripMenuItem))
+                                {
+                                    activeFilter[0] = dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value.ToString();
+                                    activeFilter[1] = true.ToString();
+
+                                    if(Boolean.Parse(activeFilter[3]))
+                                    {
+                                        if(DateTime.Parse(activeFilter[2]) >= ((DateTime)dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value))
+                                        {
+                                            activeFilter[3] = false.ToString();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    activeFilter[2] = dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value.ToString();
+                                    activeFilter[3] = true.ToString();
+
+                                    if (Boolean.Parse(activeFilter[1]))
+                                    {
+                                        if(DateTime.Parse(activeFilter[0]) >= ((DateTime)dgvCommandersLog[hit.ColumnIndex, hit.RowIndex].Value))
+                                        {
+                                            activeFilter[1] = false.ToString();
+                                        }
+                                    }
+                                }
+
+                                ((DataGridViewAutoFilter.DataGridViewAutoFilterHeaderCell)currentColumn.HeaderCell).ColumnFilterString = 
+                                                            String.Format("{0};{1};{2};{3}", 
+                                                            activeFilter[0], 
+                                                            activeFilter[1], 
+                                                            activeFilter[2], 
+                                                            activeFilter[3]);
+
+                                filterChanged = true;
+                                //return String.Format("{0};{1};{2};{3}", m_dtpBefore.Value, m_dtpBefore.Checked, m_dtpAfter.Value, m_dtpAfter.Checked);
+
+                                break;
+                        }
+
+                    }
+
+                    if(filterChanged)
+                    {
+                        Cursor = Cursors.WaitCursor;
+                        m_GUIInterface.saveSetting(dgvCommandersLog, e);
+                        RefreshData();
+                        Cursor = oldCursor;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in filterColumWithThisContentToolStripMenuItem_Click");
+            }
+        }
+
+        private void dgvCommandersLog_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+           if (e.Control is DataGridViewTextBoxEditingControl)
+            {
+                editingControl = (DataGridViewTextBoxEditingControl)e.Control;
+                editingControl.ContextMenuStrip = cmsLog;
+                filterFromHereToolStripMenuItem.Visible = false;
+                filterToHereToolStripMenuItem.Visible = false;
+                filterColumWithThisContentToolStripMenuItem.Visible = true;
+                toolStripMenuItem3.Visible = true;
+            }
+        }
+
+        private void dgvCommandersLog_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            //m_CurrentCellValue = dgvCommandersLog[e.ColumnIndex, e.RowIndex].Value;
+        }
+
         private void dgvCommandersLog_CellLeave(object sender, DataGridViewCellEventArgs e)
         {
+            //dgvCommandersLog[e.ColumnIndex, e.RowIndex].Value = m_CurrentCellValue;
+        }
+
+        private void dgvCommandersLog_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgvCommandersLog_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if(dgvCommandersLog[e.ColumnIndex, e.RowIndex].IsInEditMode)
+            {
+                //e.Cancel = true;
+                dgvCommandersLog.CancelEdit();
+            }
+                
         }
     }
 }

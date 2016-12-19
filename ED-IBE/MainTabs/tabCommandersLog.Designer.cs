@@ -72,6 +72,10 @@
             this.copySystemnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyStationnameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.filterColumWithThisContentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterFromHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filterToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiRecalcJumpDistance = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.tsmiSendToEDSM = new System.Windows.Forms.ToolStripMenuItem();
@@ -493,48 +497,78 @@
             this.copySystemnameToClipboardToolStripMenuItem,
             this.copyStationnameToClipboardToolStripMenuItem,
             this.toolStripMenuItem1,
+            this.filterColumWithThisContentToolStripMenuItem,
+            this.filterFromHereToolStripMenuItem,
+            this.filterToHereToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.tsmiRecalcJumpDistance,
             this.toolStripMenuItem2,
             this.tsmiSendToEDSM});
             this.cmsLog.Name = "cmsLog";
-            this.cmsLog.Size = new System.Drawing.Size(208, 104);
+            this.cmsLog.Size = new System.Drawing.Size(210, 176);
             // 
             // copySystemnameToClipboardToolStripMenuItem
             // 
             this.copySystemnameToClipboardToolStripMenuItem.Name = "copySystemnameToClipboardToolStripMenuItem";
-            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copySystemnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.copySystemnameToClipboardToolStripMenuItem.Text = "Copy systemname to clipboard";
             this.copySystemnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copySystemnameToClipboardToolStripMenuItem_Click);
             // 
             // copyStationnameToClipboardToolStripMenuItem
             // 
             this.copyStationnameToClipboardToolStripMenuItem.Name = "copyStationnameToClipboardToolStripMenuItem";
-            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+            this.copyStationnameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
             this.copyStationnameToClipboardToolStripMenuItem.Text = "Copy stationname to clipboard";
             this.copyStationnameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyStationnameToClipboardToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(206, 6);
+            // 
+            // filterColumWithThisContentToolStripMenuItem
+            // 
+            this.filterColumWithThisContentToolStripMenuItem.Name = "filterColumWithThisContentToolStripMenuItem";
+            this.filterColumWithThisContentToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.filterColumWithThisContentToolStripMenuItem.Text = "Filter column using this content";
+            this.filterColumWithThisContentToolStripMenuItem.Click += new System.EventHandler(this.filterColumToolStripMenuItem_Click);
+            // 
+            // filterFromHereToolStripMenuItem
+            // 
+            this.filterFromHereToolStripMenuItem.Name = "filterFromHereToolStripMenuItem";
+            this.filterFromHereToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.filterFromHereToolStripMenuItem.Text = "Filter from here";
+            this.filterFromHereToolStripMenuItem.Click += new System.EventHandler(this.filterColumToolStripMenuItem_Click);
+            // 
+            // filterToHereToolStripMenuItem
+            // 
+            this.filterToHereToolStripMenuItem.Name = "filterToHereToolStripMenuItem";
+            this.filterToHereToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.filterToHereToolStripMenuItem.Text = "Filter to here";
+            this.filterToHereToolStripMenuItem.Click += new System.EventHandler(this.filterColumToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(206, 6);
             // 
             // tsmiRecalcJumpDistance
             // 
             this.tsmiRecalcJumpDistance.Name = "tsmiRecalcJumpDistance";
-            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(207, 22);
-            this.tsmiRecalcJumpDistance.Text = "recalculate jump distance";
+            this.tsmiRecalcJumpDistance.Size = new System.Drawing.Size(209, 22);
+            this.tsmiRecalcJumpDistance.Text = "Recalculate jump distance";
             this.tsmiRecalcJumpDistance.Click += new System.EventHandler(this.tsmiRecalcJumpDistance_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(206, 6);
             // 
             // tsmiSendToEDSM
             // 
             this.tsmiSendToEDSM.Name = "tsmiSendToEDSM";
-            this.tsmiSendToEDSM.Size = new System.Drawing.Size(207, 22);
-            this.tsmiSendToEDSM.Text = "send log entry(s) to EDSM";
+            this.tsmiSendToEDSM.Size = new System.Drawing.Size(209, 22);
+            this.tsmiSendToEDSM.Text = "Send log entry(s) to EDSM";
             this.tsmiSendToEDSM.Click += new System.EventHandler(this.tsmiSendToEDSM_Click);
             // 
             // statusStrip1
@@ -738,7 +772,11 @@
             this.dgvCommandersLog.TabIndex = 44;
             this.dgvCommandersLog.Tag = "CommandersLog;1";
             this.dgvCommandersLog.ColumnSorted += new System.EventHandler<IBE.Enums_and_Utility_Classes.DataGridViewExt.SortedEventArgs>(this.dgvCommandersLog_ColumnSorted);
+            this.dgvCommandersLog.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgvCommandersLog_CellBeginEdit);
+            this.dgvCommandersLog.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCommandersLog_CellEndEdit);
             this.dgvCommandersLog.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvCommandersLog_CellLeave);
+            this.dgvCommandersLog.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvCommandersLog_CellValidating);
+            this.dgvCommandersLog.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvCommandersLog_EditingControlShowing);
             this.dgvCommandersLog.SelectionChanged += new System.EventHandler(this.dgvCommandersLog_SelectionChanged);
             this.dgvCommandersLog.Click += new System.EventHandler(this.dgvCommandersLog_Click);
             this.dgvCommandersLog.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvCommandersLog_KeyDown);
@@ -932,5 +970,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn distance;
         private DataGridViewAutoFilter.DataGridViewAutoFilterFullTextBoxColumn notes;
         private System.Windows.Forms.ButtonExt cmdFilterReset;
+        private System.Windows.Forms.ToolStripMenuItem filterColumWithThisContentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem filterFromHereToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem filterToHereToolStripMenuItem;
     }
 }
