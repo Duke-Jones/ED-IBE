@@ -89,8 +89,8 @@ namespace IBE
         private Boolean m_StationLoadingValues                          = false;
         private Boolean m_SystemIsNew                                   = false;
         private Boolean m_StationIsNew                                  = false;
-        private DateTime m_SystemWarningTime                            = DateTime.Now;
-        private DateTime m_StationWarningTime                           = DateTime.Now;
+        private DateTime m_SystemWarningTime                            = DateTime.UtcNow;
+        private DateTime m_StationWarningTime                           = DateTime.UtcNow;
 
         private PerformanceTimer _pt                                    = new PerformanceTimer();
         private String _AppPath                                         = string.Empty;
@@ -214,9 +214,9 @@ namespace IBE
                 SetupGui(true);
                 Program.SplashScreen.InfoChange("prepare GUI elements...<OK>");
 
-                if (((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
-                     DateTime.Now.Month == 12) || (DateTime.Now.Day == 31 && DateTime.Now.Month == 12) ||
-                    (DateTime.Now.Day == 1 && DateTime.Now.Month == 1))
+                if (((DateTime.UtcNow.Day == 24 || DateTime.UtcNow.Day == 25 || DateTime.UtcNow.Day == 26) &&
+                     DateTime.UtcNow.Month == 12) || (DateTime.UtcNow.Day == 31 && DateTime.UtcNow.Month == 12) ||
+                    (DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 1))
                 {
                     _timer = new System.Windows.Forms.Timer();
                     _timer.Interval = 75;
@@ -414,10 +414,10 @@ namespace IBE
 
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
-                + ". Please try again...", "", MessageBoxButtons.RetryCancel);
+                + ". Please try again...", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
                 SplashScreenForm.SetTopmost(true);
 
@@ -438,8 +438,11 @@ namespace IBE
             {
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
-                                           "Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", "", MessageBoxButtons.OKCancel);
+                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                                        "Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", 
+                                                        "", 
+                                                        MessageBoxButtons.OKCancel, 
+                                                        MessageBoxIcon.Exclamation);
 
                 SplashScreenForm.SetTopmost(true);
 
@@ -518,8 +521,8 @@ namespace IBE
 
                     SplashScreenForm.SetTopmost(false);
 
-                    var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
-                                               "Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel);
+                    var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                               "Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
                     SplashScreenForm.SetTopmost(true);
 
@@ -564,9 +567,9 @@ namespace IBE
 
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                     "Hm, that doesn't seem right, " + dialog.SelectedPath +
-                    " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel);
+                    " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
                 SplashScreenForm.SetTopmost(true);
 
@@ -588,8 +591,8 @@ namespace IBE
             {
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MsgBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
-                                           @"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel);
+                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                           @"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
                 SplashScreenForm.SetTopmost(true);
 
@@ -1507,8 +1510,8 @@ namespace IBE
                     if (phaseCtr < 17)
                     {
                         lblRegulatedNoise.ForeColor = Color.FromArgb(0, phaseCtr * 15, 0, 0);
-                        if ((DateTime.Now.Day == 24 || DateTime.Now.Day == 25 || DateTime.Now.Day == 26) &&
-                            DateTime.Now.Month == 12)
+                        if ((DateTime.UtcNow.Day == 24 || DateTime.UtcNow.Day == 25 || DateTime.UtcNow.Day == 26) &&
+                            DateTime.UtcNow.Month == 12)
                             lblRegulatedNoise.Text = "Merry Christmas!".Substring(0, phaseCtr);
                         else
                             lblRegulatedNoise.Text = "Happy New Year!!".Substring(0, phaseCtr);
@@ -2214,9 +2217,9 @@ namespace IBE
                         throw new NotImplementedException();
                         EDSystem existing = null; //_Milkyway.getSystems(EDMilkyway.enDataType.Data_Merged).Find(x => x.Name.Equals(txtSystemName.Text, StringComparison.InvariantCultureIgnoreCase));
                         if (existing != null)
-                            if (DateTime.Now.Subtract(m_SystemWarningTime).TotalSeconds > 5)
+                            if (DateTime.UtcNow.Subtract(m_SystemWarningTime).TotalSeconds > 5)
                             {
-                                m_SystemWarningTime = DateTime.Now;
+                                m_SystemWarningTime = DateTime.UtcNow;
                                 MsgBox.Show("A system with this name already exists", "Adding a new system", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                     }
@@ -2287,9 +2290,9 @@ namespace IBE
                                                    //                                                             (x.SystemId == m_currentStationdata.SystemId));
                         if (existing != null)
                         {
-                            if (DateTime.Now.Subtract(m_StationWarningTime).TotalSeconds > 5)
+                            if (DateTime.UtcNow.Subtract(m_StationWarningTime).TotalSeconds > 5)
                             {
-                                m_StationWarningTime = DateTime.Now;
+                                m_StationWarningTime = DateTime.UtcNow;
                                 MsgBox.Show("A Station with this name already exists", "Adding a new Station", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
@@ -3091,7 +3094,7 @@ namespace IBE
 
         public string SendResponse(HttpListenerRequest request)
         {
-            //return string.Format("<HTML><BODY>My web page.<br>{0}<BR>The page you requested was "+request.Url+"</BODY></HTML>", DateTime.Now);
+            //return string.Format("<HTML><BODY>My web page.<br>{0}<BR>The page you requested was "+request.Url+"</BODY></HTML>", DateTime.UtcNow);
 
             StringBuilder s = new StringBuilder();
 
@@ -3833,7 +3836,7 @@ namespace IBE
 
                 txtRestTime.Text = rest.TotalSeconds.ToString("00");
 
-                if((DateTime.Now - lastUpdateCheck).TotalHours > 1)
+                if((DateTime.UtcNow - lastUpdateCheck).TotalHours > 1)
                 {
                     Version newVersion  = null;
                     String newInfo      = null;
@@ -3844,18 +3847,18 @@ namespace IBE
                         tabCtrlMain.SelectTab(0); 
 
                         // next hint after 24 hours
-                        lastUpdateCheck = (DateTime.Now + new TimeSpan(23, 0, 0));
+                        lastUpdateCheck = (DateTime.UtcNow + new TimeSpan(23, 0, 0));
                     }
                     else
                     {
                         // next check after one hour
-                        lastUpdateCheck = DateTime.Now;
+                        lastUpdateCheck = DateTime.UtcNow;
                     }
                 }
             }
             catch (Exception)
             {
-                lastUpdateCheck = DateTime.Now;
+                lastUpdateCheck = DateTime.UtcNow;
             }
         }
 

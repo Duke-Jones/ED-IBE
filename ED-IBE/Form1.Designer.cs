@@ -1119,8 +1119,8 @@
             this.lblDonate.Name = "lblDonate";
             this.lblDonate.Size = new System.Drawing.Size(352, 139);
             this.lblDonate.TabIndex = 38;
-            this.lblDonate.Text = "If you like this program and you want to support \r\nmy development, I was very hap" +
-    "py \r\nabout a small donation. \r\n\r\nThank you, Duke Jones\r\n";
+            this.lblDonate.Text = "If you like this program and you want to support \r\nmy development, I would be ver" +
+    "y happy \r\nabout a small donation. \r\n\r\nThank you, Duke Jones\r\n";
             this.lblDonate.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // panel2

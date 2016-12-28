@@ -302,7 +302,7 @@ namespace IBE.MTPriceAnalysis
 
             try
             {
-                stopTime = (DateTime.Now - new TimeSpan(Program.DBCon.getIniValue<Int32>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilterDays", "30", true), 0, 0, 0));
+                stopTime = (DateTime.UtcNow - new TimeSpan(Program.DBCon.getIniValue<Int32>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilterDays", "30", true), 0, 0, 0));
 
                 sqlString = "truncate table tmFilteredStations;";
                 m_lDBCon.Execute(sqlString);
@@ -633,8 +633,8 @@ namespace IBE.MTPriceAnalysis
             try
             {
 
-                Debug.Print("start :" + DateTime.Now.ToShortTimeString());
-                stopTime = (DateTime.Now - new TimeSpan(Program.DBCon.getIniValue<Int32>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilterDays", "30", true), 0, 0, 0));
+                Debug.Print("start :" + DateTime.UtcNow.ToShortTimeString());
+                stopTime = (DateTime.UtcNow - new TimeSpan(Program.DBCon.getIniValue<Int32>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilterDays", "30", true), 0, 0, 0));
 
                 // gettin' some freaky performance
                 m_lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
@@ -1028,7 +1028,7 @@ namespace IBE.MTPriceAnalysis
                     Data.Tables["Location"].Clear();
                 }
                 
-                Debug.Print("Ende :" + DateTime.Now.ToShortTimeString());
+                Debug.Print("Ende :" + DateTime.UtcNow.ToShortTimeString());
 
 
                 return Result;

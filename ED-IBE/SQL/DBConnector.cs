@@ -765,11 +765,11 @@ namespace IBE.SQL
         }
 
         public static String SQLNow(){
-            return SQLDateTime(DateTime.Now);
+            return SQLDateTime(DateTime.UtcNow);
         }
     
         public static String SQLToday() {
-            return SQLDate(DateTime.Now);
+            return SQLDate(DateTime.UtcNow);
         }
     
         public static String SQLDateTime(DateTime datDateTime) {

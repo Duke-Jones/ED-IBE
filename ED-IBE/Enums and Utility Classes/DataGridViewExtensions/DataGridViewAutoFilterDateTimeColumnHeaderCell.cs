@@ -61,7 +61,7 @@ namespace DataGridViewAutoFilter
         /// <param name="oldHeaderCell">The DataGridViewColumnHeaderCell to copy property values from.</param>
         public DataGridViewAutoFilterDateTimeColumnHeaderCell(DataGridViewColumnHeaderCell oldHeaderCell) : base(oldHeaderCell)
         {
-            m_dtpBefore.Value   = DateTime.Now.Date + new TimeSpan(23,59,59);
+            m_dtpBefore.Value   = DateTime.UtcNow.Date + new TimeSpan(23,59,59);
             m_dtpAfter.Value    = new DateTime(2000, 1, 1, 0 , 0, 0);
 
             m_dtpBefore.Checked = false;
@@ -74,7 +74,7 @@ namespace DataGridViewAutoFilter
         /// </summary>
         public DataGridViewAutoFilterDateTimeColumnHeaderCell() : base()
         {
-            m_dtpBefore.Value   = DateTime.Now.Date + new TimeSpan(23,59,59);
+            m_dtpBefore.Value   = DateTime.UtcNow.Date + new TimeSpan(23,59,59);
             m_dtpAfter.Value    = new DateTime(2000, 1, 1, 0 , 0, 0);
 
             m_dtpBefore.Checked = false;
@@ -107,7 +107,7 @@ namespace DataGridViewAutoFilter
                             m_dtpBefore.Checked = false;
                     }
                     else
-                        m_dtpBefore.Value = DateTime.Now.Date + new TimeSpan(23,59,59);
+                        m_dtpBefore.Value = DateTime.UtcNow.Date + new TimeSpan(23,59,59);
                         
                     if(DateTime.TryParse(parts[2], out dtValue))
                     {

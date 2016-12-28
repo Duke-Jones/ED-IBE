@@ -15,7 +15,7 @@ namespace IBE
         private AppConfig AppConfigLocal;
         private EdDisplayConfig m_Display;
         private SQL.DBConnector m_lDBCon;
-        private DateTime lastTry_Displaydata = DateTime.Now - new TimeSpan(1,0,0);
+        private DateTime lastTry_Displaydata = DateTime.UtcNow - new TimeSpan(1,0,0);
 
         public GameSettings()
         {
@@ -66,9 +66,9 @@ namespace IBE
                     SplashScreenForm.SetTopmost(false);
 
                     var setLog =
-                        MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                        MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                             "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
-                            "Set verbose logging?", MessageBoxButtons.YesNo);
+                            "Set verbose logging?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     SplashScreenForm.SetTopmost(true);
 
@@ -111,8 +111,8 @@ namespace IBE
 
                             SplashScreenForm.SetTopmost(false);
 
-                            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
-                                fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.");
+                            MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             SplashScreenForm.SetTopmost(true);
                         }
@@ -120,7 +120,7 @@ namespace IBE
                         {
                             SplashScreenForm.SetTopmost(false);
 
-                            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                            MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                             "I can't save the file (no permission). Please set the 'VorboseLogging' manually.", "Can't write", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                             SplashScreenForm.SetTopmost(true);
@@ -224,13 +224,13 @@ namespace IBE
                         if (m_Display == null)
                         {
                             // ignore this if it was loaded short before
-                            delta = DateTime.Now - lastTry_Displaydata;
+                            delta = DateTime.UtcNow - lastTry_Displaydata;
                             if (delta.TotalMilliseconds > 1000)
                             {
                                 SplashScreenForm.SetTopmost(false);
 
                                 // ignore this if it was asked before
-                                MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm), 
+                                MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm), 
                                                            String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
 
                                 SplashScreenForm.SetTopmost(true);
@@ -239,7 +239,7 @@ namespace IBE
                                 {
                                     CErr.processError(ex, "Error in AppData_Changed()");
                                 }
-                                lastTry_Displaydata = DateTime.Now;
+                                lastTry_Displaydata = DateTime.UtcNow;
                             }
                         }
                     }

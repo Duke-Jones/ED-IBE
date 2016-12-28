@@ -2593,6 +2593,8 @@ namespace IBE.SQL
                                             break;
 	                                }
 
+                                    Debug.Print("current time filter : " + timeFilter);
+
                                     sqlStringB.Append(String.Format("(select if(SC1.cnt = 0, 0, SC1.id),{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}" +
                                                                     "         from (select ID, station_id, commodity_id, Count(*) As cnt, timestamp from tbCommodityData" +
                                                                     "              where station_id   = {0}" +
@@ -2944,7 +2946,7 @@ namespace IBE.SQL
                         csvData.BuyPrice            = commodity.Value<Int32>("buyPrice");
                         csvData.Demand              = commodity.Value<Int32>("demand");
                         csvData.Supply              = commodity.Value<Int32>("stock");
-                        csvData.SampleDate          = DateTime.Now;
+                        csvData.SampleDate          = DateTime.UtcNow;
 
                         if((!String.IsNullOrEmpty(commodity.Value<String>("demandBracket"))) && (commodity.Value<Int32>("demandBracket") > 0))
                             csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
@@ -4027,9 +4029,9 @@ namespace IBE.SQL
 
                             systemDataChanged = true;
                         }
-                        else
+                        else if (Visited == setVisitedType)
                         {
-                            // update timestamp
+                            // update timestamp only if it's the same visit reason
                             sqlString = String.Format("update tbVisitedSystems set time = {1} where system_id = {0};", 
                                                       systemID.ToString(), 
                                                       DBConnector.SQLDateTime(DateTime.UtcNow));
@@ -4158,9 +4160,9 @@ namespace IBE.SQL
 
                                 stationDataChanged = true;
                             }
-                            else
+                            else if (Visited == setVisitedType)
                             {
-                                // update timestamp
+                                // update timestamp only if it's the same visit reason
                                 sqlString = String.Format("update tbVisitedStations set time = {1} where station_id = {0};", 
                                                           stationID.ToString(), 
                                                           DBConnector.SQLDateTime(DateTime.UtcNow));
@@ -4274,7 +4276,7 @@ namespace IBE.SQL
         {
             try
             {
-                RecalcJumpDistancesInLog(maxAge, DateTime.Now);
+                RecalcJumpDistancesInLog(maxAge, DateTime.UtcNow);
             }
             catch (Exception ex)
             {

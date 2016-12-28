@@ -88,20 +88,20 @@ namespace IBE.Enums_and_Utility_Classes
                         if (currentIndex == 0)
                         {
                             // refresh time only 
-                            History[0].Visited = DateTime.Now;
+                            History[0].Visited = DateTime.UtcNow;
                         }
                         else
                         {
                             // pull the existingClassification currentComboxItem up and set current time
                             Visit = History[currentIndex];
                             History.Remove(Visit);
-                            Visit.Visited = DateTime.Now;
+                            Visit.Visited = DateTime.UtcNow;
                             History.Insert(0, Visit);
                         }
                     }
                     else
                     {
-                        History.Insert(0, new StationVisit(newStation, DateTime.Now));
+                        History.Insert(0, new StationVisit(newStation, DateTime.UtcNow));
                     }
 
                     // cut to max. length

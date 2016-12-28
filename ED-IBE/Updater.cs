@@ -165,7 +165,7 @@ namespace IBE
                     {
                         SplashScreenForm.SetTopmost(false);
 
-                        MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                        MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                         "Critical : There was errors during updating the database to the current version.\n" +
                                         "Please save current logs form the <Logs> subdirectory and send them to the developer !", 
                                         "Updating Database",  MessageBoxButtons.OK, MessageBoxIcon.Error) ;
@@ -246,7 +246,7 @@ namespace IBE
             Program.IniFile.SetValue("DB_Connection", "TimeOut", "10000");
             SplashScreenForm.SetTopmost(false);
 
-            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+            MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                             "DB-Timeoutsetting changed. Please restart ED-IBE", "Restart required", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             SplashScreenForm.SetTopmost(true);
@@ -1774,7 +1774,7 @@ namespace IBE
 
                         SplashScreenForm.SetTopmost(false);
 
-                        MessageBox.Show(parent, "Do you want to get a starters data kit ?\r\n\r\n" +
+                        MessageBoxInvoked.Show(parent, "Do you want to get a starters data kit ?\r\n\r\n" +
                                                 "You will get the existing market data from all stations in\r\n" +
                                                 "the bubble of 20 ly around your current location.\r\n\r\n" +
                                                 "Go to the 'Data' => 'Import&Export' menu.\r\n" +
@@ -1800,12 +1800,11 @@ namespace IBE
                     // new version installed
                    SplashScreenForm.SetTopmost(false);
 
-                    var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied files ?", 
-                                                          "Update master data", 
-                                                          MessageBoxButtons.YesNo, 
-                                                          MessageBoxIcon.Question, 
-                                                          MessageBoxDefaultButton.Button1);
-
+                    var dResult = MessageBoxInvoked.Show(parent, "Want to update your master data using the supplied files ?", 
+                                                                 "Update master data", 
+                                                                 MessageBoxButtons.YesNo, 
+                                                                 MessageBoxIcon.Question, 
+                                                                 MessageBoxDefaultButton.Button1);
                     SplashScreenForm.SetTopmost(true);
 
                     if(dResult ==  System.Windows.Forms.DialogResult.Yes)
@@ -1835,7 +1834,7 @@ namespace IBE
                         {
                             SplashScreenForm.SetTopmost(false);
 
-                            if(MessageBox.Show(parent, "You decided to recieve data from the EDDN permanently\r\n" +
+                            if(MessageBoxInvoked.Show(parent, "You decided to recieve data from the EDDN permanently\r\n" +
                                                        "but not to send to EDDN.\r\n\r\n" +
                                                        "The EDDN/EDDB lives from the data. If you want to receive data\r\n" +
                                                        "permanently, it would be fair in return also to send data.\r\n\r\n" +
@@ -1920,7 +1919,7 @@ namespace IBE
 
                             SplashScreenForm.SetTopmost(false);
 
-                            MessageBox.Show(parent, "EDDN sender activated once, please check if not wanted.", 
+                            MessageBoxInvoked.Show(parent, "EDDN sender activated once, please check if not wanted.", 
                                                        "EDDN Network", 
                                                        MessageBoxButtons.OK, 
                                                        MessageBoxIcon.Question);
@@ -1934,7 +1933,7 @@ namespace IBE
                     {
                         SplashScreenForm.SetTopmost(false);
 
-                        MessageBox.Show(parent, "In 'Data->Import&Export' you will find a new button 'Delete unused system data' in the lower right corner.\n" +
+                        MessageBoxInvoked.Show(parent, "In 'Data->Import&Export' you will find a new button 'Delete unused system data' in the lower right corner.\n" +
                                                 "I recommend to use this function at least one time (especially if you already used ED-IBE before v0.5.0)", 
                                                 "v0.5.5 performance hint !!!", 
                                                 MessageBoxButtons.OK, 

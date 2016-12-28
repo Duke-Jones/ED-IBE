@@ -85,13 +85,13 @@ namespace IBE.SQL
                 else
                 {
                     retValue = m_DBCon.getIniValue<T>(m_InitGroup, initKey, defaultValue, allowEmptyValue, rewriteOnBadCast);
-                    m_SettingsCache.Add(m_InitGroup + "|" + initKey, retValue, DateTime.Now + new TimeSpan(0,0,1,0));
+                    m_SettingsCache.Add(m_InitGroup + "|" + initKey, retValue, DateTime.UtcNow + new TimeSpan(0,0,1,0));
                 }
             }
             else
             {
                 retValue = m_DBCon.getIniValue<T>(m_InitGroup, initKey, defaultValue, allowEmptyValue, rewriteOnBadCast);
-                m_SettingsCache.Add(m_InitGroup + "|" + initKey, retValue, DateTime.Now + new TimeSpan(0,0,1,0));
+                m_SettingsCache.Add(m_InitGroup + "|" + initKey, retValue, DateTime.UtcNow + new TimeSpan(0,0,1,0));
             }
 
             return retValue;

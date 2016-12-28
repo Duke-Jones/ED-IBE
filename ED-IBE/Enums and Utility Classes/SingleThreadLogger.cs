@@ -19,13 +19,13 @@ namespace IBE
             if(reuseLog)
                 _logPathName = Path.Combine(destPath, string.Format("{0}.log", threadLoggerType));
             else
-                _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}.log", threadLoggerType, DateTime.Now));
+                _logPathName = Path.Combine(destPath, string.Format("{0}_{1:yyyy-MM-dd HH-mm-ss}.log", threadLoggerType, DateTime.UtcNow));
                 
         }
 
         public void Log(string logMessage)
         {
-            File.AppendAllText(_logPathName, string.Format("{0:dd.MM.yyyy HH:mm:ss} : {1}{2}", DateTime.Now, logMessage, Environment.NewLine));
+            File.AppendAllText(_logPathName, string.Format("{0:dd.MM.yyyy HH:mm:ss} : {1}{2}", DateTime.UtcNow, logMessage, Environment.NewLine));
 
             if(new FileInfo(_logPathName).Length > maxFileSize)
             {

@@ -273,7 +273,7 @@ namespace IBE.FileScanner
 
         private void FileWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            Debug.Print("get Created Event : " + DateTime.Now);
+            Debug.Print("get Created Event : " + DateTime.UtcNow);
             m_NewFileDetected = true;
         }
 
@@ -346,7 +346,7 @@ namespace IBE.FileScanner
                             // add every new file, but only if 
                             //  - it's "timevalue" is newer than the "timevalue" of the current file
                             //  - it's last write time is not longer than 24 hours ago
-                            if((GetTimeValueFromFilename(newFile) > GetTimeValueFromFilename(m_LastScan_JournalFile)) && ((DateTime.Now - File.GetLastWriteTime(newFile)).TotalHours < 24))
+                            if((GetTimeValueFromFilename(newFile) > GetTimeValueFromFilename(m_LastScan_JournalFile)) && ((DateTime.UtcNow - File.GetLastWriteTime(newFile)).TotalHours < 24))
                             {
                                 if(!newFiles.Contains(newFile))
                                 {
@@ -711,7 +711,7 @@ namespace IBE.FileScanner
                     //     while (!journalStreamReader.EndOfStream)
                 }
                 else
-                    Debug.Print("because new files : " + DateTime.Now);
+                    Debug.Print("because new files : " + DateTime.UtcNow);
 
             }while (!m_Stop);
 

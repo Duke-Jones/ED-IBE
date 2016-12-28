@@ -662,6 +662,7 @@ namespace IBE.MTCommandersLog
                     dgvCommandersLog.Top     = m_InitialTopOfGrid;
                     dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
                     bindNavCmdrsLog.Top      = m_InitialTopOfGrid - m_OffsetBindingNavigator;
+                    cmdFilterReset.Top       = m_InitialTopOfGrid - m_OffsetBindingNavigator;
                 }
                 else
                 {
@@ -669,6 +670,7 @@ namespace IBE.MTCommandersLog
                     bindNavCmdrsLog.Top      = gbCL_LogEdit.Top;
                     dgvCommandersLog.Height  = this.Height - dgvCommandersLog.Top;
                     gbCL_LogEdit.Visible     = false;
+                    cmdFilterReset.Top       = gbCL_LogEdit.Top;
                 }
 
                 cb_ShowEditField.Checked = setVisible;

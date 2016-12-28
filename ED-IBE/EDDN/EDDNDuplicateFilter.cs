@@ -77,7 +77,7 @@ namespace IBE.EDDN
                 try
                 {
                     // truncate milliseconds
-                    sampleDate = sampleDate.Truncate(TimeSpan.FromSeconds(1));
+                    sampleDate = sampleDate.Truncate(TimeSpan.FromSeconds(1)).ToUniversalTime();
 
                     if ((sampleDate <= limit1) && (sampleDate >= limit2))
                     {
@@ -133,7 +133,7 @@ namespace IBE.EDDN
                 try
                 {
                     List<DateTime> removeStamps = new List<DateTime>();
-                    DateTime limit = (DateTime.Now - m_ignoringPeriod).Truncate(TimeSpan.FromSeconds(1));
+                    DateTime limit = (DateTime.UtcNow - m_ignoringPeriod).Truncate(TimeSpan.FromSeconds(1));
 
                     for (int i = 0; i < m_RecievedDataTimes.Count; i++)
                     {

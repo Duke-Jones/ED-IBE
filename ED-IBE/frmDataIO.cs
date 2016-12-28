@@ -1421,7 +1421,7 @@ namespace IBE
 
                     SetButtons(false);
 
-                    DateTime deadline = DateTime.Now.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
+                    DateTime deadline = DateTime.UtcNow.AddDays(-1*(Int32)(nudPurgeOldDataDays.Value)).Date;
 
                     Program.Data.Progress += Data_Progress;
 

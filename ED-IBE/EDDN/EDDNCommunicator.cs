@@ -638,7 +638,7 @@ bool disposed = false;
                     csvData.BuyPrice            = commodity.Value<Int32>("buyPrice");
                     csvData.Demand              = commodity.Value<Int32>("demand");
                     csvData.Supply              = commodity.Value<Int32>("stock");
-                    csvData.SampleDate          = DateTime.Now;
+                    csvData.SampleDate          = DateTime.UtcNow;
 
                     if((!String.IsNullOrEmpty(commodity.Value<String>("demandBracket"))) && (commodity.Value<Int32>("demandBracket") > 0))
                         csvData.DemandLevel         = (String)Program.Data.BaseTableIDToName("economylevel", commodity.Value<Int32>("demandBracket") - 1, "level");
@@ -764,9 +764,9 @@ bool disposed = false;
                     String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
                     String stationName  = dataObject.SelectToken("lastStarport.name").ToString();
 
-                    if((m_ID_of_Commodity_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
+                    if((m_ID_of_Commodity_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
                     { 
-                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.UtcNow);
 
                         StringBuilder commodityStringEDDN = new StringBuilder();
 
@@ -780,7 +780,7 @@ bool disposed = false;
                         commodityStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
                         //commodityStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
-                        commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                        commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
 
                         commodityStringEDDN.Append(String.Format("\"commodities\": ["));
 
@@ -818,7 +818,7 @@ bool disposed = false;
                                     {
                                         writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
                                             systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Average, 
-                                            DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                            DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                     }
 
                                     commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ",    commodityItem.Value<String>("name")));
@@ -870,7 +870,7 @@ bool disposed = false;
                         { 
                             _Send_Commodity.Enqueue(commodityStringEDDN);
                             _SendDelayTimer_Commodity.Start();
-                            m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                            m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.UtcNow);
                         }
 
                         if(writeToFile)
@@ -908,9 +908,9 @@ bool disposed = false;
                     String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
                     String stationName  = dataObject.SelectToken("lastStarport.name").ToString();
 
-                    if((m_ID_of_Outfitting_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Outfitting_Station.Item2).TotalMinutes >= 60))
+                    if((m_ID_of_Outfitting_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Outfitting_Station.Item2).TotalMinutes >= 60))
                     { 
-                        m_ID_of_Outfitting_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                        m_ID_of_Outfitting_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.UtcNow);
 
                         StringBuilder outfittingStringEDDN = new StringBuilder();
 
@@ -924,7 +924,7 @@ bool disposed = false;
                         outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
                         //outfittingStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
-                        outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                        outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
 
                         outfittingStringEDDN.Append(String.Format("\"modules\": ["));
 
@@ -957,7 +957,7 @@ bool disposed = false;
                                     writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
                                         systemName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
                                         outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
-                                        DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                        DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                 }
 
                                 outfittingStringEDDN.Append(String.Format("\"{0}\", ", outfittingItem.Value<String>("name")));
@@ -975,7 +975,7 @@ bool disposed = false;
                         { 
                             _Send_Outfitting.Enqueue(outfittingStringEDDN);
                             _SendDelayTimer_Outfitting.Start();
-                            m_ID_of_Outfitting_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                            m_ID_of_Outfitting_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.UtcNow);
                         }
 
                         if(writeToFile)
@@ -1013,7 +1013,7 @@ bool disposed = false;
                     String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
                     String stationName = dataObject.SelectToken("lastStarport.name").ToString();
 
-                    if((m_ID_of_Shipyard_Station.Item1 != systemName + "|" + stationName) || ((DateTime.Now - m_ID_of_Shipyard_Station.Item2).TotalMinutes >= 60))
+                    if((m_ID_of_Shipyard_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Shipyard_Station.Item2).TotalMinutes >= 60))
                     { 
                         StringBuilder shipyardStringEDDN = new StringBuilder();
 
@@ -1022,7 +1022,7 @@ bool disposed = false;
                         shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
                         shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
 
-                        shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                        shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
 
                         shipyardStringEDDN.Append(String.Format("\"ships\": ["));
 
@@ -1053,7 +1053,7 @@ bool disposed = false;
                                     {
                                         writer.WriteLine(String.Format("{0},{1},{2},{3}", 
                                             systemName, stationName, shipyardItem.Name, 
-                                            DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                            DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                                     }
 
                                     shipyardStringEDDN.Append(String.Format("\"{0}\", ", outfittingItem.Value<String>("name")));
@@ -1070,7 +1070,7 @@ bool disposed = false;
                             { 
                                 _Send_Shipyard.Enqueue(shipyardStringEDDN);
                                 _SendDelayTimer_Shipyard.Start();
-                                m_ID_of_Shipyard_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.Now);
+                                m_ID_of_Shipyard_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.UtcNow);
                             }
 
                             if(writeToFile)
@@ -1101,7 +1101,7 @@ bool disposed = false;
                     StringBuilder journalStringEDDN = new StringBuilder();
                     journalStringEDDN.Append(String.Format("\"message\": {{"));
                     
-                    journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}Z\", ", DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                    journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}Z\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
                     journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
 
                     if(dataObject.SelectToken("StarSystem") == null)
@@ -1189,7 +1189,7 @@ bool disposed = false;
 
                 do{
 
-                    TimeStamp   = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
+                    TimeStamp   = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
                     UserID      = UserIdentification();
                     Data        = new EDDNCommodity_v3();
 
@@ -1276,7 +1276,7 @@ bool disposed = false;
                             if(activeQueue == _Send_MarketData_API)
                             { 
                                 // data over api sent, set cooldown time
-                                m_ID_of_Commodity_Station = new Tuple<String, DateTime>(m_ID_of_Commodity_Station.Item1, DateTime.Now);
+                                m_ID_of_Commodity_Station = new Tuple<String, DateTime>(m_ID_of_Commodity_Station.Item1, DateTime.UtcNow);
                             }
 
                             m_CommoditySendingError  = false;
@@ -1346,7 +1346,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1442,7 +1442,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1535,7 +1535,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1632,7 +1632,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.Now.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1946,7 +1946,7 @@ bool disposed = false;
  
                 if(m_CommoditySendingError)
                     retValue = SendingState.Error;
-                else if ((DateTime.Now - (DateTime)(m_ID_of_Commodity_Station.Item2)).TotalMinutes <= 60)
+                else if ((DateTime.UtcNow - (DateTime)(m_ID_of_Commodity_Station.Item2)).TotalMinutes <= 60)
                     retValue = SendingState.Send;
 
                 return retValue;
@@ -1961,7 +1961,7 @@ bool disposed = false;
  
                 if(m_OutfittingSendingError)
                     retValue = SendingState.Error;
-                else if ((DateTime.Now - (DateTime)(m_ID_of_Outfitting_Station.Item2)).TotalMinutes <= 60)
+                else if ((DateTime.UtcNow - (DateTime)(m_ID_of_Outfitting_Station.Item2)).TotalMinutes <= 60)
                     retValue = SendingState.Send;
 
                 return retValue;
@@ -1976,7 +1976,7 @@ bool disposed = false;
  
                 if(m_ShipyardSendingError)
                     retValue = SendingState.Error;
-                else if ((DateTime.Now - (DateTime)(m_ID_of_Shipyard_Station.Item2)).TotalMinutes <= 60)
+                else if ((DateTime.UtcNow - (DateTime)(m_ID_of_Shipyard_Station.Item2)).TotalMinutes <= 60)
                     retValue = SendingState.Send;
 
                 return retValue;

@@ -837,7 +837,7 @@ namespace IBE.MTCommandersLog
                             if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Expiry")))
                             {
                                 DateTime expTime = DateTime.ParseExact(e.Data.Value<String>("Expiry"), "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-                                data.AppendLine(String.Format("{0} :   {1:d} {1:t} ({2})", txtHelp.FixedLength("Expiry", usedFont, fullLength), expTime, (expTime - DateTime.Now).ToReadableString()));
+                                data.AppendLine(String.Format("{0} :   {1:d} {1:t} ({2})", txtHelp.FixedLength("Expiry", usedFont, fullLength), expTime, (expTime - DateTime.UtcNow).ToReadableString()));
                             }
                                 
                             if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("DestinationSystem")))
