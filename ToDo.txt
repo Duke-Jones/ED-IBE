@@ -31,6 +31,8 @@ todo:
 
 done:
   
+  * application context added  
+-------------------------------------------------------------------------------------         
   * "last n stations": fixed logic bug when updating from EDDB files
   * switched all "DateTime.Now" to "DateTime.UtcNow",
     import of EDDN messages should work again

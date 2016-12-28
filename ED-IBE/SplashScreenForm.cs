@@ -190,10 +190,23 @@ namespace IBE
             this.WindowState = FormWindowState.Minimized;
         }
 
-        private void SplashScreenForm_Shown(object sender, EventArgs e)
+        private async void SplashScreenForm_Shown(object sender, EventArgs e)
         {
-            m_StartTimer = new PerformanceTimer();
-            m_StartTimer.startMeasuring();
+            try
+            {
+                m_StartTimer = new PerformanceTimer();
+                m_StartTimer.startMeasuring();
+            
+                var t = new Task(() => Program.Init());
+                t.Start();
+                await t;
+
+                Program.ED_IBE_Context.LoadMainForm();
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error during main initialization");
+            }
         }
 
         /// <summary>

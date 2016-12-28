@@ -17,13 +17,115 @@ using IBE.MTPriceAnalysis;
 using IBE.FileScanner;
 using IBE.Enums_and_Utility_Classes;
 using EDCompanionAPI;
+using System.ComponentModel;
 
-#if useVNC 
+#if useVNC
 using NVNC;
 #endif
 
 namespace IBE
 {
+
+    // The class that handles the creation of the application windows
+    public class EDIBEApplicationContext : ApplicationContext {
+
+        private Int32 formCount = 0;
+
+        EDIBEApplicationContext() {
+            formCount = 0;
+
+            // Handle the ApplicationExit event to know when the application is exiting.
+            Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
+
+            Program.SplashScreen = new SplashScreenForm();
+            Program.SplashScreen.Closed += new EventHandler(OnFormClosed);            
+            Program.SplashScreen.Closing += new CancelEventHandler(OnFormClosing);            
+            formCount++;
+
+            // Show both forms
+            Program.SplashScreen.Show();
+        }
+
+        private void OnApplicationExit(object sender, EventArgs e)
+        {
+            Program.Cleanup();
+        }
+
+        private void OnFormClosing(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void OnFormClosed(object sender, EventArgs e)
+        {
+            formCount--;
+            if (formCount == 0) {
+                ExitThread();
+            }
+        }
+
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            try
+            {
+#if ShowToDo
+    Program.showToDo = true;    
+#else
+    Program.showToDo = false;
+#endif
+                bool blnOK;
+                Cursor.Current = Cursors.WaitCursor;
+
+                using (System.Threading.Mutex mut = new System.Threading.Mutex(true, "Anwendungsname", out blnOK))
+                {
+                    if (blnOK)
+                    {
+                        AppDomain.CurrentDomain.UnhandledException +=Program.CurrentDomain_UnhandledException;
+                        Application.ThreadException += Program.Application_ThreadException;
+
+                        Application.EnableVisualStyles();
+                        Application.SetCompatibleTextRenderingDefault(false);
+
+                        Program.ED_IBE_Context = new EDIBEApplicationContext();
+                        Application.Run(Program.ED_IBE_Context);
+                    }
+                    else
+                    {
+                        MessageBox.Show("A instance of ED-IBE is already running!", "Aborted !", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                    }
+                }
+
+                Cursor.Current = Cursors.Default;
+
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                CErr.processError(ex, "Error in main routine !");
+            }
+        }
+        public void LoadMainForm()
+        {
+            try
+            {
+                Program.MainForm = new Form1();
+                Program.MainForm.Closed += new EventHandler(OnFormClosed);            
+                Program.MainForm.Closing += new CancelEventHandler(OnFormClosing);            
+                formCount++;
+
+                Program.MainForm.Show();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading the main form");
+            }
+        }
+    }
+
 
     public static class Program
     {
@@ -47,68 +149,14 @@ namespace IBE
 #endregion
 
 
-    #region main object creation and disposing
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
-        {
-            try
-            {
-#if ShowToDo
-    showToDo = true;    
-#else
-    showToDo = false;
-#endif
-
-                bool blnOK;
-                Cursor.Current = Cursors.WaitCursor;
-
-                using (System.Threading.Mutex mut = new System.Threading.Mutex(true, "Anwendungsname", out blnOK))
-                {
-                    if (blnOK)
-                    {
-                        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-                        Application.ThreadException += Application_ThreadException;
-
-                        Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(false);
-
-                        Init();
-
-                        Program.MainForm = new Form1();
-                        Application.Run(Program.MainForm);
-
-                        Cleanup();
-                    }
-                    else
-                    {
-                        MessageBox.Show("A instance of ED-IBE is already running!", "Aborted !", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                    }
-                }
-
-                Cursor.Current = Cursors.Default;
-
-            }
-            catch (Exception ex)
-            {
-                Cursor.Current = Cursors.Default;
-                CErr.processError(ex, "Error in main routine !");
-            }
-        }
-
-    #endregion
-
     #region Exception Handling
 
-        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        public static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             HandleException(e.Exception);
         }
 
-        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        public static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             HandleException((Exception)(e.ExceptionObject));
         }
@@ -270,20 +318,12 @@ namespace IBE
         public static PlausibiltyChecker                    PlausibiltyCheck;
         public static GameSettings                          GameSettings;
         public static Form1                                 MainForm;
+        public static EDIBEApplicationContext                  ED_IBE_Context;
 
 #if useVNC 
         public static VncServer                             VNCAppServer;
 #endif
         public static System.Threading.Thread               VNCServerThread;
-
-		/// <summary>
-		/// Starts the splash screen on a separate thread
-		/// </summary>
-		static public void StartSplash()
-		{
-			Program.SplashScreen = new SplashScreenForm();
-			Application.Run(SplashScreen);
-		}
 
         /// <summary>
         /// starts the initialization of the global objects
@@ -295,11 +335,6 @@ namespace IBE
             {
                 if(!m_initDone)
                 { 
-			        Thread splashThread = new Thread(new ThreadStart(StartSplash));
-			        splashThread.Start();
-
-                    Thread.Sleep(1000);
-
                     Program.SplashScreen.Logger = MainLog;
 
                     Program.SplashScreen.InfoAdd("initializing logger...");
