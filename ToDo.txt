@@ -19,23 +19,22 @@ todo:
 
 * preset today/7 days for date filter cmdrs log
 * view system data after a jump
-* info filter : select a string and activate contains filter
 * routing trading: find best stations on a route
 * add a supply filter 
 * possibility of changing the sql port
-* investigate error on start ~ 19.12.16 21.40
-
 
 *************************************************************************************
 
 
 done:
   
+  * unnecessary "MessageBoxInvoked" removed again
+-------------------------------------------------------------------------------------         
   * application context added  
 -------------------------------------------------------------------------------------         
   * "last n stations": fixed logic bug when updating from EDDB files
   * switched all "DateTime.Now" to "DateTime.UtcNow",
-    import of EDDN messages should work again
+  * background-import of EDDN messages should work again
   * date filter now also takes the time into account
   * Commander's Log: new context menu for quick filtering by cell content
 -------------------------------------------------------------------------------------         

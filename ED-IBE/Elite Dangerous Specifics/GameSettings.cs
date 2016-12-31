@@ -66,7 +66,7 @@ namespace IBE
                     SplashScreenForm.SetTopmost(false);
 
                     var setLog =
-                        MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                        MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                             "Verbose logging isn't set in your Elite Dangerous AppConfig.xml, so I can't read system names. Would you like me to set it for you?",
                             "Set verbose logging?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -111,7 +111,7 @@ namespace IBE
 
                             SplashScreenForm.SetTopmost(false);
 
-                            MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                 fileName + " updated.  You'll need to restart Elite Dangerous if it's already running.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             SplashScreenForm.SetTopmost(true);
@@ -120,7 +120,7 @@ namespace IBE
                         {
                             SplashScreenForm.SetTopmost(false);
 
-                            MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                            MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                             "I can't save the file (no permission). Please set the 'VorboseLogging' manually.", "Can't write", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
                             SplashScreenForm.SetTopmost(true);
@@ -230,7 +230,7 @@ namespace IBE
                                 SplashScreenForm.SetTopmost(false);
 
                                 // ignore this if it was asked before
-                                MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm), 
+                                MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm), 
                                                            String.Format("Error while loading ED-Displaysettings from file <{0}>", configFile), "Problem while loading data...", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
 
                                 SplashScreenForm.SetTopmost(true);

@@ -414,7 +414,7 @@ namespace IBE
 
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                var MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                     "Hm, that doesn't seem right" +
                     (dialog.SelectedPath != "" ? ", " + dialog.SelectedPath + " isn't the Frontier 'Products' directory"  : "")
                 + ". Please try again...", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
@@ -438,7 +438,7 @@ namespace IBE
             {
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                var MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                                         "Automatic discovery of Frontier directory failed, please point me to your Frontier 'Products' directory.", 
                                                         "", 
                                                         MessageBoxButtons.OKCancel, 
@@ -521,7 +521,7 @@ namespace IBE
 
                     SplashScreenForm.SetTopmost(false);
 
-                    var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                    var MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                                "Couldn't find a FORC-FDEV.. directory in the Frontier Products dir, please try again...", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
                     SplashScreenForm.SetTopmost(true);
@@ -567,7 +567,7 @@ namespace IBE
 
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                var MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                     "Hm, that doesn't seem right, " + dialog.SelectedPath +
                     " is not the Game Options directory, Please try again", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
@@ -591,7 +591,7 @@ namespace IBE
             {
                 SplashScreenForm.SetTopmost(false);
 
-                var MBResult = MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                var MBResult = MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                            @"Automatic discovery of the Game Options directory failed, please point me to it...", "", MessageBoxButtons.RetryCancel, MessageBoxIcon.Exclamation);
 
                 SplashScreenForm.SetTopmost(true);

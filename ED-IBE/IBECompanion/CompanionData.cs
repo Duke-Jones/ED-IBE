@@ -94,7 +94,7 @@ namespace IBE.IBECompanion
 
                                 SplashScreenForm.SetTopmost(false);
 
-                                MessageBoxInvoked.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
+                                MessageBox.Show(SplashScreenForm.GetPrimaryGUI(Program.MainForm),
                                                 "Warning: can't connect to companion server : <" + loginResult.Status.ToString() + ">", 
                                                 "Companion Interface",  
                                                 MessageBoxButtons.OK, 
