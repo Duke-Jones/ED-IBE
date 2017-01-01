@@ -262,7 +262,8 @@ namespace IBE
                                             enImportTypes.EDDB_Stations | 
                                             enImportTypes.EDCD_Outfitting | 
                                             enImportTypes.EDCD_Commodity | 
-                                            enImportTypes.EDCD_Shipyard;
+                                            enImportTypes.EDCD_Shipyard |
+                                            enImportTypes.IBE_Localizations_Commodities;
 
                 var t = new Task(() => ImportDataAsync(null, importFlags, null, path));
                 t.Start();
@@ -433,6 +434,7 @@ namespace IBE
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
             Boolean retValue = false;
             Boolean restartEDDN = false;
+            Boolean commodityNameUpdate = false;
             Boolean stationOrCommodityImport = false;
             FolderBrowserDialog fbFolderDialog = new FolderBrowserDialog();
             OpenFileDialog foDialog = new OpenFileDialog();
@@ -546,11 +548,12 @@ namespace IBE
 
                             if (FileExistsOrMessage(sourcePath, FileName))
                             {
-                                Program.Data.ImportLocalizationDataFromCSV(Path.Combine(sourcePath, FileName), SQL.EliteDBIO.enLocalizationType.Commodity, SQL.EliteDBIO.enLocalisationImportType.overwriteNonBase);
+                                Program.Data.ImportLocalizationDataFromCSV(Path.Combine(sourcePath, FileName), SQL.EliteDBIO.enLocalizationType.Commodity, SQL.EliteDBIO.enLocalisationImportType.intelligent_silent);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommoditylocalization.TableName);
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
+                                commodityNameUpdate      = true;
                             }
                             else
                             {
@@ -904,6 +907,12 @@ namespace IBE
 
                         if (stationOrCommodityImport)
                         {
+                            if(commodityNameUpdate)
+                            {
+                                // check for wrong or changed id/name-combinations and fix them
+                                Program.Data.CleanupCommoditynames();
+                            }
+
                             // update the visited information
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating visited systems and stations...", AddSeparator=true});
                             Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
@@ -937,6 +946,7 @@ namespace IBE
                 if(restartEDDN)
                     Program.EDDNComm.StartEDDNListening();
 
+                CErr.processError(ex, "Error while importing data to database");
                 throw new Exception("Error while importing data to database", ex);
             }
         }

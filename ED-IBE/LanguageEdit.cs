@@ -240,255 +240,43 @@ namespace IBE
         /// </summary>
         private void SaveData()
         {
-            String sqlString;
             String parameterName;
             EliteDBIO.enLocalizationType activeSetting;
             List<Int32> collectorID = new List<Int32>();
-            List<Int32> deletedIDs = new List<Int32>();
             DialogResult addMispellingsToMapping = System.Windows.Forms.DialogResult.No;
 
 
             try
             {
-                parameterName = gbType.Tag.ToString().Split(new char[] {';'})[0];
+                parameterName = gbType.Tag.ToString().Split(new char[] { ';' })[0];
                 activeSetting = m_DBCon.getIniValue<EliteDBIO.enLocalizationType>(DB_GROUPNAME, parameterName, EliteDBIO.enLocalizationType.Commodity.ToString(), false);
 
-                if((m_MisspelledIDs.Count > 0) && (activeSetting == EliteDBIO.enLocalizationType.Commodity))
+                if ((m_MisspelledIDs.Count > 0) && (activeSetting == EliteDBIO.enLocalizationType.Commodity))
                 {
-                    addMispellingsToMapping = MessageBox.Show(this, "Add misspellings to the mapping table to allow a autocorrection in future cases ?", 
-                                                                    "Extend mapping table ?", 
-                                                                    MessageBoxButtons.YesNo, 
+                    addMispellingsToMapping = MessageBox.Show(this, "Add misspellings to the mapping table to allow a autocorrection in future cases ?",
+                                                                    "Extend mapping table ?",
+                                                                    MessageBoxButtons.YesNo,
                                                                     MessageBoxIcon.Question);
                 }
 
                 m_DBCon.TransBegin();
-                
+
                 m_DBCon.TableUpdate(dgvData.Name, m_MainDataset, m_DataAdapter[dgvData]);
 
                 m_DBCon.TableUpdate(dgvDataOwn.Name, m_MainDataset, m_DataAdapter[dgvDataOwn]);
 
-                // entries which have to be deleted
-                foreach (Int32 delID in m_DeletedIDs)
-                {
-                    if(!deletedIDs.Contains(delID))
-                    {
-                        sqlString = String.Format("delete from tbCommodity" +
-                                                    " where id = {0}", 
-                                                    delID);
-                        m_DBCon.Execute(sqlString);
-                        deletedIDs.Add(delID);
-                    }
-                }
-
                 // entries which have to be updated, because their localization was unknown
-                foreach (var changedValuePair in m_ChangedIDs)
-                {
-                    switch (activeSetting)
-                    {
-                        case EliteDBIO.enLocalizationType.Commodity:
-                            // change the collected data to the new id
-                            sqlString = String.Format("update tbCommodityData" +
-                                                      " set   commodity_id = {1}" +
-                                                      " where commodity_id = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbPriceHistory" +
-                                                      " set   commodity_id = {1}" +
-                                                      " where commodity_id = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            // delete entry from tbCommodity, the ForeigenKeys will delete the 
-                            // entries from the other affected tables
-                            // entries in table "tbCommodityClassification" can be deleted
-                            sqlString = String.Format("delete from tbCommodity" +
-                                                      " where id = {0}", 
-                                                      changedValuePair.Key);
-                            m_DBCon.Execute(sqlString);
-
-                            break;
-
-                        case EliteDBIO.enLocalizationType.Category:
-                            // change the commodities to the new id
-                            sqlString = String.Format("update tbCommodity" +
-                                                      " set   category_id = {1}" +
-                                                      " where category_id = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            // delete entry from tbCategory, the ForeigenKeys will delete the 
-                            // entries from the other affected tables
-                            sqlString = String.Format("delete from tbCategory" +
-                                                      " where id = {0}", 
-                                                      changedValuePair.Key);
-                            m_DBCon.Execute(sqlString);
-
-                            break;
-                        case EliteDBIO.enLocalizationType.Economylevel:
-                            // change the commodities to the new id
-                            sqlString = String.Format("update tbCommodityData" +
-                                                      " set   DemandLevel = {1}" +
-                                                      " where DemandLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbCommodityData" +
-                                                      " set   SupplyLevel = {1}" +
-                                                      " where SupplyLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbPriceHistory" +
-                                                      " set   DemandLevel = {1}" +
-                                                      " where DemandLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbPriceHistory" +
-                                                      " set   SupplyLevel = {1}" +
-                                                      " where SupplyLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                        // delete entry from tbCategory, the ForeigenKeys will delete the 
-                            // entries from the other affected tables
-                            sqlString = String.Format("delete from tbEconomyLevel" +
-                                                      " where id = {0}", 
-                                                      changedValuePair.Key);
-                            m_DBCon.Execute(sqlString);
-
-                            break;
-                        default:
-                            throw new Exception("unknown setting :  " + activeSetting);
-                    }
-
-                    collectorID.Add(changedValuePair.Value);
-                }
+                collectorID = Program.Data.UpdateCommodityIDs(m_DBCon, activeSetting, m_ChangedIDs, m_DeletedIDs, false);
 
                 // entries which have to be updated, because they're simply misspelled
-                foreach (var changedValuePair in m_MisspelledIDs)
-                {
-
-                    switch (activeSetting)
-                    {
-                        case EliteDBIO.enLocalizationType.Commodity:
-                            // change the collected data to the new id
-                            sqlString = String.Format("update tbCommodityData" +
-                                                      " set   commodity_id = {1}" +
-                                                      " where commodity_id = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbPriceHistory" +
-                                                      " set   commodity_id = {1}" +
-                                                      " where commodity_id = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            // extend mapping table
-                            if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                sqlString = String.Format("insert ignore into tbdnMap_Commodity(CompanionName, CompanionAddition, GameName, GameAddition)" +
-                                                          " select c1.commodity as CompanionName, '' as CompanionAddition, c2.commodity as GameName, '' as GameAddition" +
-                                                          "  from" +
-                                                          "    (select commodity from tbCommodity where id = {0}) c1" +
-                                                          "  join" +
-                                                          "    (select commodity from tbCommodity where id = {1}) c2",
-                                                          changedValuePair.Key, 
-                                                          changedValuePair.Value);
-                                m_DBCon.Execute(sqlString);
-                            }
-
-                            // delete entry from tbCommodity, the ForeigenKeys will delete the 
-                            // entries from the other affected tables
-                            // entries in table "tbCommodityClassification" can be deleted
-                            sqlString = String.Format("delete from tbCommodity" +
-                                                      " where id = {0}", 
-                                                      changedValuePair.Key);
-                            m_DBCon.Execute(sqlString);
-
-
-                            break;
-
-                        case EliteDBIO.enLocalizationType.Category:
-                            // change the commodities to the new id
-                            sqlString = String.Format("update tbCommodity" +
-                                                      " set   category_id = {1}" +
-                                                      " where category_id = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            // delete entry from tbCategory, the ForeigenKeys will delete the 
-                            // entries from the other affected tables
-                            sqlString = String.Format("delete from tbCategory" +
-                                                      " where id = {0}", 
-                                                      changedValuePair.Key);
-                            m_DBCon.Execute(sqlString);
-
-                            break;
-
-                        case EliteDBIO.enLocalizationType.Economylevel:
-                            // change the commodities to the new id
-                            sqlString = String.Format("update tbCommodityData" +
-                                                      " set   DemandLevel = {1}" +
-                                                      " where DemandLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbCommodityData" +
-                                                      " set   SupplyLevel = {1}" +
-                                                      " where SupplyLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbPriceHistory" +
-                                                      " set   DemandLevel = {1}" +
-                                                      " where DemandLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                            sqlString = String.Format("update tbPriceHistory" +
-                                                      " set   SupplyLevel = {1}" +
-                                                      " where SupplyLevel = {0}", 
-                                                      changedValuePair.Key, 
-                                                      changedValuePair.Value);
-                            m_DBCon.Execute(sqlString);
-
-                        // delete entry from tbCategory, the ForeigenKeys will delete the 
-                            // entries from the other affected tables
-                            sqlString = String.Format("delete from tbEconomyLevel" +
-                                                      " where id = {0}", 
-                                                      changedValuePair.Key);
-                            m_DBCon.Execute(sqlString);
-
-                            break;
-                        default:
-                            throw new Exception("unknown setting :  " + activeSetting);
-                    }
-
-                    collectorID.Add(changedValuePair.Value);
-                }
+                collectorID.AddRange(Program.Data.UpdateCommodityIDs(m_DBCon, activeSetting, m_MisspelledIDs, null, (addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)));
 
                 m_DBCon.TransCommit();
 
-                if(addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
+                if (addMispellingsToMapping == System.Windows.Forms.DialogResult.Yes)
                     Program.Data.PrepareBaseTables("tbdnmap_commodity");
 
-                cmdSave.Enabled  = m_MainDataset.HasChanges();
+                cmdSave.Enabled = m_MainDataset.HasChanges();
 
                 if (collectorID.Count > 0)
                 {
@@ -946,6 +734,8 @@ namespace IBE
                     importType = EliteDBIO.enLocalisationImportType.onlyNew;
                 else if(rbImportOverwriteButBase.Checked)
                     importType = EliteDBIO.enLocalisationImportType.overwriteNonBase;
+                else if(rbImportIntelligent.Checked)
+                    importType = EliteDBIO.enLocalisationImportType.intelligent;
                 else
                     importType = EliteDBIO.enLocalisationImportType.overWriteAll;
                 

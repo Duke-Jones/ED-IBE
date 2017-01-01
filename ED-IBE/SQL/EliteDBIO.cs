@@ -77,7 +77,9 @@ namespace IBE.SQL
         {
             onlyNew             = 0,
             overwriteNonBase    = 1,
-            overWriteAll        = 2
+            intelligent         = 2,
+            intelligent_silent  = 3,
+            overWriteAll        = 4
         }
 
         public enum enDataSource
@@ -762,14 +764,69 @@ namespace IBE.SQL
                                 if((String)LocalizationFromFile[LanguageFormFile.Key] != "")
                                     currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
                             }
+                            else if(((importType == enLocalisationImportType.intelligent) || (importType == enLocalisationImportType.intelligent_silent)))
+                            {
 
+                                if(((String)(currentLocalizations[0]["locname"])) != ((String)(LocalizationFromFile[LanguageFormFile.Key])))
+                                {
+
+                                    if((String)(LocalizationFromFile[LanguageFormFile.Key]) == "Low Temperature Diamonds")
+                                        Debug.Print("stop");
+
+                                    // overwrite because somethings in the name is not the same
+                                    if(((String)(currentLocalizations[0]["locname"])) == BaseName)
+                                    {
+                                        // it's not localized yet, overwrite
+                                        currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
+                                    }
+                                    else if(LanguageFormFile.Key != Program.BASE_LANGUAGE)
+                                    {
+                                        if(importType == enLocalisationImportType.intelligent)
+                                        {
+                                            // it's already localized, ask user or ignore
+                                            if(System.Windows.Forms.MessageBox.Show(String.Format("Change <{0}> to <{1}> (language {2}) ?", currentLocalizations[0]["locname"], LocalizationFromFile[LanguageFormFile.Key], LanguageFormFile.Key), "Updating commodity names", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                                            {
+                                                currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
+                                            }
+                                        }
+                                        else
+                                        {
+                                            currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if(importType == enLocalisationImportType.intelligent)
+                                        {
+                                            // it's already localized, ask user or ignore
+                                            if(System.Windows.Forms.MessageBox.Show(String.Format("Change <{0}> to <{1}> (language {2}) ?", currentLocalizations[0]["locname"], LocalizationFromFile[LanguageFormFile.Key], LanguageFormFile.Key), "Updating commodity names", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Question, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                                            {
+                                                sqlString = String.Format("insert ignore into tbdnMap_Commodity(CompanionName, CompanionAddition, GameName, GameAddition)" +
+                                                                            " values ('{0}', '','{1}', ''); " +
+                                                                            "delete from tbdnmap_commodity where CompanionName like binary GameName;",
+                                                                            currentLocalizations[0]["locname"],
+                                                                            (String)LocalizationFromFile[LanguageFormFile.Key]);
+                                                lDBCon.Execute(sqlString);
+                                                currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
+                                            }
+                                        }
+                                        else
+                                        {
+                                            sqlString = String.Format("insert ignore into tbdnMap_Commodity(CompanionName, CompanionAddition, GameName, GameAddition)" +
+                                                                        " values ('{0}', '','{1}', ''); " +
+                                                                        "delete from tbdnmap_commodity where CompanionName like binary GameName;",
+                                                                        currentLocalizations[0]["locname"],
+                                                                        (String)LocalizationFromFile[LanguageFormFile.Key]);
+                                            lDBCon.Execute(sqlString);
+                                            currentLocalizations[0]["locname"] = (String)LocalizationFromFile[LanguageFormFile.Key];
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         Counter++;
                         sendProgressEvent(new ProgressEventArgs() {Info="import commodity localization", CurrentValue=Counter, TotalValue=DataNames.Tables["Names"].Rows.Count });
-
-                        //if((Counter % 50) == 0)
-                        //    lDBCon.TableUpdate(Data.tbcommoditylocalization);
                     }
                 }
                 // submit changes
@@ -778,6 +835,7 @@ namespace IBE.SQL
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=1");
 
+                PrepareBaseTables("tbdnmap_commodity");
                 lDBCon.Dispose();
 
             }
@@ -1042,6 +1100,204 @@ namespace IBE.SQL
             {
                 throw new Exception("Error while adding missing localization entrys", ex);
             }        
+        }
+
+        internal void CleanupCommoditynames()
+        {
+            String sqlString;
+            DataTable data = new DataTable();
+            List<int> collectorID;
+            Dictionary<Int32, Int32> changedIDs     = new Dictionary<int, int>();
+            List<Int32>              deletedIDs     = new List<Int32>();
+
+            try
+            {
+                sqlString = "select distinct L1.commodity_ID as wrong, L2.commodity_ID as ok from" +
+                            "   (select * from tbCommodityLocalization where Commodity_ID < 0) L1, (select * from tbCommodityLocalization where Commodity_ID > 0) L2" +
+                            "   where l1.locname = l2.locname" +
+                            " union " +
+                            "select distinct l_w.Commodity_ID As wrong, l_c.commodity_id As ok from tbdnmap_commodity M, " +
+                            "   tbCommodityLocalization L_w, tbCommodityLocalization L_c" +
+                            "   where L_w.locname = M.CompanionName" +
+                            "   and   L_c.locname = M.GameName" +
+                            "   and   l_w.Commodity_ID <> l_c.Commodity_ID" +
+                            "   and   l_w.Commodity_ID < 0" +
+                            "   and   l_c.Commodity_ID > 0";                              
+                    
+                Program.DBCon.Execute(sqlString, data);
+
+                foreach (DataRow dRow in data.Rows)
+                    changedIDs.Add((Int32)dRow["wrong"], (Int32)dRow["ok"]);
+
+                Program.DBCon.TransBegin();
+
+                collectorID = UpdateCommodityIDs(Program.DBCon, enLocalizationType.Commodity, changedIDs, null, false);
+
+                Program.DBCon.TransCommit();
+
+                if (collectorID.Count > 0)
+                {
+                    // check for multiple prices
+                    Program.Data.DeleteMultiplePrices(collectorID);
+                }
+
+                // this should be done in the calling routine:
+                //Program.Data.AddMissingLocalizationEntries();
+                //Program.Data.updateTranslation();
+
+            }
+            catch (Exception ex)
+            {
+                if(Program.DBCon.TransActive())
+                    Program.DBCon.TransRollback();
+
+                throw new Exception("Error while cleaning up commodity names", ex);
+            }
+        }
+
+        internal List<Int32> UpdateCommodityIDs(DBConnector useDBCon, EliteDBIO.enLocalizationType dataType, Dictionary<int, int> misspelledIDs, List<int> deletedIDs, Boolean addMispellingsToMapping)
+        {
+            try
+            {
+                List<int> collectorID = new List<int>();
+                List<int> deletedIDsDone = new List<int>();
+                string sqlString;
+
+                if(deletedIDs != null)
+                {
+                    // entries which have to be deleted
+                    foreach (Int32 delID in deletedIDs)
+                    {
+                        if (!deletedIDsDone.Contains(delID))
+                        {
+                            sqlString = String.Format("delete from tbCommodity" +
+                                                        " where id = {0}",
+                                                        delID);
+                            useDBCon.Execute(sqlString);
+                            deletedIDsDone.Add(delID);
+                        }
+                    }
+                }
+
+                if(misspelledIDs != null)
+                {
+                    // entries which have to be updated, because they're simply misspelled
+                    foreach (var changedValuePair in misspelledIDs)
+                    {
+
+                        switch (dataType)
+                        {
+                            case EliteDBIO.enLocalizationType.Commodity:
+                                // change the collected data to the new id
+                                sqlString = String.Format("update tbCommodityData" +
+                                                          " set   commodity_id = {1}" +
+                                                          " where commodity_id = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                sqlString = String.Format("update tbPriceHistory" +
+                                                          " set   commodity_id = {1}" +
+                                                          " where commodity_id = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                // extend mapping table
+                                if (addMispellingsToMapping)
+                                {
+                                    sqlString = String.Format("insert ignore into tbdnMap_Commodity(CompanionName, CompanionAddition, GameName, GameAddition)" +
+                                                              " select c1.commodity as CompanionName, '' as CompanionAddition, c2.commodity as GameName, '' as GameAddition" +
+                                                              "  from" +
+                                                              "    (select commodity from tbCommodity where id = {0}) c1" +
+                                                              "  join" +
+                                                              "    (select commodity from tbCommodity where id = {1}) c2",
+                                                              changedValuePair.Key,
+                                                              changedValuePair.Value);
+                                    useDBCon.Execute(sqlString);
+                                }
+
+                                // delete entry from tbCommodity, the ForeigenKeys will delete the 
+                                // entries from the other affected tables
+                                // entries in table "tbCommodityClassification" can be deleted
+                                sqlString = String.Format("delete from tbCommodity" +
+                                                          " where id = {0}",
+                                                          changedValuePair.Key);
+                                useDBCon.Execute(sqlString);
+
+
+                                break;
+
+                            case EliteDBIO.enLocalizationType.Category:
+                                // change the commodities to the new id
+                                sqlString = String.Format("update tbCommodity" +
+                                                          " set   category_id = {1}" +
+                                                          " where category_id = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                // delete entry from tbCategory, the ForeigenKeys will delete the 
+                                // entries from the other affected tables
+                                sqlString = String.Format("delete from tbCategory" +
+                                                          " where id = {0}",
+                                                          changedValuePair.Key);
+                                useDBCon.Execute(sqlString);
+
+                                break;
+
+                            case EliteDBIO.enLocalizationType.Economylevel:
+                                // change the commodities to the new id
+                                sqlString = String.Format("update tbCommodityData" +
+                                                          " set   DemandLevel = {1}" +
+                                                          " where DemandLevel = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                sqlString = String.Format("update tbCommodityData" +
+                                                          " set   SupplyLevel = {1}" +
+                                                          " where SupplyLevel = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                sqlString = String.Format("update tbPriceHistory" +
+                                                          " set   DemandLevel = {1}" +
+                                                          " where DemandLevel = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                sqlString = String.Format("update tbPriceHistory" +
+                                                          " set   SupplyLevel = {1}" +
+                                                          " where SupplyLevel = {0}",
+                                                          changedValuePair.Key,
+                                                          changedValuePair.Value);
+                                useDBCon.Execute(sqlString);
+
+                                // delete entry from tbCategory, the ForeigenKeys will delete the 
+                                // entries from the other affected tables
+                                sqlString = String.Format("delete from tbEconomyLevel" +
+                                                          " where id = {0}",
+                                                          changedValuePair.Key);
+                                useDBCon.Execute(sqlString);
+
+                                break;
+                            default:
+                                throw new Exception("unknown setting :  " + dataType);
+                        }
+
+                        collectorID.Add(changedValuePair.Value);
+                    }
+                }
+
+                return collectorID;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating commodity-ids", ex);
+            }
         }
 
 #endregion
@@ -3329,6 +3585,9 @@ namespace IBE.SQL
                                                   " and   commodity_id = {1}" + 
                                                   " order by timestamp desc",
                                                   foundData[0].ToString(), foundData[1].ToString());
+
+                        if(data.Tables["tbDeleteData"] != null)
+                            data.Tables["tbDeleteData"].Clear();
 
                         Program.DBCon.Execute(sqlString, "tbDeleteData", data);
                         

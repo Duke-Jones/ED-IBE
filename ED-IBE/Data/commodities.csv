@@ -1,16 +1,4 @@
 Commodity_ID;Language;Name
--4;eng;Diagnostic Sensor
--4;ger;Diagnostic Sensor
--4;fra;Diagnostic Sensor
--3;eng;H N Shock Mount
--3;ger;H N Shock Mount
--3;fra;H N Shock Mount
--2;eng;C M M Composite
--2;ger;CMM-Komposit
--2;fra;C M M Composite
--1;eng;Animalmeat
--1;ger;Animalmeat
--1;fra;Animalmeat
 1;eng;Explosives
 1;ger;Sprengstoffe
 1;fra;Explosifs
@@ -63,7 +51,7 @@ Commodity_ID;Language;Name
 17;ger;Nahrungskartuschen
 17;fra;Cartouches Alimentaires
 18;eng;Fruit And Vegetables
-18;ger;Obst Und Gemüse
+18;ger;Obst und Gemüse
 18;fra;Fruits et Légumes
 19;eng;Grain
 19;ger;Getreide
@@ -300,7 +288,7 @@ Commodity_ID;Language;Name
 97;ger;Osmium
 97;fra;Osmium
 98;eng;SAP 8 CORE CONTAINER
-98;ger;Container Mit Sap 8-Kern
+98;ger;Container mit SAP 8-Kern
 98;fra;SAP 8 CORE CONTAINER
 99;eng;Trinkets Of Hidden Fortune
 99;ger;Trinkets Of Fortune
@@ -324,7 +312,7 @@ Commodity_ID;Language;Name
 105;ger;Pyrophyllit
 105;fra;Pyrophyllite
 106;eng;Moissanite
-106;ger;Moissanite
+106;ger;Moissanit
 106;fra;Moissanite
 107;eng;Goslarite
 107;ger;Goslarit
@@ -339,7 +327,7 @@ Commodity_ID;Language;Name
 110;ger;Thallium
 110;fra;Thallium
 111;eng;Lanthanum
-111;ger;Lanthanum
+111;ger;Lanthan
 111;fra;Lanthanum
 112;eng;Bismuth
 112;ger;Bismuth
@@ -351,7 +339,7 @@ Commodity_ID;Language;Name
 114;ger;Meta-Legierungen
 114;fra;Meta-Alloys
 115;eng;Ceramic Composites
-115;ger;Keramik-Verbundwerkstoffe
+115;ger;Keramische Verbundwerkstoffe
 115;fra;Ceramic Composites
 116;eng;Evacuation Shelter
 116;ger;Evakuierungsschutz
@@ -375,7 +363,7 @@ Commodity_ID;Language;Name
 123;ger;Occupied CryoPod
 123;fra;Occupied CryoPod
 124;eng;Muon Imager
-124;ger;Muon Imager
+124;ger;Myon-Bildgeber
 124;fra;Muon Imager
 125;eng;Lavian Brandy
 125;ger;Lavian Brandy
@@ -684,7 +672,7 @@ Commodity_ID;Language;Name
 226;ger;Jotun Mookah
 226;fra;Jotun Mookah
 227;eng;Giant Verrix
-227;ger;Giant Verrix
+227;ger;Riesen-Verrix
 227;fra;Giant Verrix
 228;eng;Indi Bourbon
 228;ger;Indi Bourbon
@@ -830,7 +818,7 @@ Commodity_ID;Language;Name
 275;eng;Samarium
 275;ger;Samarium
 275;fra;Samarium
-276;eng;Low Temperature Diamond
+276;eng;Low Temperature Diamonds
 276;ger;Niedertemperaturdiamanten
 276;fra;Low Temperature Diamond
 277;eng;Hydrogen Peroxide
@@ -872,17 +860,17 @@ Commodity_ID;Language;Name
 289;eng;Power Converter
 289;ger;Energiekonverter
 289;fra;Power Converter
-290;eng;Power Grid Assembly
+290;eng;Energy Grid Assembly
 290;ger;Energienetz-Gruppe
-290;fra;Power Grid Assembly
+290;fra;Energy Grid Assembly
 291;eng;Power Transfer Bus
 291;ger;Energietransferbus
-291;fra;Power Transfer Conduits
+291;fra;Power Transfer Bus
 292;eng;Radiation Baffle
 292;ger;Radiation Baffle
 292;fra;Radiation Baffle
 293;eng;Exhaust Manifold
-293;ger;Exhaust Manifold
+293;ger;Krümmer
 293;fra;Exhaust Manifold
 294;eng;Reinforced Mounting Plate
 294;ger;Reinforced Mounting Plate
@@ -915,13 +903,13 @@ Commodity_ID;Language;Name
 303;ger;Leitfähige Stoffe
 303;fra;Conductive Fabrics
 304;eng;Military Grade Fabrics
-304;ger;Military Grade Fabrics
+304;ger;Militärische Stoffe
 304;fra;Military Grade Fabrics
 305;eng;Advanced Medicines
 305;ger;Fortschrittliche Medikamente
 305;fra;Advanced Medicines
 306;eng;Medical Diagnostic Equipment
-306;ger;Medical Diagnostic Equipment
+306;ger;Medizinische Diagnostikausrüstung
 306;fra;Medical Diagnostic Equipment
 307;eng;Survival Equipment
 307;ger;Überlebensausrüstung

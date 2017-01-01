@@ -65,6 +65,7 @@ namespace IBE
             // 
             this.cmdOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.cmdOK.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdOK.Location = new System.Drawing.Point(625, 12);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(129, 33);
@@ -77,6 +78,7 @@ namespace IBE
             // 
             this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cmdCancel.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCancel.Location = new System.Drawing.Point(625, 51);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(129, 33);
@@ -98,7 +100,7 @@ namespace IBE
             this.gameNameDataGridViewTextBoxColumn,
             this.gameAdditionDataGridViewTextBoxColumn});
             this.dgvMappings.DataSource = this.tbdnmapcommodityBindingSource;
-            this.dgvMappings.DoubleBuffer = false;
+            this.dgvMappings.DoubleBuffer = true;
             this.dgvMappings.Location = new System.Drawing.Point(12, 12);
             this.dgvMappings.Name = "dgvMappings";
             this.dgvMappings.Size = new System.Drawing.Size(607, 310);

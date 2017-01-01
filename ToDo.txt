@@ -22,12 +22,18 @@ todo:
 * routing trading: find best stations on a route
 * add a supply filter 
 * possibility of changing the sql port
-
+* recollect station data results in 0 credits ?!
 *************************************************************************************
 
 
 done:
-  
+
+
+  * base data import on update now also updates commodity localizations
+  * a few new commodity localizations for german  
+  * import of commodity-localizations does now update instead of overwrite  
+  * fixed a bug when searching for multiple prices for a commodity
+-------------------------------------------------------------------------------------         
   * unnecessary "MessageBoxInvoked" removed again
 -------------------------------------------------------------------------------------         
   * application context added  

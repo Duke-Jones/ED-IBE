@@ -30,8 +30,8 @@ namespace IBE
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LanguageEdit));
             this.dgvData = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.column_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,14 +62,15 @@ namespace IBE
             this.cmdExportCSV = new System.Windows.Forms.ButtonExt();
             this.cmdImportFromCSV = new System.Windows.Forms.ButtonExt();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.rbImportIntelligent = new System.Windows.Forms.RadioButton();
             this.rbImportOverwriteButBase = new System.Windows.Forms.RadioButton();
             this.rbImportOnlyNew = new System.Windows.Forms.RadioButton();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.cmdCorrectSpelling = new System.Windows.Forms.ButtonExt();
+            this.cmdMappings = new System.Windows.Forms.ButtonExt();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.cmdMappings = new System.Windows.Forms.ButtonExt();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataOwn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -113,9 +114,9 @@ namespace IBE
             // column_id
             // 
             this.column_id.DataPropertyName = "id1";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle3.NullValue = null;
-            this.column_id.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle1.NullValue = null;
+            this.column_id.DefaultCellStyle = dataGridViewCellStyle1;
             this.column_id.HeaderText = "ID";
             this.column_id.Name = "column_id";
             this.column_id.ReadOnly = true;
@@ -162,9 +163,9 @@ namespace IBE
             // column_id2
             // 
             this.column_id2.DataPropertyName = "id1";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle4.NullValue = null;
-            this.column_id2.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle2.NullValue = null;
+            this.column_id2.DefaultCellStyle = dataGridViewCellStyle2;
             this.column_id2.HeaderText = "ID";
             this.column_id2.Name = "column_id2";
             this.column_id2.ReadOnly = true;
@@ -295,6 +296,7 @@ namespace IBE
             // 
             // cmdSave
             // 
+            this.cmdSave.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdSave.Location = new System.Drawing.Point(11, 19);
             this.cmdSave.Name = "cmdSave";
             this.cmdSave.Size = new System.Drawing.Size(156, 34);
@@ -305,6 +307,7 @@ namespace IBE
             // 
             // cmdExit
             // 
+            this.cmdExit.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdExit.Location = new System.Drawing.Point(11, 59);
             this.cmdExit.Name = "cmdExit";
             this.cmdExit.Size = new System.Drawing.Size(156, 34);
@@ -315,6 +318,7 @@ namespace IBE
             // 
             // cmdConfirm
             // 
+            this.cmdConfirm.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdConfirm.Location = new System.Drawing.Point(216, 28);
             this.cmdConfirm.Name = "cmdConfirm";
             this.cmdConfirm.Size = new System.Drawing.Size(156, 34);
@@ -392,6 +396,7 @@ namespace IBE
             // 
             // cmdExportCSV
             // 
+            this.cmdExportCSV.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdExportCSV.Location = new System.Drawing.Point(10, 19);
             this.cmdExportCSV.Name = "cmdExportCSV";
             this.cmdExportCSV.Size = new System.Drawing.Size(156, 34);
@@ -403,6 +408,7 @@ namespace IBE
             // 
             // cmdImportFromCSV
             // 
+            this.cmdImportFromCSV.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdImportFromCSV.Location = new System.Drawing.Point(10, 59);
             this.cmdImportFromCSV.Name = "cmdImportFromCSV";
             this.cmdImportFromCSV.Size = new System.Drawing.Size(156, 34);
@@ -414,29 +420,45 @@ namespace IBE
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.rbImportIntelligent);
             this.groupBox4.Controls.Add(this.rbImportOverwriteButBase);
             this.groupBox4.Controls.Add(this.rbImportOnlyNew);
             this.groupBox4.Location = new System.Drawing.Point(10, 99);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(156, 76);
+            this.groupBox4.Size = new System.Drawing.Size(156, 83);
             this.groupBox4.TabIndex = 8;
             this.groupBox4.TabStop = false;
             this.groupBox4.Tag = "";
             this.groupBox4.Text = "Import Type";
             this.toolTip1.SetToolTip(this.groupBox4, "Handling of already existing names.");
+            this.groupBox4.Visible = false;
+            // 
+            // rbImportIntelligent
+            // 
+            this.rbImportIntelligent.AutoSize = true;
+            this.rbImportIntelligent.Checked = true;
+            this.rbImportIntelligent.Location = new System.Drawing.Point(9, 61);
+            this.rbImportIntelligent.Name = "rbImportIntelligent";
+            this.rbImportIntelligent.Size = new System.Drawing.Size(70, 17);
+            this.rbImportIntelligent.TabIndex = 7;
+            this.rbImportIntelligent.TabStop = true;
+            this.rbImportIntelligent.Tag = "";
+            this.rbImportIntelligent.Text = "Intelligent";
+            this.toolTip1.SetToolTip(this.rbImportIntelligent, resources.GetString("rbImportIntelligent.ToolTip"));
+            this.rbImportIntelligent.UseVisualStyleBackColor = true;
             // 
             // rbImportOverwriteButBase
             // 
             this.rbImportOverwriteButBase.AutoSize = true;
-            this.rbImportOverwriteButBase.Checked = true;
             this.rbImportOverwriteButBase.Location = new System.Drawing.Point(9, 44);
             this.rbImportOverwriteButBase.Name = "rbImportOverwriteButBase";
             this.rbImportOverwriteButBase.Size = new System.Drawing.Size(140, 17);
             this.rbImportOverwriteButBase.TabIndex = 6;
-            this.rbImportOverwriteButBase.TabStop = true;
             this.rbImportOverwriteButBase.Tag = "";
             this.rbImportOverwriteButBase.Text = "Overwrite All But English";
-            this.toolTip1.SetToolTip(this.rbImportOverwriteButBase, resources.GetString("rbImportOverwriteButBase.ToolTip"));
+            this.toolTip1.SetToolTip(this.rbImportOverwriteButBase, "Handling of already existing names: \r\nImport will only happen, if not existing ye" +
+        "t or the string is from a non-base language.\r\n(\"base language\" is english as glo" +
+        "bal identifier)\r\n");
             this.rbImportOverwriteButBase.UseVisualStyleBackColor = true;
             // 
             // rbImportOnlyNew
@@ -465,6 +487,7 @@ namespace IBE
             // 
             // cmdCorrectSpelling
             // 
+            this.cmdCorrectSpelling.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCorrectSpelling.Location = new System.Drawing.Point(15, 28);
             this.cmdCorrectSpelling.Name = "cmdCorrectSpelling";
             this.cmdCorrectSpelling.Size = new System.Drawing.Size(156, 34);
@@ -473,6 +496,19 @@ namespace IBE
             this.toolTip1.SetToolTip(this.cmdCorrectSpelling, resources.GetString("cmdCorrectSpelling.ToolTip"));
             this.cmdCorrectSpelling.UseVisualStyleBackColor = true;
             this.cmdCorrectSpelling.Click += new System.EventHandler(this.cmdCorrectSpelling_Click);
+            // 
+            // cmdMappings
+            // 
+            this.cmdMappings.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdMappings.Location = new System.Drawing.Point(11, 135);
+            this.cmdMappings.Name = "cmdMappings";
+            this.cmdMappings.Size = new System.Drawing.Size(156, 34);
+            this.cmdMappings.TabIndex = 11;
+            this.cmdMappings.Text = "Show Mappings";
+            this.toolTip1.SetToolTip(this.cmdMappings, "Shows the current mappings for misspelled commodity names (for auto-correction on" +
+        " import of market data)");
+            this.cmdMappings.UseVisualStyleBackColor = true;
+            this.cmdMappings.Click += new System.EventHandler(this.cmdMappings_Click);
             // 
             // groupBox2
             // 
@@ -509,18 +545,6 @@ namespace IBE
             this.label5.TabIndex = 15;
             this.label5.Text = resources.GetString("label5.Text");
             this.label5.Click += new System.EventHandler(this.label5_Click);
-            // 
-            // cmdMappings
-            // 
-            this.cmdMappings.Location = new System.Drawing.Point(11, 135);
-            this.cmdMappings.Name = "cmdMappings";
-            this.cmdMappings.Size = new System.Drawing.Size(156, 34);
-            this.cmdMappings.TabIndex = 11;
-            this.cmdMappings.Text = "Show Mappings";
-            this.toolTip1.SetToolTip(this.cmdMappings, "Shows the current mappings for misspelled commodity names (for auto-correction on" +
-        " import of market data)");
-            this.cmdMappings.UseVisualStyleBackColor = true;
-            this.cmdMappings.Click += new System.EventHandler(this.cmdMappings_Click);
             // 
             // LanguageEdit
             // 
@@ -602,5 +626,6 @@ namespace IBE
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.ButtonExt cmdCorrectSpelling;
         private System.Windows.Forms.ButtonExt cmdMappings;
+        private System.Windows.Forms.RadioButton rbImportIntelligent;
     }
 }

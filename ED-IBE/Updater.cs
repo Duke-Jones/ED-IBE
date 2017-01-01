@@ -159,6 +159,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 5, 7))
                         UpdateTo_0_5_7(ref foundError);
 
+                    if (dbVersion < new Version(0, 5, 8))
+                        UpdateTo_0_5_8(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -1673,6 +1676,89 @@ namespace IBE
             }
         }        
 
+        private static void UpdateTo_0_5_8(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.8...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                sqlString = "INSERT IGNORE INTO `tbdnmap_commodity` VALUES ('Advanceo Catalysers','','Advanced Catalysers',''),                 \n" +
+                            " ('Agricultural Medicines','','Agri-Medicines',''),('Ai Relics','','AI Relics',''),                                \n" +
+                            " ('Animalmeat','','Animal Meat',''),('Aovanced Medicines','','Advanced Medicines',''),                             \n" +
+                            " ('Atmospheric Extractors','','Atmospheric Processors',''),('Auto Fabricators','','Auto-Fabricators',''),          \n" +
+                            " ('Basic Narcotics','','Narcotics',''),('Bio Reducing Lichen','','Bioreducing Lichen',''),                         \n" +
+                            " ('C M M Composite','','CMM Composite',''),                                                                        \n" +
+                            " ('Comercial Samples','','Commercial Samples',''),('Diagnostic Sensor','','Hardware Diagnostic Sensor',''),        \n" +
+                            " ('Drones','','Limpet',''),                                                                                        \n" +
+                            " ('Encripted Data Storage','','Encrypted Data Storage',''),('H N Shock Mount','','HN Shock Mount',''),             \n" +
+                            " ('Hafnium178','','Hafnium 178',''),                                                                               \n" +
+                            " ('Hazardous Environment Suits','','H.E. Suits',''),('Heliostatic Furnaces','','Microbial Furnaces',''),           \n" +
+                            " ('Hr Shock Mount','','HN Shock Mount',''),                                                                        \n" +
+                            " ('Liquid Oxgen','','Liquid Oxygen',''),('Marine Supplies','','Marine Equipment',''),                              \n" +
+                            " ('Meta Alloys','','Meta-Alloys',''),                                                                              \n" +
+                            " ('Mu Tom Imager','','Muon Imager',''),('Non Lethal Weapons','','Non-Lethal Weapons',''),                          \n" +
+                            " ('Power Transfer Conduits','','Power Transfer Bus',''),                                                           \n" +
+                            " ('S A P8 Core Container','','SAP 8 Core Container',''),('Skimer Components','','Skimmer Components',''),          \n" +
+                            " ('Terrain Enrichment Systems','','Land Enrichment Systems',''),                                                   \n" +
+                            " ('Trinkets Of Fortune','','Trinkets Of Hidden Fortune',''),                                                       \n" +
+                            " ('U S S Cargo Ancient Artefact','','Ancient Artefact',''),                                                        \n" +
+                            " ('U S S Cargo Experimental Chemicals','','Experimental Chemicals',''),                                            \n" +
+                            " ('U S S Cargo Military Plans','','Military Plans',''),('U S S Cargo Prototype Tech','','Prototype Tech',''),      \n" +
+                            " ('U S S Cargo Rebel Transmissions','','Rebel Transmissions',''),                                                  \n" +
+                            " ('U S S Cargo Technical Blueprints','','Technical Blueprints',''),                                                \n" +
+                            " ('U S S Cargo Trade Data','','Trade Data',''),('Unknown Artifact','','Unknown Artefact',''),                      \n" +
+                            " ('Unknown Artifact2','','Unknown Artefact',''),('Wreckage Components','','Salvageable Wreckage','');              \n" +
+                            "                                                                                                                   \n" + 
+                            "delete from tbdnmap_commodity where CompanionName like binary GameName;                                            \n" +
+                            "                                                                                                                   \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EDDiscovery');                                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EDDI');                                         \n";
+
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.5.8...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.5.8", ex);
+            }
+        }        
+
+
         static void sqlScript_ScriptCompleted(object sender, EventArgs e)
         {
             m_MREvent.Set();   
@@ -1753,8 +1839,6 @@ namespace IBE
         /// <param name="parent"></param>
         internal async static System.Threading.Tasks.Task DoSpecial(Form parent)
         {
-            Boolean didUpdate = false;
-
             try
             {
 
@@ -1797,15 +1881,17 @@ namespace IBE
                 }
                 else if(m_OldDBVersion < m_NewDBVersion)
                 { 
-                    // new version installed
-                   SplashScreenForm.SetTopmost(false);
+                   // // new version installed
+                   //SplashScreenForm.SetTopmost(false);
 
-                    var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied files ?", 
-                                                                 "Update master data", 
-                                                                 MessageBoxButtons.YesNo, 
-                                                                 MessageBoxIcon.Question, 
-                                                                 MessageBoxDefaultButton.Button1);
-                    SplashScreenForm.SetTopmost(true);
+                   // var dResult = MessageBox.Show(parent, "Want to update your master data using the supplied files ?", 
+                   //                                       "Update master data", 
+                   //                                       MessageBoxButtons.YesNo, 
+                   //                                       MessageBoxIcon.Question, 
+                   //                                       MessageBoxDefaultButton.Button1);
+                   // SplashScreenForm.SetTopmost(true);
+
+                    System.Windows.Forms.DialogResult dResult = System.Windows.Forms.DialogResult.Yes;
 
                     if(dResult ==  System.Windows.Forms.DialogResult.Yes)
                     {
@@ -1821,10 +1907,9 @@ namespace IBE
                         DataIO.Close();
                         DataIO.Dispose();
                         
-                        didUpdate = true;
-
                         Program.SplashScreen.InfoAdd("updating master data...<OK>");
                     }
+
 
                     if(m_NewDBVersion == new Version(0,2,1,0))
                     {
@@ -1906,8 +1991,6 @@ namespace IBE
                         DataIO.Close();
                         DataIO.Dispose();
                         
-                        didUpdate = true;
-
                         Program.SplashScreen.InfoAdd("importing FDevIDs for the first time...<OK>");
                     }
 
