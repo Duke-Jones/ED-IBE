@@ -770,6 +770,10 @@ namespace IBE
 
                     Program.Data.ImportLocalizationDataFromCSV(openFileDialog1.FileName, activeSetting, importType);
 
+                    Program.Data.CleanupCommoditynames();
+                    Program.Data.AddMissingLocalizationEntries();
+                    Program.Data.updateTranslation();
+
                     Cursor = Cursors.Default;
                 }
 

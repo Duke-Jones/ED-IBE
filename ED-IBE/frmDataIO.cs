@@ -530,6 +530,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
+                                commodityNameUpdate = true;
                             }
                             else
                             {
@@ -601,6 +602,7 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
+                                commodityNameUpdate = true;
                             }
                             else
                             {

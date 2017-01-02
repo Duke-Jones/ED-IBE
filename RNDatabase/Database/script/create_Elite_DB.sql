@@ -1418,6 +1418,7 @@ INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`
 INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Unknown Artifact', '', 'Unknown Artefact', '');
 INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Unknown Artifact2', '', 'Unknown Artefact', '');
 INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Wreckage Components', '', 'Salvageable Wreckage', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Methanol Monohydrate', '', 'Methanol Monohydrate Crystals', '');
 
 COMMIT;
 

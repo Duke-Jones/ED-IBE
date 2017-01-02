@@ -1712,8 +1712,9 @@ namespace IBE
                             " ('U S S Cargo Rebel Transmissions','','Rebel Transmissions',''),                                                  \n" +
                             " ('U S S Cargo Technical Blueprints','','Technical Blueprints',''),                                                \n" +
                             " ('U S S Cargo Trade Data','','Trade Data',''),('Unknown Artifact','','Unknown Artefact',''),                      \n" +
-                            " ('Unknown Artifact2','','Unknown Artefact',''),('Wreckage Components','','Salvageable Wreckage','');              \n" +
-                            "                                                                                                                   \n" + 
+                            " ('Unknown Artifact2','','Unknown Artefact',''),('Wreckage Components','','Salvageable Wreckage',''),              \n" +
+                            " ('Methanol Monohydrate', '', 'Methanol Monohydrate Crystals', '');                                                \n" +  
+                            "                                                                                                                   \n" +
                             "delete from tbdnmap_commodity where CompanionName like binary GameName;                                            \n" +
                             "                                                                                                                   \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbTrustedSenders` (`Name`) VALUES ('EDDiscovery');                                  \n" +

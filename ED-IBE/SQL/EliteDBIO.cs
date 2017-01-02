@@ -796,6 +796,7 @@ namespace IBE.SQL
                                     }
                                     else
                                     {
+                                        
                                         if(importType == enLocalisationImportType.intelligent)
                                         {
                                             // it's already localized, ask user or ignore
@@ -4112,40 +4113,64 @@ namespace IBE.SQL
             {
                 // commodities
                 sqlString = String.Format(
-                            "update tbcommodity C, (select C1.ID, if(Loc1.LocName is null, C1.Commodity, Loc1.LocName) As loccommodity" + 
-                            "                          from tbCommodity C1 left join  (" +
+                            "update tbcommodity C, (select C1.ID, if(Loc1.LocName is null, if(Loc2.LocName is null, C1.Commodity, Loc2.LocName), Loc1.LocName) As loccommodity," + 
+                            "                                     if(Loc2.LocName is null, C1.Commodity, Loc2.LocName) As commodity" +
+                            "                          from tbCommodity C1" +
+                            "                          left join  (" +
                             "                               select * from tbCommodityLocalization L2, tbLanguage La2" +
 							"				                 where L2.Language_id = La2.id" +
-							"				                 and La2.language     = {0}) Loc1" + 
-							"	                        on C1.id = loc1.Commodity_id) Loc" +
-							" set C.loccommodity = Loc.loccommodity" +
-							" where C.id = Loc.ID", DBConnector.SQLAString(Language)); 
+							"				                 and La2.language     = {0})  Loc1 on C1.id = loc1.Commodity_id" + 
+				            "                          left join  (" +
+						    "                               select * from tbCommodityLocalization L2, tbLanguage La2" +
+						    "                                          where L2.Language_id = La2.id" +
+							" 		                                 and La2.language     = {1}) Loc2 on C1.id = loc2.Commodity_id" +
+                            "                       ) Loc" +
+							" set C.loccommodity = Loc.loccommodity, C.commodity    = Loc.commodity" +
+							" where C.id = Loc.ID", 
+                            DBConnector.SQLAString(Language), 
+                            DBConnector.SQLAString(Program.BASE_LANGUAGE)); 
 
                 Program.DBCon.Execute(sqlString);
 
                 // categories
                 sqlString = String.Format(
-                            "update tbCategory C, (select C1.ID, if(Loc1.LocName is null, C1.Category, Loc1.LocName) As locCategory" + 
-                            "                          from tbCategory C1 left join  (" +
+                            "update tbCategory C, (select C1.ID, if(Loc1.LocName is null, if(Loc2.LocName is null, C1.Category, Loc2.LocName), Loc1.LocName) As locCategory," + 
+                            "                                     if(Loc2.LocName is null, C1.Category, Loc2.LocName) As Category" +
+                            "                          from tbCategory C1" +
+                            "                          left join  (" +
                             "                               select * from tbCategoryLocalization L2, tbLanguage La2" +
 							"				                 where L2.Language_id = La2.id" +
-							"				                 and La2.language     = {0}) Loc1" + 
-							"	                        on C1.id = loc1.Category_id) Loc" +
-							" set C.locCategory = Loc.locCategory" +
-							" where C.id = Loc.ID", DBConnector.SQLAString(Language)); 
+							"				                 and La2.language     = {0})  Loc1 on C1.id = loc1.Category_id" + 
+				            "                          left join  (" +
+						    "                               select * from tbCategoryLocalization L2, tbLanguage La2" +
+						    "                                          where L2.Language_id = La2.id" +
+							" 		                                 and La2.language     = {1}) Loc2 on C1.id = loc2.Category_id" +
+                            "                       ) Loc" +
+							" set C.locCategory = Loc.locCategory, C.Category    = Loc.Category" +
+							" where C.id = Loc.ID", 
+                            DBConnector.SQLAString(Language), 
+                            DBConnector.SQLAString(Program.BASE_LANGUAGE));
 
                 Program.DBCon.Execute(sqlString);
 
                 // economy levels
                 sqlString = String.Format(
-                            "update tbEconomyLevel C, (select C1.ID, if(Loc1.LocName is null, C1.Level, Loc1.LocName) As locEconomyLevel" +
-                            "                              from tbEconomyLevel C1 left join  (" +
-                            "                                   select * from tbLevelLocalization L2, tbLanguage La2" +
-                            "                                    where L2.Language_id = La2.id" +
-                            "                                    and   La2.language   = {0}) Loc1" +
-                            "                               on C1.id = loc1.EconomyLevel_id) Loc " +
-                            " set C.locLevel = Loc.locEconomyLevel " +
-                            " where C.id = Loc.ID", DBConnector.SQLAString(Language)); 
+                            "update tbEconomyLevel C, (select C1.ID, if(Loc1.LocName is null, if(Loc2.LocName is null, C1.Level, Loc2.LocName), Loc1.LocName) As locEconomyLevel," + 
+                            "                                     if(Loc2.LocName is null, C1.Level, Loc2.LocName) As EconomyLevel" +
+                            "                          from tbEconomyLevel C1" +
+                            "                          left join  (" +
+                            "                               select * from tbLevelLocalization L2, tbLanguage La2" +
+							"				                 where L2.Language_id = La2.id" +
+							"				                 and La2.language     = {0})  Loc1 on C1.id = loc1.EconomyLevel_id" + 
+				            "                          left join  (" +
+						    "                               select * from tbLevelLocalization L2, tbLanguage La2" +
+						    "                                          where L2.Language_id = La2.id" +
+							" 		                                 and La2.language     = {1}) Loc2 on C1.id = loc2.EconomyLevel_id" +
+                            "                       ) Loc" +
+							" set C.locLevel = Loc.locEconomyLevel, C.Level    = Loc.EconomyLevel" +
+							" where C.id = Loc.ID", 
+                            DBConnector.SQLAString(Language), 
+                            DBConnector.SQLAString(Program.BASE_LANGUAGE)); 
 
                 Program.DBCon.Execute(sqlString);
             }
