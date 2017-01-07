@@ -359,7 +359,7 @@
             this.rbImportPrices_Bubble.Size = new System.Drawing.Size(214, 30);
             this.rbImportPrices_Bubble.TabIndex = 1;
             this.rbImportPrices_Bubble.Tag = "ImportPricesBubble";
-            this.rbImportPrices_Bubble.Text = "Ok, give me a starter kit out of a bubble \r\nwithin some ly of my current position" +
+            this.rbImportPrices_Bubble.Text = "Ok, give me a starter kit within a bubble \r\nwithin some ly of my current position" +
     "";
             this.rbImportPrices_Bubble.UseVisualStyleBackColor = true;
             // 

@@ -2376,8 +2376,15 @@ namespace IBE.SQL
                 foreach (var Classification in newCommodityClassification)
                 {
                     // get the current commodity id
-                    Int32  CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", Classification.Key));
+                    Datasets.dsEliteDB.tbdnmap_commodityRow mappedName = (Datasets.dsEliteDB.tbdnmap_commodityRow)BaseData.tbdnmap_commodity.Rows.Find(new object[] {Classification.Key, ""});
+                    Int32 CommodityID;
                     UInt32 CClassifID;
+
+                    if(mappedName != null)
+                        CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", mappedName.GameName));
+                    else
+                        CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", Classification.Key));
+
 
                     // and check, if the commodity is already added to station
                     var Found = from dsEliteDB.tbcommodityclassificationRow relevantCommodity in existingClassification
@@ -3256,7 +3263,7 @@ namespace IBE.SQL
                 {
                     DataTable data = Program.Data.GetNeighbourSystems(importParams.SystemID, importParams.Radius);
 
-                    String info = "filter data to the bubble (radius " + importParams.Radius+ " ly) : " + data.Rows.Count +" systems...";
+                    String info = "filter out bubble data (radius " + importParams.Radius+ " ly) : " + data.Rows.Count +" systems...";
                     eva = new ProgressEventArgs() { Info=info, NewLine=true};      
 
                     if(!sendProgressEvent(eva))

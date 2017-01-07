@@ -230,6 +230,9 @@
             this.cbMaxTripDistance = new System.Windows.Forms.CheckBox();
             this.cmdRoundTripCaclulation = new System.Windows.Forms.ButtonExt();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.cmbMinSupply = new System.Windows.Forms.TextBoxInt32();
+            this.label20 = new System.Windows.Forms.Label();
+            this.cbMinSupply = new System.Windows.Forms.CheckBox();
             this.dgvStationToStationRoutes = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.systemID1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.systemName1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -375,6 +378,7 @@
             // 
             // cmbShowSystem
             // 
+            this.cmbShowSystem.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmbShowSystem.Image = ((System.Drawing.Image)(resources.GetObject("cmbShowSystem.Image")));
             this.cmbShowSystem.Location = new System.Drawing.Point(495, 10);
             this.cmbShowSystem.Name = "cmbShowSystem";
@@ -885,6 +889,7 @@
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button2.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button2.Location = new System.Drawing.Point(984, 16);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(97, 23);
@@ -896,6 +901,7 @@
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button3.Location = new System.Drawing.Point(1087, 16);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(97, 23);
@@ -906,6 +912,7 @@
             // 
             // button5
             // 
+            this.button5.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button5.Image = ((System.Drawing.Image)(resources.GetObject("button5.Image")));
             this.button5.Location = new System.Drawing.Point(304, 12);
             this.button5.Name = "button5";
@@ -1121,6 +1128,7 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button6.Location = new System.Drawing.Point(1014, 10);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(93, 23);
@@ -1132,6 +1140,7 @@
             // button7
             // 
             this.button7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button7.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button7.Location = new System.Drawing.Point(1113, 10);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
@@ -1142,6 +1151,7 @@
             // 
             // button8
             // 
+            this.button8.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 3.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button8.Location = new System.Drawing.Point(556, 21);
             this.button8.Name = "button8";
@@ -1153,6 +1163,7 @@
             // 
             // button9
             // 
+            this.button9.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 3.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button9.Location = new System.Drawing.Point(556, 6);
             this.button9.Name = "button9";
@@ -1164,6 +1175,7 @@
             // 
             // button10
             // 
+            this.button10.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 3.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button10.Location = new System.Drawing.Point(478, 21);
             this.button10.Name = "button10";
@@ -1175,6 +1187,7 @@
             // 
             // button11
             // 
+            this.button11.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button11.Font = new System.Drawing.Font("Microsoft Sans Serif", 3.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button11.Location = new System.Drawing.Point(478, 6);
             this.button11.Name = "button11";
@@ -1880,6 +1893,7 @@
             // 
             // cmdRoundTripCaclulation
             // 
+            this.cmdRoundTripCaclulation.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdRoundTripCaclulation.Location = new System.Drawing.Point(453, 12);
             this.cmdRoundTripCaclulation.Name = "cmdRoundTripCaclulation";
             this.cmdRoundTripCaclulation.Size = new System.Drawing.Size(129, 33);
@@ -1893,6 +1907,9 @@
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Controls.Add(this.cmbMinSupply);
+            this.groupBox3.Controls.Add(this.label20);
+            this.groupBox3.Controls.Add(this.cbMinSupply);
             this.groupBox3.Controls.Add(this.dgvStationToStationRoutes);
             this.groupBox3.Controls.Add(this.label19);
             this.groupBox3.Controls.Add(this.cmbMaxTripDistance);
@@ -1904,6 +1921,42 @@
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "100 best round-trips";
+            // 
+            // cmbMinSupply
+            // 
+            this.cmbMinSupply.Location = new System.Drawing.Point(137, 21);
+            this.cmbMinSupply.MaxValue = 9999999;
+            this.cmbMinSupply.MinValue = 0;
+            this.cmbMinSupply.Name = "cmbMinSupply";
+            this.cmbMinSupply.Size = new System.Drawing.Size(48, 20);
+            this.cmbMinSupply.TabIndex = 48;
+            this.cmbMinSupply.Tag = "MinSupplyValue;1000";
+            this.cmbMinSupply.Text = "1000";
+            this.cmbMinSupply.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.cmbMinSupply.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbMinSupply_KeyPress);
+            this.cmbMinSupply.Leave += new System.EventHandler(this.cmbMinSupply_Leave);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(188, 24);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(10, 13);
+            this.label20.TabIndex = 50;
+            this.label20.Text = "t";
+            // 
+            // cbMinSupply
+            // 
+            this.cbMinSupply.AutoSize = true;
+            this.cbMinSupply.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.cbMinSupply.Location = new System.Drawing.Point(22, 23);
+            this.cbMinSupply.Name = "cbMinSupply";
+            this.cbMinSupply.Size = new System.Drawing.Size(110, 17);
+            this.cbMinSupply.TabIndex = 49;
+            this.cbMinSupply.Tag = "MinSupply;false";
+            this.cbMinSupply.Text = "Min. supply/stock";
+            this.cbMinSupply.UseVisualStyleBackColor = true;
+            this.cbMinSupply.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // dgvStationToStationRoutes
             // 
@@ -2134,6 +2187,7 @@
             // 
             // cmdSwitchStations
             // 
+            this.cmdSwitchStations.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdSwitchStations.Location = new System.Drawing.Point(300, 18);
             this.cmdSwitchStations.Name = "cmdSwitchStations";
             this.cmdSwitchStations.Size = new System.Drawing.Size(37, 21);
@@ -2190,6 +2244,7 @@
             // 
             // button14
             // 
+            this.button14.DisabledTextColor = System.Drawing.Color.DimGray;
             this.button14.Image = ((System.Drawing.Image)(resources.GetObject("button14.Image")));
             this.button14.Location = new System.Drawing.Point(626, 16);
             this.button14.Name = "button14";
@@ -2221,6 +2276,7 @@
             // 
             // cmdClearCommodityFilters
             // 
+            this.cmdClearCommodityFilters.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdClearCommodityFilters.Location = new System.Drawing.Point(626, 46);
             this.cmdClearCommodityFilters.Name = "cmdClearCommodityFilters";
             this.cmdClearCommodityFilters.Size = new System.Drawing.Size(87, 24);
@@ -2231,6 +2287,7 @@
             // 
             // cmdCommodityFilter2
             // 
+            this.cmdCommodityFilter2.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCommodityFilter2.Location = new System.Drawing.Point(455, 46);
             this.cmdCommodityFilter2.Name = "cmdCommodityFilter2";
             this.cmdCommodityFilter2.Size = new System.Drawing.Size(161, 24);
@@ -2241,6 +2298,7 @@
             // 
             // cmdCommodityFilter1
             // 
+            this.cmdCommodityFilter1.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdCommodityFilter1.Location = new System.Drawing.Point(112, 46);
             this.cmdCommodityFilter1.Name = "cmdCommodityFilter1";
             this.cmdCommodityFilter1.Size = new System.Drawing.Size(161, 24);
@@ -2567,6 +2625,7 @@
             // 
             // cmdFilter
             // 
+            this.cmdFilter.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdFilter.Location = new System.Drawing.Point(790, 13);
             this.cmdFilter.Name = "cmdFilter";
             this.cmdFilter.Size = new System.Drawing.Size(129, 33);
@@ -3140,5 +3199,8 @@
         private System.Windows.Forms.ToolStripMenuItem copybuyStationnameToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem copysellStationnameToClipboardToolStripMenuItem;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBoxInt32 cmbMinSupply;
+        private System.Windows.Forms.CheckBox cbMinSupply;
     }
 }

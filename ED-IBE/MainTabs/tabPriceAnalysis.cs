@@ -2243,5 +2243,31 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+        private void cmbMinSupply_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            try
+            {
+                if(e.KeyChar == (char)13)
+                    if(m_GUIInterface.saveSetting(sender) && cbMinSupply.Checked)
+                        setFilterHasChanged(true);                
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmbMinSupply_KeyPress");
+            }
+        }
+
+        private void cmbMinSupply_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender) && cbMinSupply.Checked)
+                    setFilterHasChanged(true);                
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmbMinSupply_Leave");
+            }
+        }
     }
 }

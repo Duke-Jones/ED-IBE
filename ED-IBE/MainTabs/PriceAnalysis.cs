@@ -776,7 +776,7 @@ namespace IBE.MTPriceAnalysis
                 String wherePart_Send           = "";
                 String havingPart_Return        = "";
                 String havingPart_Send          = "";
-
+                String wherePart_MinSupply      = "";
 
                 // time filter         
                 if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
@@ -796,7 +796,7 @@ namespace IBE.MTPriceAnalysis
                     havingPart_Send = " having Forward > 0 ";
                 }
 
-                if(CommoditiesReturn.Count > 0)
+                if (CommoditiesReturn.Count > 0)
                 {
                     if(String.IsNullOrEmpty(wherePart_Return))
                         wherePart_Return  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
@@ -804,6 +804,13 @@ namespace IBE.MTPriceAnalysis
                         wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
 
                     havingPart_Return = " having Back > 0 ";
+                }
+
+                // min supply filter
+                if(Program.DBCon.getIniValue<Boolean>(tabPriceAnalysis.DB_GROUPNAME, "MinSupply"))
+                {
+                    var minSupply =  Program.DBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "MinSupplyValue");
+                    wherePart_MinSupply  = String.Format(" CD.Supply >= {0} ", minSupply);
                 }
 
                 if(!Cancelled)
@@ -832,7 +839,10 @@ namespace IBE.MTPriceAnalysis
 
                     foreach(DataRow StartStation in Data.Tables["StartStations"].Rows)
                     {
-                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return);
+                        if(String.IsNullOrWhiteSpace(wherePart_MinSupply))
+                            sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return, "", "", "");
+                        else
+                            sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return, wherePart_Send == ""?" where ":" and ", wherePart_Return == ""?" where ":" and ", wherePart_MinSupply);
 
 
                         m_lDBCon.Execute(sqlString, "MinProfit", Data);
