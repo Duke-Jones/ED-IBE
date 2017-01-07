@@ -1933,6 +1933,7 @@
             this.cmbMinSupply.Tag = "MinSupplyValue;1000";
             this.cmbMinSupply.Text = "1000";
             this.cmbMinSupply.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.cmbMinSupply.Visible = false;
             this.cmbMinSupply.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbMinSupply_KeyPress);
             this.cmbMinSupply.Leave += new System.EventHandler(this.cmbMinSupply_Leave);
             // 
@@ -1944,6 +1945,7 @@
             this.label20.Size = new System.Drawing.Size(10, 13);
             this.label20.TabIndex = 50;
             this.label20.Text = "t";
+            this.label20.Visible = false;
             // 
             // cbMinSupply
             // 
@@ -1956,6 +1958,7 @@
             this.cbMinSupply.Tag = "MinSupply;false";
             this.cbMinSupply.Text = "Min. supply/stock";
             this.cbMinSupply.UseVisualStyleBackColor = true;
+            this.cbMinSupply.Visible = false;
             this.cbMinSupply.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // dgvStationToStationRoutes

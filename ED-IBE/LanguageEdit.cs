@@ -773,6 +773,9 @@ namespace IBE
                     Program.Data.CleanupCommoditynames();
                     Program.Data.AddMissingLocalizationEntries();
                     Program.Data.updateTranslation();
+                    Program.Data.PrepareBaseTables("tbcommodity");
+                    Program.Data.PrepareBaseTables("tbcommoditylocalization");
+                    Program.Data.PrepareBaseTables("tbcommoditybase");
 
                     Cursor = Cursors.Default;
                 }

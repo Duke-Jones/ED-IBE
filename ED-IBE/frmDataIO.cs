@@ -434,7 +434,6 @@ namespace IBE
             Dictionary<Int32, Int32> changedSystemIDs = new Dictionary<int,int>();
             Boolean retValue = false;
             Boolean restartEDDN = false;
-            Boolean commodityNameUpdate = false;
             Boolean stationOrCommodityImport = false;
             FolderBrowserDialog fbFolderDialog = new FolderBrowserDialog();
             OpenFileDialog foDialog = new OpenFileDialog();
@@ -530,7 +529,12 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
-                                commodityNameUpdate = true;
+                                Program.Data.CleanupCommoditynames();
+                                Program.Data.AddMissingLocalizationEntries();
+                                Program.Data.updateTranslation();
+                                Program.Data.PrepareBaseTables("tbcommodity");
+                                Program.Data.PrepareBaseTables("tbcommoditylocalization");
+                                Program.Data.PrepareBaseTables("tbcommoditybase");
                             }
                             else
                             {
@@ -554,7 +558,12 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
-                                commodityNameUpdate      = true;
+                                Program.Data.CleanupCommoditynames();
+                                Program.Data.AddMissingLocalizationEntries();
+                                Program.Data.updateTranslation();
+                                Program.Data.PrepareBaseTables("tbcommodity");
+                                Program.Data.PrepareBaseTables("tbcommoditylocalization");
+                                Program.Data.PrepareBaseTables("tbcommoditybase");
                             }
                             else
                             {
@@ -602,7 +611,12 @@ namespace IBE
                                 Program.Data.PrepareBaseTables(Program.Data.BaseData.tbcommodity.TableName);
                                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import self-added commodity localizations...<OK>", NewLine = true});
                                 stationOrCommodityImport = true;
-                                commodityNameUpdate = true;
+                                Program.Data.CleanupCommoditynames();
+                                Program.Data.AddMissingLocalizationEntries();
+                                Program.Data.updateTranslation();
+                                Program.Data.PrepareBaseTables("tbcommodity");
+                                Program.Data.PrepareBaseTables("tbcommoditylocalization");
+                                Program.Data.PrepareBaseTables("tbcommoditybase");
                             }
                             else
                             {
@@ -909,12 +923,6 @@ namespace IBE
 
                         if (stationOrCommodityImport)
                         {
-                            if(commodityNameUpdate)
-                            {
-                                // check for wrong or changed id/name-combinations and fix them
-                                Program.Data.CleanupCommoditynames();
-                            }
-
                             // update the visited information
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="updating visited systems and stations...", AddSeparator=true});
                             Program.Data.updateVisitedBaseFromLog(SQL.EliteDBIO.enVisitType.Systems | SQL.EliteDBIO.enVisitType.Stations);
@@ -1003,7 +1011,7 @@ namespace IBE
                 filesList.AddRange(m_DL_FilesPrice);
 
                 if (Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
-                    specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
+                    specialDestiationFolder = Program.GetDataPath(@"..\..\Data\");
 
                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Clear = true });
 
@@ -1836,7 +1844,7 @@ namespace IBE
                 SetButtons(false);
 
                 if(Debugger.IsAttached && ((Control.ModifierKeys & Keys.Control) == Keys.Control))
-                    specialDestiationFolder = Program.GetDataPath(@"..\..\..\Data\");
+                    specialDestiationFolder = Program.GetDataPath(@"..\..\Data\");
 
                 Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() { Clear = true });
 

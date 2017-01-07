@@ -26,8 +26,10 @@ todo:
 
 done:
 
+v0.5.9
+  * fixed a possible crash reasons when importing data from eddb
+  * a few new commodity localizations for german  
   * first steps for a additional supply/stock filter (not finished)
-  * fixed a possible crash reason when importing data from eddb
 -------------------------------------------------------------------------------------         
 v0.5.8
   * bugfix on handling of commodity-basenames

@@ -810,7 +810,7 @@ Commodity_ID;Language;Name
 272;ger;Onionhead Beta Strain
 272;fra;Onionhead Beta Strain
 273;eng;Praseodymium
-273;ger;Praseodymium
+273;ger;Praseodym
 273;fra;Praseodymium
 274;eng;Bromellite
 274;ger;Bromellite
@@ -820,7 +820,7 @@ Commodity_ID;Language;Name
 275;fra;Samarium
 276;eng;Low Temperature Diamonds
 276;ger;Niedertemperaturdiamanten
-276;fra;Low Temperature Diamond
+276;fra;Low Temperature Diamonds
 277;eng;Hydrogen Peroxide
 277;ger;Wasserstoffperoxid
 277;fra;Hydrogen Peroxide
@@ -855,7 +855,7 @@ Commodity_ID;Language;Name
 287;ger;HN-Dämpferaufhängung
 287;fra;HN Shock Mount
 288;eng;Emergency Power Cells
-288;ger;Emergency Power Cells
+288;ger;Notfall-Energiezellen
 288;fra;Emergency Power Cells
 289;eng;Power Converter
 289;ger;Energiekonverter
@@ -882,7 +882,7 @@ Commodity_ID;Language;Name
 296;ger;Magnetische Emitterspule
 296;fra;Magnetic Emitter Coil
 297;eng;Modular Terminals
-297;ger;Modular Terminals
+297;ger;Modulterminals
 297;fra;Modular Terminals
 298;eng;Nanobreakers
 298;ger;Nanobreakers

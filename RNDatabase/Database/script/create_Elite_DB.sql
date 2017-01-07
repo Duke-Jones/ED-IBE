@@ -1295,7 +1295,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.8');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.5.9');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;
