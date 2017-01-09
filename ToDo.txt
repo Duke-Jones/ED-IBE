@@ -26,6 +26,8 @@ todo:
 
 done:
 
+  * supply/stock filter is working
+-------------------------------------------------------------------------------------         
 v0.5.9
   * fixed a possible crash reasons when importing data from eddb
   * a few new commodity localizations for german  

@@ -723,15 +723,16 @@ namespace IBE.MTPriceAnalysis
                 // result gives per "station to station" route only the one best profit for all combinations of commodities
                 sqlBaseString = "insert ignore into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
                                 " select Station_ID_From, Station_ID_To, max(Profit) As Max_Profit from " +
-                                " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit  from  " +
-                                " 	(select L1.*, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward,  " +
-                                " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back  " +
-                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell  " +
+                                " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit from  " +
+                                " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
+                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
                                 " 																		  and N.Station_ID_From = {0} {2}" +
                                 " 				   ) L1  " +
                                 " 	 join " +
-                                " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell " +
+                                " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
                                 " 																		  and N.Station_ID_From = {0} {2}" +
                                 " 				   ) L2 " +
@@ -742,14 +743,15 @@ namespace IBE.MTPriceAnalysis
                                 "      " +
                                 "     join  " +
                                 "  " +
-                                " 	(select L1.*, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward,  " +
-                                " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back  " +
-                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell  " +
+                                " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
+                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
                                 " 																		  and N.Station_ID_From = {0} {3}" +
                                 " 				   ) L1  " +
                                 " 	 join " +
-                                " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell " +
+                                " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
                                 " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
                                 " 																		  and N.Station_ID_From = {0} {3}" +
                                 " 				   ) L2 " +
@@ -776,7 +778,7 @@ namespace IBE.MTPriceAnalysis
                 String wherePart_Send           = "";
                 String havingPart_Return        = "";
                 String havingPart_Send          = "";
-                String wherePart_MinSupply      = "";
+                String havingPart_MinSupply      = "";
 
                 // time filter         
                 if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
@@ -793,7 +795,7 @@ namespace IBE.MTPriceAnalysis
                     else
                         wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
 
-                    havingPart_Send = " having Forward > 0 ";
+                    havingPart_Send = " Forward > 0 ";
                 }
 
                 if (CommoditiesReturn.Count > 0)
@@ -803,14 +805,14 @@ namespace IBE.MTPriceAnalysis
                     else
                         wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
 
-                    havingPart_Return = " having Back > 0 ";
+                    havingPart_Return = " Back > 0 ";
                 }
 
                 // min supply filter
                 if(Program.DBCon.getIniValue<Boolean>(tabPriceAnalysis.DB_GROUPNAME, "MinSupply"))
                 {
                     var minSupply =  Program.DBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "MinSupplyValue");
-                    wherePart_MinSupply  = String.Format(" CD.Supply >= {0} ", minSupply);
+                    havingPart_MinSupply  = String.Format(" Supply >= {0} ", minSupply);
                 }
 
                 if(!Cancelled)
@@ -837,13 +839,40 @@ namespace IBE.MTPriceAnalysis
 
                     Int32 currentMinValue = 0;
 
+                    if(!String.IsNullOrWhiteSpace(havingPart_MinSupply))
+                    {
+                        if(!String.IsNullOrWhiteSpace(havingPart_Send))
+                        {
+                            havingPart_Send = " having " + havingPart_Send + ", " + havingPart_MinSupply;
+                        }
+                        else
+                        {
+                            havingPart_Send = " having " + havingPart_MinSupply;
+                        }
+                        if(!String.IsNullOrWhiteSpace(havingPart_Return))
+                        {
+                            havingPart_Return = " having " + havingPart_Return + ", " + havingPart_MinSupply;
+                        }
+                        else
+                        {
+                            havingPart_Return = " having " + havingPart_MinSupply;
+                        }
+                    }
+                    else
+                    {
+                        if(!String.IsNullOrWhiteSpace(havingPart_Send))
+                        {
+                            havingPart_Send = " having " + havingPart_Send;
+                        }
+                        if(!String.IsNullOrWhiteSpace(havingPart_Return))
+                        {
+                            havingPart_Return = " having " + havingPart_Return;
+                        }
+                    }
+
                     foreach(DataRow StartStation in Data.Tables["StartStations"].Rows)
                     {
-                        if(String.IsNullOrWhiteSpace(wherePart_MinSupply))
-                            sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return, "", "", "");
-                        else
-                            sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return, wherePart_Send == ""?" where ":" and ", wherePart_Return == ""?" where ":" and ", wherePart_MinSupply);
-
+                        sqlString = String.Format(sqlBaseString, StartStation["Station_ID_From"], currentMinValue, wherePart_Send, wherePart_Return, havingPart_Send, havingPart_Return);
 
                         m_lDBCon.Execute(sqlString, "MinProfit", Data);
 
