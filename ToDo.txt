@@ -28,7 +28,10 @@ todo:
 * data backup
 
 done:
-
+  * changed order of columns in "Price Analysis"->"By Station"
+    (fix won't change column order in existing installations, please do it manually 
+	-> 	right click on the table header in the upper left corner)
+-------------------------------------------------------------------------------------         
   * fixed journal scanner problem when path contains "."
   * added latest version of mysql v5.6 binaries (v5.6.35)   
 -------------------------------------------------------------------------------------         
