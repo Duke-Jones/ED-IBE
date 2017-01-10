@@ -24,8 +24,14 @@ todo:
 * recollect station data results in 0 credits ?!
 *************************************************************************************
 
+* make delay time for getting companion data after landing adjustable
+* data backup
+
 done:
 
+  * fixed journal scanner problem when path contains "."
+  * added latest version of mysql v5.6 binaries (v5.6.35)   
+-------------------------------------------------------------------------------------         
   * supply/stock filter is working
 -------------------------------------------------------------------------------------         
 v0.5.9

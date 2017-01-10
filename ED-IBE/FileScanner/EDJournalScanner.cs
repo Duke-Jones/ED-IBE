@@ -196,21 +196,41 @@ namespace IBE.FileScanner
         /// </summary>
         public void Start()
         {
+            Boolean existing = true;
+            SingleThreadLogger logger           = new SingleThreadLogger(ThreadLoggerType.FileScanner);
+
             try
             {
                 if (m_JournalScanner_Thread == null)
                 {
                     m_SavedgamesPath = Program.DBCon.getIniValue<String>(IBESettingsView.DB_GROUPNAME, "JournalPath", "");
 
-                    if(String.IsNullOrWhiteSpace(m_SavedgamesPath) || (!Directory.Exists(m_SavedgamesPath)))
-                    {
-                        if (SHGetKnownFolderPath(SAVED_GAMES, 0, IntPtr.Zero, out m_SavedgamesPath) != 0)
-                            m_SavedgamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games");
+                    if(m_extLogging) logger.Log("Init : read path <" + m_SavedgamesPath +">");
 
-                        if(Directory.Exists(m_SavedgamesPath))
+                    existing = Directory.Exists(m_SavedgamesPath);
+
+                    if(String.IsNullOrWhiteSpace(m_SavedgamesPath) || (!existing))
+                    {
+                        if(m_extLogging) logger.Log("Init : check 1 : existing = " + existing.ToString() + " - <" + m_SavedgamesPath +">");
+
+                        if (SHGetKnownFolderPath(SAVED_GAMES, 0, IntPtr.Zero, out m_SavedgamesPath) != 0)
+                        {
+                            if(m_extLogging) logger.Log("Init : check 2 : folder path = " + Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
+                            m_SavedgamesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Saved Games");
+                        }
+
+                        existing = Directory.Exists(m_SavedgamesPath);
+
+                        if(m_extLogging) logger.Log("Init : check 3 : existing = " + existing.ToString() + " - <" + m_SavedgamesPath +">");
+
+                        if(existing)
                             m_SavedgamesPath = Path.Combine(m_SavedgamesPath, @"Frontier Developments\Elite Dangerous");
 
-                        if(!Directory.Exists(m_SavedgamesPath))
+                        existing = Directory.Exists(m_SavedgamesPath);
+
+                        if(m_extLogging) logger.Log("Init : check 4 : existing = " + existing.ToString() + " - <" + m_SavedgamesPath +">");
+
+                        if(!existing)
                         {
                             m_SavedgamesPath = null;
                             throw new Exception("ED-IBE can't find the \"Saved Games\" path to access the E:D journal file");
@@ -781,7 +801,7 @@ namespace IBE.FileScanner
 
             try
             {
-                journalFilename = Path.GetFileNameWithoutExtension(journalFilename.Substring(journalFilename.IndexOf(".")+1));
+                journalFilename = Path.GetFileNameWithoutExtension(journalFilename).Replace("Journal.", "");
                 journalFilename = journalFilename.Replace(".", "");
 
                 if(journalFilename.Length == 14) 
