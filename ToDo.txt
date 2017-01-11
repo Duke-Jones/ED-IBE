@@ -21,13 +21,16 @@ todo:
 * routing trading: find best stations on a route
 * add a supply filter 
 * possibility of changing the sql port
-* recollect station data results in 0 credits ?!
 *************************************************************************************
 
-* make delay time for getting companion data after landing adjustable
 * data backup
 
 done:
+
+  * manual re-collection of station data results no more in a balance of 0 in Commander's Log
+  * when undocking the current balance is received from companion-interface
+  * added multiple attempts to recieve actual data from companion-interface after docking  
+-------------------------------------------------------------------------------------         
   * changed order of columns in "Price Analysis"->"By Station"
     (fix won't change column order in existing installations, please do it manually 
 	-> 	right click on the table header in the upper left corner)

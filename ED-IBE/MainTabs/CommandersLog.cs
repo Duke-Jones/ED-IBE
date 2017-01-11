@@ -1116,7 +1116,7 @@ namespace IBE.MTCommandersLog
                             {
                                 // add new
                                 Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System, 
-                                                                Program.actualCondition.Station, "", "", 0, 0, 0, 
+                                                                Program.actualCondition.Station, "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), 
                                                                 "Market Data Collected", "");
                             }
                         }

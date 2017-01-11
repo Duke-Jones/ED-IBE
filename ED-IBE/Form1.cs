@@ -3485,14 +3485,20 @@ namespace IBE
             }
         }
 
-        private void cmdEventLanded_Click(object sender, EventArgs e)
+        private async void cmdEventLanded_Click(object sender, EventArgs e)
         {
             try
             {
-                Program.CompanionIO.RefreshAndImport();
+                cmdEventLanded.Enabled = false;
+                var t = new System.Threading.Tasks.Task(() => Program.CompanionIO.RefreshAndImport(false, false));
+                t.Start();
+                await t;
+
+                cmdEventLanded.Enabled = true;
             }
             catch (Exception ex)
             {
+                cmdEventLanded.Enabled = true;
                 CErr.processError(ex, "Error in cmdEventLanded_Click");
             }
         }
