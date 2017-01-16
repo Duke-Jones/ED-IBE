@@ -29,7 +29,8 @@ todo:
 
 
 done:
-
+  * fixed: crash when use stock-filter in combination with commodity-filter 
+-------------------------------------------------------------------------------------         
 v0.6.0
   * manual re-collection of station data results no more in a balance of 0 in Commander's Log
   * when undocking the current balance is received from companion-interface

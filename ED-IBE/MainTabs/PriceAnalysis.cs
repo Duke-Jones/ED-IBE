@@ -843,7 +843,7 @@ namespace IBE.MTPriceAnalysis
                     {
                         if(!String.IsNullOrWhiteSpace(havingPart_Send))
                         {
-                            havingPart_Send = " having " + havingPart_Send + ", " + havingPart_MinSupply;
+                            havingPart_Send = " having " + havingPart_Send + " and " + havingPart_MinSupply;
                         }
                         else
                         {
@@ -851,7 +851,7 @@ namespace IBE.MTPriceAnalysis
                         }
                         if(!String.IsNullOrWhiteSpace(havingPart_Return))
                         {
-                            havingPart_Return = " having " + havingPart_Return + ", " + havingPart_MinSupply;
+                            havingPart_Return = " having " + havingPart_Return + " and " + havingPart_MinSupply;
                         }
                         else
                         {
