@@ -245,6 +245,20 @@ namespace IBE.MTPriceAnalysis
                         GUI.setFilterHasChanged(true);
                         
                         break;
+
+                    case FileScanner.EDJournalScanner.JournalEvent.Docked:
+
+                        if(Program.DBCon.getIniValue<Boolean>(tabPriceAnalysis.DB_GROUPNAME, "FixCurrentStation", false.ToString(), false))
+                        {
+                            Program.actualCondition.System     = e.Data.Value<String>("StarSystem");
+                            Program.actualCondition.Station    = e.Data.Value<String>("StationName");
+
+                            GUI.UpdateFixedStation();
+                            GUI.RefreshColors();
+                            GUI.setFilterHasChanged(true);
+                        }
+                                                
+                        break;
                 }
             }
             catch (Exception ex)
@@ -719,66 +733,109 @@ namespace IBE.MTPriceAnalysis
 
                 PV.progressStop();
 
-                // get for one station and all of it's neighbours the tradings for all commodity combinations
-                // result gives per "station to station" route only the one best profit for all combinations of commodities
-                sqlBaseString = "insert ignore into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
-                                " select Station_ID_From, Station_ID_To, max(Profit) As Max_Profit from " +
-                                " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit from  " +
-                                " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
-                                " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
-                                "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
-                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
-                                " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
-                                " 																		  and N.Station_ID_From = {0} {2}" +
-                                " 				   ) L1  " +
-                                " 	 join " +
-                                " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
-                                " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
-                                " 																		  and N.Station_ID_From = {0} {2}" +
-                                " 				   ) L2 " +
-                                " 	on  L1.Station_ID_From = L2.Station_ID_From " +
-                                " 	and L1.Station_ID_To   = L2.Station_ID_To " +
-                                " 	and L1.Commodity_ID    = L2.Commodity_ID" +
-                                "   {4}) Pr1 " +
-                                "      " +
-                                "     join  " +
-                                "  " +
-                                " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
-                                " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
-                                "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
-                                " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
-                                " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
-                                " 																		  and N.Station_ID_From = {0} {3}" +
-                                " 				   ) L1  " +
-                                " 	 join " +
-                                " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
-                                " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
-                                " 																		  and N.Station_ID_From = {0} {3}" +
-                                " 				   ) L2 " +
-                                " 	on  L1.Station_ID_From = L2.Station_ID_From " +
-                                " 	and L1.Station_ID_To   = L2.Station_ID_To " +
-                                " 	and L1.Commodity_ID    = L2.Commodity_ID" +
-                                "   {5}) Pr2 " +
-                                "      " +
-                                " on  Pr1.Station_ID_From = Pr2.Station_ID_From " +
-                                " and Pr1.Station_ID_To   = Pr2.Station_ID_To) ALL_RESULTS " +
-                                " where Profit > {1}" +
-                                " group by Station_ID_From, Station_ID_To;" + 
-                                " " +
-                                "delete BP1 from tmBestProfits BP1, (select Max_Profit from tmBestProfits" +
-                                "                                     order by Max_Profit desc" +
-                                "                                     limit 100,1) BP2" +
-                                " where BP1.Max_Profit < BP2.Max_Profit;" +  
-                                " " +
-                                "select Max_Profit As Min_Profit from tmBestProfits" +
-                                " order by Max_Profit desc" +
-                                " limit 100,1;";
+                if(Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    // get for one station and all of it's neighbours the tradings for all commodity combinations
+                    // result gives per "station to station" route only the one best profit for all combinations of commodities
+                    sqlBaseString = "insert ignore into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
+                                    " select Station_ID_From, Station_ID_To, max(Profit) As Max_Profit from " +
+                                    " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, Pr2.Back, (ifnull(Pr1.Forward, 0) + ifnull(Pr2.Back,0)) As Profit from  " +
+                                    " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                    " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                    "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
+                                    " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
+                                    " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
+                                    " 																		  and N.Station_ID_From = {0} {2}" +
+                                    " 				   ) L1  " +
+                                    " 	 join " +
+                                    " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
+                                    " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
+                                    " 																		  and N.Station_ID_From = {0} {2}" +
+                                    " 				   ) L2 " +
+                                    " 	on  L1.Station_ID_From = L2.Station_ID_From " +
+                                    " 	and L1.Station_ID_To   = L2.Station_ID_To " +
+                                    " 	and L1.Commodity_ID    = L2.Commodity_ID" +
+                                    "   {4}) Pr1 " +
+                                    "      " +
+                                    "     join  " +
+                                    "  " +
+                                    " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                    " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                    "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
+                                    " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
+                                    " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
+                                    " 																		  and N.Station_ID_From = {0} {3}" +
+                                    " 				   ) L1  " +
+                                    " 	 join " +
+                                    " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
+                                    " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
+                                    " 																		  and N.Station_ID_From = {0} {3}" +
+                                    " 				   ) L2 " +
+                                    " 	on  L1.Station_ID_From = L2.Station_ID_From " +
+                                    " 	and L1.Station_ID_To   = L2.Station_ID_To " +
+                                    " 	and L1.Commodity_ID    = L2.Commodity_ID" +
+                                    "   {5}) Pr2 " +
+                                    "      " +
+                                    " on  Pr1.Station_ID_From = Pr2.Station_ID_From " +
+                                    " and Pr1.Station_ID_To   = Pr2.Station_ID_To) ALL_RESULTS " +
+                                    " where Profit > {1}" +
+                                    " group by Station_ID_From, Station_ID_To;" + 
+                                    " " +
+                                    "delete BP1 from tmBestProfits BP1, (select Max_Profit from tmBestProfits" +
+                                    "                                     order by Max_Profit desc" +
+                                    "                                     limit 100,1) BP2" +
+                                    " where BP1.Max_Profit < BP2.Max_Profit;" +  
+                                    " " +
+                                    "select Max_Profit As Min_Profit from tmBestProfits" +
+                                    " order by Max_Profit desc" +
+                                    " limit 100,1;";
+                }
+                else
+                {
+                    // get for one station and all of it's neighbours the tradings for all commodity combinations
+                    // result gives per "station to station" route only the one best profit for all combinations of commodities
+                    sqlBaseString = "insert ignore into tmBestProfits(Station_ID_From, Station_ID_To, Max_Profit)" +
+                                    " select Station_ID_From, Station_ID_To, max(Profit) As Max_Profit from " +
+                                    " (select PR1.Station_ID_From, PR1.Station_ID_To, Pr1.Forward, 0, ifnull(Pr1.Forward, 0) As Profit from  " +
+                                    " 	(select L1.Station_ID_From, L1.Station_ID_To, L1.Commodity_ID, L1.Buy, L1.Sell, if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, (nullif(L2.Sell,0) - nullif(L1.Buy,0)), null) As Forward, " +
+                                    " 			if((nullif(L1.Sell,0) - nullif(L2.Buy,0)) > 0, (nullif(L1.Sell,0) - nullif(L2.Buy,0)), null) As Back," +
+                                    "           if((nullif(L2.Sell,0) - nullif(L1.Buy,0)) > 0, L1.Supply, L2.Supply) As Supply " +
+                                    " 	from          (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply    " +
+                                    " 					   from tmNeighbourstations N join tbCommodityData CD on  N.Station_ID_From = CD.Station_ID " +
+                                    " 																		  and N.Station_ID_From = {0} {2}" +
+                                    " 				   ) L1  " +
+                                    " 	 join " +
+                                    " 				  (select N.Station_ID_From, N.Station_ID_To, CD.Commodity_ID, CD.Buy, CD.Sell, CD.Supply   " +
+                                    " 					   from tmNeighbourstations N join tbCommodityData CD on N.Station_ID_To = CD.Station_ID " +
+                                    " 																		  and N.Station_ID_From = {0} {2}" +
+                                    " 				   ) L2 " +
+                                    " 	on  L1.Station_ID_From = L2.Station_ID_From " +
+                                    " 	and L1.Station_ID_To   = L2.Station_ID_To " +
+                                    " 	and L1.Commodity_ID    = L2.Commodity_ID" +
+                                    "   {4}) Pr1 " +
+                                    "      " +
+                                    "    ) ALL_RESULTS " +
+                                    " where Profit > {1}" +
+                                    " group by Station_ID_From, Station_ID_To;" + 
+                                    " " +
+                                    "delete BP1 from tmBestProfits BP1, (select Max_Profit from tmBestProfits" +
+                                    "                                     order by Max_Profit desc" +
+                                    "                                     limit 100,1) BP2" +
+                                    " where BP1.Max_Profit < BP2.Max_Profit;" +  
+                                    " " +
+                                    "select Max_Profit As Min_Profit from tmBestProfits" +
+                                    " order by Max_Profit desc" +
+                                    " limit 100,1;";
+
+                }
 
                 String wherePart_Return         = "";
                 String wherePart_Send           = "";
                 String havingPart_Return        = "";
                 String havingPart_Send          = "";
                 String havingPart_MinSupply      = "";
+
+                
 
                 // time filter         
                 if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
@@ -798,14 +855,17 @@ namespace IBE.MTPriceAnalysis
                     havingPart_Send = " Forward > 0 ";
                 }
 
-                if (CommoditiesReturn.Count > 0)
+                if(Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if(String.IsNullOrEmpty(wherePart_Return))
-                        wherePart_Return  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
-                    else
-                        wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+                    if (CommoditiesReturn.Count > 0)
+                    {
+                        if(String.IsNullOrEmpty(wherePart_Return))
+                            wherePart_Return  = " where " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+                        else
+                            wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
 
-                    havingPart_Return = " Back > 0 ";
+                        havingPart_Return = " Back > 0 ";
+                    }
                 }
 
                 // min supply filter
@@ -1007,23 +1067,41 @@ namespace IBE.MTPriceAnalysis
                 wherePart_Send   = "";
                 wherePart_Return = "";
 
-                // time filter         
-                if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
+                if(Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    wherePart_Send   = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
-                    wherePart_Return = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                    // time filter         
+                    if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
+                    {
+                        wherePart_Send   = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                        wherePart_Return = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                    }
+
+                    // commodity filter
+                    if(CommoditiesSend.Count > 0)
+                    {
+                        wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
+                    }
+
+                    if(CommoditiesReturn.Count > 0)
+                    {
+                        wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
+                    }
+                }
+                else
+                {
+                    // time filter         
+                    if(Program.DBCon.getIniValue<Boolean>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilter", false.ToString(), true))
+                    {
+                        wherePart_Send   = " and CD.timestamp >= " + DBConnector.SQLDateTime(stopTime);
+                    }
+
+                    // commodity filter
+                    if(CommoditiesSend.Count > 0)
+                    {
+                        wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
+                    }
                 }
 
-                // commodity filter
-                if(CommoditiesSend.Count > 0)
-                {
-                    wherePart_Send += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesSend);
-                }
-
-                if(CommoditiesReturn.Count > 0)
-                {
-                    wherePart_Return += " and " + DBConnector.GetString_Or<Int32>("CD.Commodity_ID", CommoditiesReturn);
-                }
 
                 // now get the timestamps of the best-profit commodities and get other details
                 foreach (dsEliteDB.tmpa_s2s_besttripsRow CurrentRow in Result)

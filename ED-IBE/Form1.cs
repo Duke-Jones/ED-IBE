@@ -3314,7 +3314,7 @@ namespace IBE
                         {
                             AddComboboxLine(txtEventInfo,       "Docked");
 
-                            Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
+                            Program.actualCondition.System     = e.Data.Value<String>("StarSystem");
                             Program.actualCondition.Station    = e.Data.Value<String>("StationName");
 
                             ShowLocationData();

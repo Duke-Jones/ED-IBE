@@ -191,6 +191,10 @@ namespace IBE.MTPriceAnalysis
                 foreach (String Value in ComboboxValues.Split(';'))
                 cmbMaxTripDistance.Items.Add(Int32.Parse(Value));
 
+                cmbRoutingType.Items.Clear();
+                cmbRoutingType.Items.Add("one way");
+                cmbRoutingType.Items.Add("round trip");
+
                 m_GUIInterface = new DBGuiInterface(DB_GROUPNAME, new DBConnector(Program.DBCon.ConfigData, true));
                 m_GUIInterface.loadAllSettings(this);
 
@@ -205,6 +209,8 @@ namespace IBE.MTPriceAnalysis
 
                 SetFilterButtonText(cmdCommodityFilter1, m_DataSource.CommoditiesSend);
                 SetFilterButtonText(cmdCommodityFilter2, m_DataSource.CommoditiesReturn);
+
+                cmdCommodityFilter2.Enabled = Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase);
 
                 m_InitDone = true;                              
 
@@ -827,7 +833,7 @@ namespace IBE.MTPriceAnalysis
         }
 
         /// <summary>
-        /// "Location to Star Distance" enabled/disabled
+        /// CheckBox_CheckedChanged
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -841,8 +847,18 @@ namespace IBE.MTPriceAnalysis
                     {
                         Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
                     }
-                    else if (((CheckBox)sender).Equals(cbFixedStation) && m_InitDone)
+                    else if (((CheckBox)sender).Equals(cbFixedStation) && cbFixedStation.Checked && m_InitDone)
+                    {             
+                        cbFixedCurrentStation.Checked = false;
+
+                        UpdateFixedStation();
+
+                        Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
+                    }
+                    else if (((CheckBox)sender).Equals(cbFixedCurrentStation) && cbFixedCurrentStation.Checked && m_InitDone)
                     {                                       
+                        cbFixedStation.Checked = false;
+
                         UpdateFixedStation();
 
                         Program.Colors.SetColorToObject(cmdRoundTripCaclulation, GUIColors.ColorNames.Marked_ForeColor, GUIColors.ColorNames.Marked_BackColor);
@@ -855,7 +871,7 @@ namespace IBE.MTPriceAnalysis
             }
             catch (Exception ex)
             {
-                CErr.processError(ex, "Error in cbMaxDistanceToStar_CheckedChanged");
+                CErr.processError(ex, "Error in CheckBox_CheckedChanged");
             }
         }
 
@@ -974,6 +990,55 @@ namespace IBE.MTPriceAnalysis
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error in cmbSystemLightYears_Leave");
+            }
+        }
+
+        private void cmbKeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+              if(e.KeyCode == Keys.Enter)
+                if(m_GUIInterface.saveSetting(sender))
+                {
+                    cmdCommodityFilter2.Enabled = Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase);
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmbKeyDown");
+            }
+        }
+
+        private void cmbSelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender))
+                {
+                    cmdCommodityFilter2.Enabled = Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase);
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmbSelectedIndexChanged");
+            }
+        }
+
+        private void cmbLeave(object sender, EventArgs e)
+        {
+            try
+            {
+                if(m_GUIInterface.saveSetting(sender))
+                {
+                    cmdCommodityFilter2.Enabled = Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase);
+                    setFilterHasChanged(true);                
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmbLeave");
             }
         }
 
@@ -1346,6 +1411,8 @@ namespace IBE.MTPriceAnalysis
                     SetComboBoxEventsActive(true);
 
                     sortDataGridView(dgvStationToStationRoutes);
+
+                    scStationToStation_2.Panel2Collapsed = (!Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase));
                 }
 
                 SetButtons(true);
@@ -1850,7 +1917,9 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
-        private void UpdateFixedStation()
+        public delegate void Int32Delegate(Int32 value);
+
+        public void UpdateFixedStation()
         {
             try
             {
@@ -1862,6 +1931,28 @@ namespace IBE.MTPriceAnalysis
                     {
                         Station1 = (int?)cmbStation1.SelectedValue;
                         m_DataSource.FixedStation = Station1.Value;
+                    }
+                    catch (Exception)
+                    {
+                        m_DataSource.FixedStation = 0;
+                        cbFixedStation.Checked = false;
+                    }
+                }
+                else if(cbFixedCurrentStation.Checked)
+                {
+                    try
+                    {
+                        if(Program.actualCondition.Station_ID != null)
+                        {
+                            Station1 = (int?)Program.actualCondition.Station_ID;
+                            cmbStation1.Invoke((MethodInvoker)delegate(){cmbStation1.SelectedValue =  Station1;});
+                            m_DataSource.FixedStation = Station1.Value;
+                        }
+                        else
+                        {
+                            Station1 = (int?)cmbStation1.SelectedValue;
+                            m_DataSource.FixedStation = Station1.Value;
+                        }
                     }
                     catch (Exception)
                     {
@@ -1952,6 +2043,7 @@ namespace IBE.MTPriceAnalysis
             Int32 totalProfit = 0;
             DataGridViewExt currentDGV = (DataGridViewExt)sender;
             Label detailStation;
+            Label detailStationExt = null;
             Label detailCommodity;
             Label detailProfit;
             Panel detailPanel;
@@ -1965,12 +2057,31 @@ namespace IBE.MTPriceAnalysis
                     detailCommodity   = lbDetailCommodity1;
                     detailProfit      = lbDetailProfit1;     
                     detailPanel       = paStationDetail1;
+
+                    if(!cmbRoutingType.Text.Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // if we don't calculate round trips we must consider 
+                        // a manual update of the second station details
+                        detailStationExt = lbDetailStation2;
+                    }
                 }
                 else
                 {
                     detailStation     = lbDetailStation2;
-                    detailCommodity   = lbDetailCommodity2;
-                    detailProfit      = lbDetailProfit2;
+                    
+                    if(cmbRoutingType.Text.Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        detailCommodity   = lbDetailCommodity2;
+                        detailProfit      = lbDetailProfit2;
+                    }
+                    else
+                    {
+                        detailCommodity           = null;
+                        detailProfit              = null;
+                        lbDetailCommodity2. Text  = "none";
+                        lbDetailProfit2.Text      = "none";
+                        detailProfit = null;
+                    }
                     detailPanel       = paStationDetail2;
                 }
 
@@ -1981,8 +2092,12 @@ namespace IBE.MTPriceAnalysis
                     stationInfo   = (SQL.Datasets.dsEliteDB.visystemsandstationsRow[])Program.Data.BaseData.visystemsandstations.Select("StationID=" + commodityInfo.Station_ID);
 
                     detailStation.Text    = String.Format("{0} / {1}", stationInfo[0].SystemName, stationInfo[0].StationName);
-                    detailCommodity.Text  = commodityInfo.Commodity;
-                    detailProfit.Text     = commodityInfo.Profit.ToString();
+
+                    if(detailCommodity != null)
+                        detailCommodity.Text  = commodityInfo.Commodity;
+
+                    if(detailProfit != null)
+                        detailProfit.Text     = commodityInfo.Profit.ToString();
 
                     if(stationInfo[0].StationID == (Program.actualCondition.Station_ID ?? 0))
                     {
@@ -1992,14 +2107,34 @@ namespace IBE.MTPriceAnalysis
                     {
                         Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
                     }
+
+                    if((detailStationExt != null) && (detailStationExt.Tag.GetType() == typeof(Int32)))
+                    {
+                        lbDetailCommodity2. Text  = "none";
+                        lbDetailProfit2.Text      = "none";
+
+                        if((Int32)detailStationExt.Tag == (Program.actualCondition.Station_ID ?? 0))
+                        {
+                            Program.Colors.SetColorToObject(paStationDetail2, GUIColors.ColorNames.Marked_ForeColor1, GUIColors.ColorNames.Marked_BackColor1, true);
+                        }
+                        else
+                        {
+                            Program.Colors.SetColorToObject(paStationDetail2, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
+                        }
+                    }
                }
                 else
                 {
                     detailStation.Text    =  "-";
                     detailCommodity.Text  =  "-";
-                    detailProfit.Text     =  "0";
+
+                    if(detailProfit != null)
+                        detailProfit.Text     =  "0";
 
                     Program.Colors.SetColorToObject(detailPanel, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
+
+                    if((detailStationExt != null))
+                        Program.Colors.SetColorToObject(paStationDetail2, GUIColors.ColorNames.Default_ForeColor, GUIColors.ColorNames.Default_BackColor, true);
                 }
 
                 if(Int32.TryParse(lbDetailProfit1.Text, out intValue))
@@ -2267,6 +2402,20 @@ namespace IBE.MTPriceAnalysis
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error in cmbMinSupply_Leave");
+            }
+        }
+
+        private void cmbStation2_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (!cmbRoutingType.Text.Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if(cmbStation2.Text == "")
+                    lbDetailStation2.Text    = "none";
+                else
+                {
+                    lbDetailStation2.Text   = String.Format("{0} / {1}", ((System.Data.DataRowView)cmbStation2.SelectedItem).Row[1], ((System.Data.DataRowView)cmbStation2.SelectedItem).Row[3]);
+                    lbDetailStation2.Tag    = (Int32)((System.Data.DataRowView)cmbStation2.SelectedItem).Row[2];
+                }
             }
         }
     }

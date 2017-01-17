@@ -19,16 +19,19 @@ todo:
 
 * view system data after a jump
 * routing trading: find best stations on a route
-* add a supply filter 
 * possibility of changing the sql port
 * delete old log files
 * data backup
 
 *************************************************************************************
 
-
+--> update station on landing event
 
 done:
+  
+  * added "current station" option ("dynamic" fixed station which depends on your current location)
+  * added single trading hop calculation
+-------------------------------------------------------------------------------------         
   * fixed: crash when use stock-filter in combination with commodity-filter 
 -------------------------------------------------------------------------------------         
 v0.6.0
