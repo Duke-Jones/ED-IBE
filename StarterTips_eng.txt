@@ -18,6 +18,7 @@ Content:
 			3.4. find the next station that sells a particular commodity
 			3.5. find profitable route "extended" (eg. for Trading-CGs)
 			     (station and commodity filter)
+ 			3.6. find next profitable destination "one way" ("wild trader")
 		4. Export and import of data (menu item "Data" -> "Import&Export")
 			4.1 Export a list of visited systems for import into E:D
 		5. Translations
@@ -147,6 +148,7 @@ Result:
 
 3.3. find profitable route
 Go to the tab "Price Analysis" -> "Station-To_Station" and press "Start Calculation".
+("Type"="round trip" should be set)
 In the right table you see an overview of the 100 most profitable routes with details.
 Depending on which row you select, in the two left tables the commodity data is shown.
 So look for the right route that suits most to your needs and then identify
@@ -168,6 +170,15 @@ in a specific direction. Eg. if you need to buy "Gallium" und "Indium"
 for selling it on "Station 1",you have to set the buy filter for "Station 2" to 
 "Gallium" und "Indium". Now you get only routes with stations which can supply 
 at least one these both commodities.
+
+3.6. find next profitable destination "one way" ("wild trader")
+As alternative to "fix" you can also enable "current". In opposite to fix
+now always the current station (where you've been docked) is your fixed start station.
+If you also set "Type" to "one way" you will follow a previously unknown route 
+(... like a kind of wild trader ;) ) After each docking you will get a new destination.
+Attention: The newer the prices, the better the results.
+Just try it or play around with the "max age"-filter.
+PS: if "Type" is set to "one way" the commodity filters for station 2 are ignored.
 
 ___________________________________________
 4. Export and import of data ("Data" -> "Import&Export")

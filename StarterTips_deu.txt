@@ -14,6 +14,7 @@ Inhalt:
 			3.4. die nächste Station finden, die eine bestimmte Ware verkauft
 			3.5. profitable Route finden "extended" (z. für Trading-CGs)
 			     (Station-Filter + Commodity-Filter)
+			3.6. nächstes profitables Ziel ohne Rückflug finden ("wild trader")
 		4. Ex-/Import von Daten
 			4.1 Export der besuchten System zum Import in E:D
 		5. Übersetzungen
@@ -144,7 +145,8 @@ Ergebnis:
 
 3.3. profitable Route finden
 Geht man jetzt auf den Tab "Preisanalysis" -> "Station-To_Station" und drückt "Start Calculation"
-werden einem kurze Zeit später die Ergebnisse unter Berücksichtigung der eingestellten Filter präsentiert:
+("Type"="round trip" sollte eingestellt sein) werden einem kurze Zeit später die Ergebnisse 
+unter Berücksichtigung der eingestellten Filter präsentiert:
 In der rechten Tabelle befindet sich die Übersicht über die 100 profitabelsten Routen mit Detailangaben.
 Je nachdem welchen Datensatz man auswählt werden die Warendaten der beiden beteiligten Stationen in 
 den beiden linken Tabellen angezeigt. 
@@ -166,6 +168,15 @@ Zusätzlich kann man für beide Flugrichtungen die Waren einschränken.
 Wenn auf der fixierten "Station 1" nur die Waren "Gallium" und "Indium" 
 verkauft werden solln, muss man den Kauf-Filter der "Station 2" auf "Gallium" und "Indium"
 setzen. Jetzt werden nur noch Station berücksichtigt, die die ausgewählten Waren liefern können.
+
+3.6. nächstes profitables Ziel ohne Rückflug finden ("wild trader")
+Neben der Option "Fix" gibt es noch die Option "Current". Im Gegensatz zu "Fix"
+wird hier immer die *aktuelle* Station als Ursprung gewählt. In Verbindung mit
+der Einstellung "Type"="one way" kann man eine vorher völlig unbekannte Route abfliegen.
+Nach jedem Landen verschlägt es einen zu einer neuen Station. Achtung: je älter die Preise sind,
+um so unzuverlässige ist die Profit-Berechnung. Entweder auf "gut Glück" oder mit dem "max age"-Filter
+probieren.
+PS: Tst "Type"="one way" eingestellt werden evtl. eingestellte Waren-Filter bei Station 2 ignoriert.
 
 ________________________________________________________________________
 4. Ex-/Import von Daten (Menüpunkt "Data"->"Import")

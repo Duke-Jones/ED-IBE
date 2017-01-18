@@ -25,10 +25,12 @@ todo:
 
 *************************************************************************************
 
---> update station on landing event
-
 done:
-  
+
+
+v0.6.1
+  * fix: on station tables was shown the wrong collecting date  
+-------------------------------------------------------------------------------------         
   * added "current station" option ("dynamic" fixed station which depends on your current location)
   * added single trading hop calculation
 -------------------------------------------------------------------------------------         

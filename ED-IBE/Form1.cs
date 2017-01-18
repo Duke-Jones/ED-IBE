@@ -3309,9 +3309,9 @@ namespace IBE
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
-                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
-                        {
+                        //if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
+                        //   (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
+                        //{
                             AddComboboxLine(txtEventInfo,       "Docked");
 
                             Program.actualCondition.System     = e.Data.Value<String>("StarSystem");
@@ -3319,7 +3319,7 @@ namespace IBE
 
                             ShowLocationData();
                             ShowStatus();
-                        }
+                        //}
 
                         break;
 

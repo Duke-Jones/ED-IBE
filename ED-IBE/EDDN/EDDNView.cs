@@ -238,14 +238,17 @@ namespace IBE.EDDN
             {
                 m_Communicator.StartEDDNListening();
 
-                if(MessageBox.Show(this, "Shall I also activate sending of market data for you?", 
-                                         "EDDN Network", 
-                                         MessageBoxButtons.YesNo, 
-                                         MessageBoxIcon.Question, 
-                                         MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                if(!m_Communicator.SenderIsActivated)
                 {
-                    if(!m_Communicator.SenderIsActivated)
-                        m_Communicator.ActivateSender();
+                    if(MessageBox.Show(this, "Shall I also activate sending of market data for you?", 
+                                             "EDDN Network", 
+                                             MessageBoxButtons.YesNo, 
+                                             MessageBoxIcon.Question, 
+                                             MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        if(!m_Communicator.SenderIsActivated)
+                            m_Communicator.ActivateSender();
+                    }
                 }
             }
             catch (Exception ex)
