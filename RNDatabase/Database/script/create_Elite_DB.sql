@@ -1066,17 +1066,17 @@ USE `elite_db`;
 CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vilog` AS 
 select `l`.`time` AS `time`,`s`.`systemname` AS `systemname`,`st`.`stationname` AS `stationname`,`e`.`eventtype` AS `eventtype`,`c`.`cargoaction` 
 AS `cargoaction`,`co`.`loccommodity` AS `loccommodity`,`l`.`cargovolume` AS `cargovolume`,`l`.`credits_transaction` 
-AS `credits_transaction`,`l`.`credits_total` AS `credits_total`, `l`.`distance` AS `distance`, `l`.`notes` AS `notes` from (((((`tblog` `l` 
-left join `tbeventtype` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbcargoaction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) 
-left join `tbsystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbstations` `st` on((`l`.`station_id` = `st`.`id`))) 
-left join `tbcommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
+AS `credits_transaction`,`l`.`credits_total` AS `credits_total`, `l`.`distance` AS `distance`, `l`.`notes` AS `notes` from (((((`tbLog` `l` 
+left join `tbEventType` `e` on((`l`.`event_id` = `e`.`id`))) left join `tbCargoAction` `c` on((`l`.`cargoaction_id` = `c`.`id`))) 
+left join `tbSystems` `s` on((`l`.`system_id` = `s`.`id`))) left join `tbStations` `st` on((`l`.`station_id` = `st`.`id`))) 
+left join `tbCommodity` `co` on((`l`.`commodity_id` = `co`.`id`)));
 
 -- -----------------------------------------------------
 -- View `elite_db`.`viSystemsAndStations`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `elite_db`.`viSystemsAndStations`;
 USE `elite_db`;
-CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `visystemsandstations` AS select `sy`.`id` AS `SystemID`,`sy`.`systemname` AS `SystemName`,`s`.`id` AS `StationID`,`s`.`stationname` AS `StationName` from (`tbstations` `s` join `tbsystems` `sy`) where (`s`.`system_id` = `sy`.`id`);
+CREATE  OR REPLACE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `visystemsandstations` AS select `sy`.`id` AS `SystemID`,`sy`.`systemname` AS `SystemName`,`s`.`id` AS `StationID`,`s`.`stationname` AS `StationName` from (`tbStations` `s` join `tbSystems` `sy`) where (`s`.`system_id` = `sy`.`id`);
 USE `elite_db`;
 
 DELIMITER $$
@@ -1084,7 +1084,7 @@ USE `elite_db`$$
 CREATE
 DEFINER=`RN_User`@`::1`
 TRIGGER `elite_db`.`tbCommodityData_AFTER_INSERT`
-AFTER INSERT ON `elite_db`.`tbcommoditydata`
+AFTER INSERT ON `elite_db`.`tbCommodityData`
 FOR EACH ROW
 BEGIN                                                                                                                                                                         
 	DECLARE isActive BOOLEAN;                                                                                                                                                  
@@ -1106,7 +1106,7 @@ USE `elite_db`$$
 CREATE
 DEFINER=`RN_User`@`::1`
 TRIGGER `elite_db`.`tbCommodityData_AFTER_UPDATE`
-AFTER UPDATE ON `elite_db`.`tbcommoditydata`
+AFTER UPDATE ON `elite_db`.`tbCommodityData`
 FOR EACH ROW
 BEGIN                                                                                                                                                                         
 	DECLARE isActive BOOLEAN;                                                                                                                                                  
