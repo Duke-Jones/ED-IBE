@@ -28,6 +28,8 @@ todo:
 done:
 
 
+  * changed format of timestamps for sending to EDDN due to problems with the timezone offset
+-------------------------------------------------------------------------------------         
 v0.6.1
   * fix: on station tables was shown the wrong collecting date  
 -------------------------------------------------------------------------------------         
