@@ -623,7 +623,9 @@ namespace IBE
                 cbStartWebserverOnLoad.Checked = true;
                 bStart_Click(null, null);
             }
-   
+
+            SetQuickDecisionSwitch();
+
         }
 
        
@@ -3686,6 +3688,18 @@ namespace IBE
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Int32.Parse("dsfsd");
+        }
+
+        private void cbEDDNOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", cbEDDNOverride.Checked.ToString());
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cbEDDNOverride_CheckedChanged");
+            }
         }
 
         private void txtEventInfo_DropDownClosed(object sender, EventArgs e)

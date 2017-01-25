@@ -28,6 +28,11 @@ todo:
 done:
 
 
+v0.6.2
+  * fixed behaviour for "quick decision switch" for upload market data or not
+  * fixed wrong stock value when sending price data
+  * changed format of timestamps back with fixed format of journal entries
+-------------------------------------------------------------------------------------         
   * changed format of timestamps for sending to EDDN due to problems with the timezone offset
 -------------------------------------------------------------------------------------         
 v0.6.1

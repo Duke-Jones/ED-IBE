@@ -384,6 +384,7 @@
         "set after collecting data next time.\r\nDoes not affect the settings for outfittin" +
         "g and shipyard data.\r\n\r\n");
             this.cbEDDNOverride.UseVisualStyleBackColor = true;
+            this.cbEDDNOverride.CheckedChanged += new System.EventHandler(this.cbEDDNOverride_CheckedChanged);
             // 
             // contextMenuStrip1
             // 
