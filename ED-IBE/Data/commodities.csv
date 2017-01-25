@@ -13,10 +13,10 @@ Commodity_ID;Language;Name
 4;fra;Pesticides
 5;eng;Clothing
 5;ger;Kleidung
-5;fra;Maquillage
+5;fra;Vêtements
 6;eng;Consumer Technology
 6;ger;Unterhaltungselektronik
-6;fra;Vêtements
+6;fra;Électronique Grand Public
 7;eng;Domestic Appliances
 7;ger;Haushaltsgeräte
 7;fra;Équipement de Loisir
@@ -202,7 +202,7 @@ Commodity_ID;Language;Name
 67;fra;Combinaisons de Protection
 68;eng;Land Enrichment Systems
 68;ger;Landanreicherungssysteme
-68;fra;Systèmes d'Enrichissement Des
+68;fra;Sys. Enrichissement Sols
 69;eng;Resonating Separators
 69;ger;Resonanzabgrenzer
 69;fra;Séparateurs à Résonance
@@ -307,7 +307,7 @@ Commodity_ID;Language;Name
 103;fra;Geological Equipment
 104;eng;Structural Regulators
 104;ger;Strukturregulatoren
-104;fra;Structural Regulators
+104;fra;Régulateurs Structurels
 105;eng;Pyrophyllite
 105;ger;Pyrophyllit
 105;fra;Pyrophyllite
@@ -337,16 +337,16 @@ Commodity_ID;Language;Name
 113;fra;Bootleg Liquor
 114;eng;Meta-Alloys
 114;ger;Meta-Legierungen
-114;fra;Meta-Alloys
+114;fra;Méta-Alliages
 115;eng;Ceramic Composites
 115;ger;Keramische Verbundwerkstoffe
-115;fra;Ceramic Composites
+115;fra;Composés en Céramique
 116;eng;Evacuation Shelter
 116;ger;Evakuierungsschutz
-116;fra;Evacuation Shelter
+116;fra;Abri d'Urgence
 117;eng;Synthetic Reagents
 117;ger;Synthetische Reagenzstoffe
-117;fra;Synthetic Reagents
+117;fra;Réactifs Synthétiques
 118;eng;Surface Stabilisers
 118;ger;Oberflächenstabilisierer
 118;fra;Surface Stabilisers
@@ -805,7 +805,7 @@ Commodity_ID;Language;Name
 270;fra;Occupied Escape Pod
 271;eng;Water
 271;ger;Wasser
-271;fra;Water
+271;fra;Eau
 272;eng;Onionhead Beta Strain
 272;ger;Onionhead Beta Strain
 272;fra;Onionhead Beta Strain
@@ -820,7 +820,7 @@ Commodity_ID;Language;Name
 275;fra;Samarium
 276;eng;Low Temperature Diamonds
 276;ger;Niedertemperaturdiamanten
-276;fra;Low Temperature Diamonds
+276;fra;Diamants Basse Température
 277;eng;Hydrogen Peroxide
 277;ger;Wasserstoffperoxid
 277;fra;Hydrogen Peroxide
@@ -829,40 +829,40 @@ Commodity_ID;Language;Name
 278;fra;Liquid Oxygen
 279;eng;Methanol Monohydrate Crystals
 279;ger;Methanol-Monohydrat-Kristalle
-279;fra;Methanol Monohydrate Crystals
+279;fra;Cristaux de Méthanol Monohydraté
 280;eng;Lithium Hydroxide
 280;ger;Lithiumhydroxid
-280;fra;Lithium Hydroxide
+280;fra;Hydroxyde de Lithium
 281;eng;Methane Clathrate
 281;ger;Methanklathrat
 281;fra;Methane Clathrate
 282;eng;Insulating Membrane
 282;ger;Isoliermembran
-282;fra;Insulating Membrane
+282;fra;Membrane Isolante
 283;eng;CMM Composite
 283;ger;CMM-Komposit
-283;fra;CMM Composite
+283;fra;Composite MMC
 284;eng;Cooling Hoses
 284;ger;Cooling Hoses
 284;fra;Cooling Hoses
 285;eng;Neofabric Insulation
 285;ger;Neofabric Insulation
-285;fra;Neofabric Insulation
+285;fra;Isolant en Néotextile
 286;eng;Articulation Motors
 286;ger;Articulation Motors
-286;fra;Articulation Motors
+286;fra;Moteurs à Articulation
 287;eng;HN Shock Mount
 287;ger;HN-Dämpferaufhängung
-287;fra;HN Shock Mount
+287;fra;Protection Antichocs HP
 288;eng;Emergency Power Cells
 288;ger;Notfall-Energiezellen
 288;fra;Emergency Power Cells
 289;eng;Power Converter
 289;ger;Energiekonverter
-289;fra;Power Converter
+289;fra;Convertisseur d'Énergie
 290;eng;Energy Grid Assembly
 290;ger;Energienetz-Gruppe
-290;fra;Energy Grid Assembly
+290;fra;Système de Réseau d'Alimentation
 291;eng;Power Transfer Bus
 291;ger;Energietransferbus
 291;fra;Power Transfer Bus
@@ -877,40 +877,40 @@ Commodity_ID;Language;Name
 294;fra;Reinforced Mounting Plate
 295;eng;Heatsink Interlink
 295;ger;Kühlkörperverbinder
-295;fra;Heatsink Interlink
+295;fra;Interconnexion de Dissipateur Thermique
 296;eng;Magnetic Emitter Coil
 296;ger;Magnetische Emitterspule
-296;fra;Magnetic Emitter Coil
+296;fra;Bobine d'Émission Magnétique
 297;eng;Modular Terminals
 297;ger;Modulterminals
-297;fra;Modular Terminals
+297;fra;Terminaux Modulaires
 298;eng;Nanobreakers
 298;ger;Nanobreakers
-298;fra;Nanobreakers
+298;fra;Nanodestructeurs
 299;eng;Telemetry Suite
 299;ger;Telemetry Suite
-299;fra;Telemetry Suite
+299;fra;Système de Télémétrie
 300;eng;Micro Controllers
 300;ger;Microcontroller
-300;fra;Micro Controllers
+300;fra;Microcontrôleurs
 301;eng;Ion Distributor
 301;ger;Ionenverteiler
 301;fra;Ion Distributor
 302;eng;Hardware Diagnostic Sensor
 302;ger;Hardware-Diagnostiksensor
-302;fra;Hardware Diagnostic Sensor
+302;fra;Capteur de Diagnostic d'Équipement
 303;eng;Conductive Fabrics
 303;ger;Leitfähige Stoffe
-303;fra;Conductive Fabrics
+303;fra;Tissus Conducteurs
 304;eng;Military Grade Fabrics
 304;ger;Militärische Stoffe
 304;fra;Military Grade Fabrics
 305;eng;Advanced Medicines
 305;ger;Fortschrittliche Medikamente
-305;fra;Advanced Medicines
+305;fra;Médicaments Complexes
 306;eng;Medical Diagnostic Equipment
 306;ger;Medizinische Diagnostikausrüstung
-306;fra;Medical Diagnostic Equipment
+306;fra;Équipement de Diagnostic Médical
 307;eng;Survival Equipment
 307;ger;Überlebensausrüstung
 307;fra;Survival Equipment

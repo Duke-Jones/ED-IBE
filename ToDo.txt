@@ -28,6 +28,10 @@ todo:
 done:
 
 
+v0.6.3
+  * added some french translations (thx to Sharkalone)
+  * removed timezone for sending to EDDN again (finally)
+-------------------------------------------------------------------------------------         
 v0.6.2
   * fixed behaviour for "quick decision switch" for upload market data or not
   * fixed wrong stock value when sending price data

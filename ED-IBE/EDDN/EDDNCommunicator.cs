@@ -780,7 +780,7 @@ bool disposed = false;
                         commodityStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
                         //commodityStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
-                        commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                        commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
 
                         commodityStringEDDN.Append(String.Format("\"commodities\": ["));
 
@@ -818,7 +818,7 @@ bool disposed = false;
                                     {
                                         writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
                                             systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Average, 
-                                            DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                            DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
                                     }
 
                                     commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ",    commodityItem.Value<String>("name")));
@@ -924,7 +924,7 @@ bool disposed = false;
                         outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
                         //outfittingStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
-                        outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                        outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
 
                         outfittingStringEDDN.Append(String.Format("\"modules\": ["));
 
@@ -957,7 +957,7 @@ bool disposed = false;
                                     writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
                                         systemName, stationName, outfitting.Category, outfitting.Name, outfitting.Mount, 
                                         outfitting.Guidance, outfitting.Ship, outfitting.Class, outfitting.Rating, 
-                                        DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                        DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
                                 }
 
                                 outfittingStringEDDN.Append(String.Format("\"{0}\", ", outfittingItem.Value<String>("name")));
@@ -1022,7 +1022,7 @@ bool disposed = false;
                         shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
                         shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
 
-                        shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                        shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
 
                         shipyardStringEDDN.Append(String.Format("\"ships\": ["));
 
@@ -1053,7 +1053,7 @@ bool disposed = false;
                                     {
                                         writer.WriteLine(String.Format("{0},{1},{2},{3}", 
                                             systemName, stationName, shipyardItem.Name, 
-                                            DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                                            DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
                                     }
 
                                     shipyardStringEDDN.Append(String.Format("\"{0}\", ", outfittingItem.Value<String>("name")));
@@ -1101,7 +1101,7 @@ bool disposed = false;
                     StringBuilder journalStringEDDN = new StringBuilder();
                     journalStringEDDN.Append(String.Format("\"message\": {{"));
                     
-                    journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture)));
+                    journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture)));
                     journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
 
                     if(dataObject.SelectToken("StarSystem") == null)
@@ -1189,7 +1189,7 @@ bool disposed = false;
 
                 do{
 
-                    TimeStamp   = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture);
+                    TimeStamp   = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture);
                     UserID      = UserIdentification();
                     Data        = new EDDNCommodity_v3();
 
@@ -1346,7 +1346,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1442,7 +1442,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1535,7 +1535,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
@@ -1632,7 +1632,7 @@ bool disposed = false;
                 {
                     SoftwareName        = "ED-IBE (API)",
                     SoftwareVersion     = VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3),
-                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture) + DateTime.Now.ToString("zzz", CultureInfo.InvariantCulture),
+                    GatewayTimestamp    = DateTime.UtcNow.ToString("s", CultureInfo.InvariantCulture),
                     UploaderID          = UserIdentification()
                 };
 
