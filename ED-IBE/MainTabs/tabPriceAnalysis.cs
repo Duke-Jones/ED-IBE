@@ -691,7 +691,7 @@ namespace IBE.MTPriceAnalysis
                         DataTable tmpTable = new DataTable();
                         Program.DBCon.Execute(sqlString, tmpTable);
 
-                        m_DGVTables[cmbByStation.Name].Merge(tmpTable);
+                        m_DGVTables[cmbByStation.Name].Merge(tmpTable, true, MissingSchemaAction.Ignore);
 
                         DataRow separatorRow = m_DGVTables[cmbByStation.Name].NewRow();
                         separatorRow["SystemID"]        = "0";
