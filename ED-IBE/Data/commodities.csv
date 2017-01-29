@@ -842,9 +842,9 @@ Commodity_ID;Language;Name
 283;eng;CMM Composite
 283;ger;CMM-Komposit
 283;fra;Composite MMC
-284;eng;Cooling Hoses
-284;ger;Cooling Hoses
-284;fra;Cooling Hoses
+284;eng;Micro-Weave Cooling Hoses
+284;ger;Mikroflecht-Kühlschläuche
+284;fra;Micro-Weave Cooling Hoses
 285;eng;Neofabric Insulation
 285;ger;Neofabric Insulation
 285;fra;Isolant en Néotextile
@@ -891,7 +891,7 @@ Commodity_ID;Language;Name
 299;ger;Telemetry Suite
 299;fra;Système de Télémétrie
 300;eng;Micro Controllers
-300;ger;Microcontroller
+300;ger;Mikrocontroller
 300;fra;Microcontrôleurs
 301;eng;Ion Distributor
 301;ger;Ionenverteiler

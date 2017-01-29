@@ -162,6 +162,9 @@ namespace IBE
                     if (dbVersion < new Version(0, 5, 8))
                         UpdateTo_0_5_8(ref foundError);
 
+                    if (dbVersion < new Version(0, 6, 4))
+                        UpdateTo_0_6_4(ref foundError);
+
                     if (!foundError) 
                         Program.DBCon.setIniValue("Database", "Version", appVersion.ToString());
                     else
@@ -1759,6 +1762,103 @@ namespace IBE
             }
         }        
 
+        private static void UpdateTo_0_6_4(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.6.4...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                sqlString = "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Advanceo Catalysers', '', 'Advanced Catalysers', '', NULL);                   \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Agricultural Medicines', '', 'Agri-Medicines', '', NULL);                     \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Ai Relics', '', 'AI Relics', '', NULL);                                       \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Animalmeat', '', 'Animal Meat', '', NULL);                                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Aovanced Medicines', '', 'Advanced Medicines', '', NULL);                     \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Atmospheric Extractors', '', 'Atmospheric Processors', '', NULL);             \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Auto Fabricators', '', 'Auto-Fabricators', '', NULL);                         \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Basic Narcotics', '', 'Narcotics', '', NULL);                                 \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Bio Reducing Lichen', '', 'Bioreducing Lichen', '', NULL);                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('C M M Composite', '', 'CMM Composite', '', NULL);                             \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Comercial Samples', '', 'Commercial Samples', '', NULL);                      \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Diagnostic Sensor', '', 'Hardware Diagnostic Sensor', '', NULL);              \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Drones', '', 'Limpet', '', NULL);                                             \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Encripted Data Storage', '', 'Encrypted Data Storage', '', NULL);             \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('H N Shock Mount', '', 'HN Shock Mount', '', NULL);                            \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Hafnium178', '', 'Hafnium 178', '', NULL);                                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Hazardous Environment Suits', '', 'H.E. Suits', '', NULL);                    \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Heliostatic Furnaces', '', 'Microbial Furnaces', '', NULL);                   \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Hr Shock Mount', '', 'HN Shock Mount', '', NULL);                             \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Liquid Oxgen', '', 'Liquid Oxygen', '', NULL);                                \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Marine Supplies', '', 'Marine Equipment', '', NULL);                          \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Meta Alloys', '', 'Meta-Alloys', '', NULL);                                   \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Mu Tom Imager', '', 'Muon Imager', '', NULL);                                 \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Non Lethal Weapons', '', 'Non-Lethal Weapons', '', NULL);                     \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Transfer Conduits', '', 'Power Transfer Bus', '', NULL);                \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('S A P8 Core Container', '', 'SAP 8 Core Container', '', NULL);                \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Skimer Components', '', 'Skimmer Components', '', NULL);                      \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Terrain Enrichment Systems', '', 'Land Enrichment Systems', '', NULL);        \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Trinkets Of Fortune', '', 'Trinkets Of Hidden Fortune', '', NULL);            \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Ancient Artefact', '', 'Ancient Artefact', '', NULL);             \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Experimental Chemicals', '', 'Experimental Chemicals', '', NULL); \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Military Plans', '', 'Military Plans', '', NULL);                 \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Prototype Tech', '', 'Prototype Tech', '', NULL);                 \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Rebel Transmissions', '', 'Rebel Transmissions', '', NULL);       \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Technical Blueprints', '', 'Technical Blueprints', '', NULL);     \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Trade Data', '', 'Trade Data', '', NULL);                         \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Unknown Artifact', '', 'Unknown Artefact', '', NULL);                         \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Unknown Artifact2', '', 'Unknown Artefact', '', NULL);                        \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Wreckage Components', '', 'Salvageable Wreckage', '', NULL);                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Methanol Monohydrate', '', 'Methanol Monohydrate Crystals', '', NULL);        \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Cooling Hoses', '', 'Micro-Weave Cooling Hoses', '', NULL);                   \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Low Temperature Diamond', '', 'Low Temperature Diamonds', '', NULL);          \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Occupied Cryo Pod', '', 'Occupied CryoPod', '', NULL);                        \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Grid Assembly', '', 'Energy Grid Assembly', '', NULL);                  \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "delete from tbdnmap_commodity where CompanionName like binary GameName;                                                                                                                                           \n" +
+                            "                                                                                                                                                                                                                  \n";
+
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.6.4...<OK>");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.6.4", ex);
+            }
+        }    
 
         static void sqlScript_ScriptCompleted(object sender, EventArgs e)
         {

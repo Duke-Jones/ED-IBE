@@ -1002,6 +1002,7 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbDNMap_Commodity` (
   `CompanionAddition` VARCHAR(255) NOT NULL,
   `GameName` VARCHAR(255) NOT NULL,
   `GameAddition` VARCHAR(255) NOT NULL,
+  `ts` TIMESTAMP NULL DEFAULT DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`CompanionName`, `CompanionAddition`))
 ENGINE = InnoDB;
 
@@ -1379,46 +1380,50 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Advanceo Catalysers', '', 'Advanced Catalysers', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Agricultural Medicines', '', 'Agri-Medicines', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Ai Relics', '', 'AI Relics', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Animalmeat', '', 'Animal Meat', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Aovanced Medicines', '', 'Advanced Medicines', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Atmospheric Extractors', '', 'Atmospheric Processors', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Auto Fabricators', '', 'Auto-Fabricators', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Basic Narcotics', '', 'Narcotics', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Bio Reducing Lichen', '', 'Bioreducing Lichen', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('C M M Composite', '', 'CMM Composite', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Comercial Samples', '', 'Commercial Samples', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Diagnostic Sensor', '', 'Hardware Diagnostic Sensor', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Drones', '', 'Limpet', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Encripted Data Storage', '', 'Encrypted Data Storage', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('H N Shock Mount', '', 'HN Shock Mount', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Hafnium178', '', 'Hafnium 178', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Hazardous Environment Suits', '', 'H.E. Suits', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Heliostatic Furnaces', '', 'Microbial Furnaces', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Hr Shock Mount', '', 'HN Shock Mount', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Liquid Oxgen', '', 'Liquid Oxygen', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Marine Supplies', '', 'Marine Equipment', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Meta Alloys', '', 'Meta-Alloys', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Mu Tom Imager', '', 'Muon Imager', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Non Lethal Weapons', '', 'Non-Lethal Weapons', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Power Transfer Conduits', '', 'Power Transfer Bus', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('S A P8 Core Container', '', 'SAP 8 Core Container', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Skimer Components', '', 'Skimmer Components', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Terrain Enrichment Systems', '', 'Land Enrichment Systems', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Trinkets Of Fortune', '', 'Trinkets Of Hidden Fortune', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Ancient Artefact', '', 'Ancient Artefact', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Experimental Chemicals', '', 'Experimental Chemicals', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Military Plans', '', 'Military Plans', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Prototype Tech', '', 'Prototype Tech', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Rebel Transmissions', '', 'Rebel Transmissions', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Technical Blueprints', '', 'Technical Blueprints', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('U S S Cargo Trade Data', '', 'Trade Data', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Unknown Artifact', '', 'Unknown Artefact', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Unknown Artifact2', '', 'Unknown Artefact', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Wreckage Components', '', 'Salvageable Wreckage', '');
-INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`) VALUES ('Methanol Monohydrate', '', 'Methanol Monohydrate Crystals', '');
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Advanceo Catalysers', '', 'Advanced Catalysers', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Agricultural Medicines', '', 'Agri-Medicines', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Ai Relics', '', 'AI Relics', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Animalmeat', '', 'Animal Meat', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Aovanced Medicines', '', 'Advanced Medicines', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Atmospheric Extractors', '', 'Atmospheric Processors', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Auto Fabricators', '', 'Auto-Fabricators', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Basic Narcotics', '', 'Narcotics', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Bio Reducing Lichen', '', 'Bioreducing Lichen', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('C M M Composite', '', 'CMM Composite', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Comercial Samples', '', 'Commercial Samples', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Diagnostic Sensor', '', 'Hardware Diagnostic Sensor', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Drones', '', 'Limpet', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Encripted Data Storage', '', 'Encrypted Data Storage', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('H N Shock Mount', '', 'HN Shock Mount', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Hafnium178', '', 'Hafnium 178', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Hazardous Environment Suits', '', 'H.E. Suits', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Heliostatic Furnaces', '', 'Microbial Furnaces', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Hr Shock Mount', '', 'HN Shock Mount', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Liquid Oxgen', '', 'Liquid Oxygen', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Marine Supplies', '', 'Marine Equipment', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Meta Alloys', '', 'Meta-Alloys', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Mu Tom Imager', '', 'Muon Imager', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Non Lethal Weapons', '', 'Non-Lethal Weapons', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Transfer Conduits', '', 'Power Transfer Bus', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('S A P8 Core Container', '', 'SAP 8 Core Container', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Skimer Components', '', 'Skimmer Components', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Terrain Enrichment Systems', '', 'Land Enrichment Systems', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Trinkets Of Fortune', '', 'Trinkets Of Hidden Fortune', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Ancient Artefact', '', 'Ancient Artefact', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Experimental Chemicals', '', 'Experimental Chemicals', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Military Plans', '', 'Military Plans', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Prototype Tech', '', 'Prototype Tech', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Rebel Transmissions', '', 'Rebel Transmissions', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Technical Blueprints', '', 'Technical Blueprints', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('U S S Cargo Trade Data', '', 'Trade Data', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Unknown Artifact', '', 'Unknown Artefact', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Unknown Artifact2', '', 'Unknown Artefact', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Wreckage Components', '', 'Salvageable Wreckage', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Methanol Monohydrate', '', 'Methanol Monohydrate Crystals', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Cooling Hoses', '', 'Micro-Weave Cooling Hoses', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Low Temperature Diamond', '', 'Low Temperature Diamonds', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Occupied Cryo Pod', '', 'Occupied CryoPod', '', NULL);
+INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Grid Assembly', '', 'Energy Grid Assembly', '', NULL);
 
 COMMIT;
 
