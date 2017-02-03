@@ -26,7 +26,9 @@ todo:
 *************************************************************************************
 
 done:
-
+ 
+  * changed timeout for paused connections from 8 hours to one week
+-------------------------------------------------------------------------------------         
   * added a timestamp to commodity mappings to see what has changed at last
   * added/fixed a few translations of commodities
 -------------------------------------------------------------------------------------         

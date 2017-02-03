@@ -1853,6 +1853,17 @@ namespace IBE
                     Program.SplashScreen.InfoAdd("...updating structure of database to v0.6.4...<OK>");
                 }
 
+                // mysql settings: update timeout to one week
+                STA.Settings.INIFile dbIniFile;
+
+                if (Debugger.IsAttached)
+                    dbIniFile = new STA.Settings.INIFile(Path.Combine(Program.IniFile.GetValue("DB_Server", "WorkingDirectory", @"..\..\..\RNDatabase\Database"), "Elite.ini"), false, true, true);
+                else
+                    dbIniFile = new STA.Settings.INIFile(Program.GetDataPath(@"Database\Elite.ini"), false, true, true);
+
+                dbIniFile.SetValue("mysqld", "wait_timeout",        (Int32)604800);
+                dbIniFile.SetValue("mysqld", "interactive_timeout", (Int32)604800);
+
             }
             catch (Exception ex)
             {
