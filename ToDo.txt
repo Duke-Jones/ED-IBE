@@ -27,6 +27,8 @@ todo:
 
 done:
  
+  * fixed wrong column type for profit on station2station tab
+-------------------------------------------------------------------------------------         
   * changed timeout for paused connections from 8 hours to one week
 -------------------------------------------------------------------------------------         
   * added a timestamp to commodity mappings to see what has changed at last

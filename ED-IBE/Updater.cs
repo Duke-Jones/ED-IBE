@@ -1819,8 +1819,20 @@ namespace IBE
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Grid Assembly', '', 'Energy Grid Assembly', '', NULL);                  \n" +
                             "                                                                                                                                                                                                                  \n" +
                             "delete from tbdnmap_commodity where CompanionName like binary GameName;                                                                                                                                           \n" +
-                            "                                                                                                                                                                                                                  \n";
-
+                            "                                                                                                                                                                                                                  \n" +
+                            "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                                                                                          \n" +
+                            "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                                                                                           \n" +
+                            "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                                                                                         \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "ALTER TABLE `elite_db`.`tmPA_S2S_BestTrips`                                                                                                                                                                       \n" +
+                            "CHANGE COLUMN `Profit` `Profit` INT(11) NULL DEFAULT NULL ;                                                                                                                                                       \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "ALTER TABLE `elite_db`.`tbDNMap_Commodity`                                                                                                                                                                        \n" +
+                            "ADD COLUMN `ts` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `GameAddition`;                                                                                                \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                                                                                       \n" +
+                            "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                                                                                   \n" +
+                            "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                                                                             \n";
 
 
                 var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
