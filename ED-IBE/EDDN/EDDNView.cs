@@ -33,6 +33,7 @@ namespace IBE.EDDN
                 m_GUIInterface.loadAllSettings(this);
 
                 LoadTrustedSenders();
+                LoadEDDNRelays();
 
                 m_Communicator.DataChangedEvent += m_Communicator_DataChangedEvent;
                 tmrRefresh.Start();
@@ -379,6 +380,62 @@ namespace IBE.EDDN
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error while removing a trusted sender");
+            }
+        }
+
+        private void LoadEDDNRelays()
+        {
+            try
+            {
+                dgvEDDNRelays.DataSource = Program.Data.BaseData.tbeddnrelays;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading EDDN relays", ex);
+            }
+        }
+
+        private void cmdAddEDDNRelay_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                String newName = "";
+
+                if ((InputBox.Show("EDDN Relays", "Adress of relay ?", ref newName) == System.Windows.Forms.DialogResult.OK) && (!String.IsNullOrEmpty(newName.Trim())))
+                {
+                    Program.Data.BaseData.tbeddnrelays.Rows.Add(newName.Trim());
+
+                    Program.Data.PrepareBaseTables(Program.Data.BaseData.tbeddnrelays.TableName, true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while adding a EDDN relay");
+            }
+        }
+
+        private void cmdRemoveEDDNRelay_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (dgvEDDNRelays.SelectedRows.Count > 0)
+                {
+                    if(MessageBox.Show("Remove relay from list ?", "EDDN Relays", MessageBoxButtons.OKCancel,  MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.OK)
+                    {
+                        foreach (DataGridViewRow selRow in dgvEDDNRelays.SelectedRows)
+                        {
+                            ((SQL.Datasets.dsEliteDB.tbeddnrelaysRow)((System.Data.DataRowView)(selRow.DataBoundItem)).Row).Delete();
+                        }
+
+                        Program.Data.PrepareBaseTables(Program.Data.BaseData.tbeddnrelays.TableName, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error while removing a EDDN relay");
             }
         }
 

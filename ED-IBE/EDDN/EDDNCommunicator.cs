@@ -197,9 +197,6 @@ bool disposed = false;
         private EDDNDuplicateFilter                 m_DuplicateRelayFilter  = new EDDNDuplicateFilter(new TimeSpan(0,0,30));
         private Dictionary<String, EDDNReciever>    m_Reciever;
         private FileScanner.EDJournalScanner        m_JournalScanner = null;
-        private List<String>                        m_Relays    = new List<string>() { "tcp://eddn-relay.elite-markets.net:9500", 
-                                                                                       "tcp://eddn-relay.ed-td.space:9500"};
-
         private Tuple<String, DateTime>             m_ID_of_Commodity_Station = new Tuple<String, DateTime>("", new DateTime());
         private Tuple<String, DateTime>             m_ID_of_Outfitting_Station = new Tuple<String, DateTime>("", new DateTime());
         private Tuple<String, DateTime>             m_ID_of_Shipyard_Station = new Tuple<String, DateTime>("", new DateTime());
@@ -257,13 +254,13 @@ bool disposed = false;
             {
                 StopEDDNListening();
 
-                foreach (String adress in m_Relays)
+                foreach (SQL.Datasets.dsEliteDB.tbeddnrelaysRow relay in Program.Data.BaseData.tbeddnrelays.Rows)
                 {
-                    var newReciever = new EDDNReciever(adress);
+                    var newReciever = new EDDNReciever(relay.Address);
                     newReciever.StartListen();
                     newReciever.DataRecieved += RecievedEDDNData;
 
-                    m_Reciever.Add(adress, newReciever);
+                    m_Reciever.Add(relay.Address, newReciever);
                 }
 
             }

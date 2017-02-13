@@ -27,6 +27,8 @@ todo:
 
 done:
  
+  * replaced hardcoded adresses for EDDN relays by editable database entries
+-------------------------------------------------------------------------------------         
   * fixed wrong column type for profit on station2station tab
 -------------------------------------------------------------------------------------         
   * changed timeout for paused connections from 8 hours to one week

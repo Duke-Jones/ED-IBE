@@ -53,10 +53,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.dgvTrustedSenders = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
             this.colSenderName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.cmdRemoveRelay = new System.Windows.Forms.ButtonExt();
+            this.cmdAddRelay = new System.Windows.Forms.ButtonExt();
+            this.label4 = new System.Windows.Forms.Label();
+            this.dgvEDDNRelays = new IBE.Enums_and_Utility_Classes.DataGridViewExt(this.components);
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSend = new System.Windows.Forms.TabPage();
             this.lbEDDNInfo = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.lblSenderStatus = new System.Windows.Forms.Label();
@@ -90,15 +97,15 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox4.SuspendLayout();
             this.gbSendingDefault.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEDDNRelays)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabSend.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbSenderStatus)).BeginInit();
@@ -111,7 +118,6 @@
             this.tabByMessageType.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).BeginInit();
-            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // tmrRefresh
@@ -339,6 +345,7 @@
             // 
             // cmdRemoveTrusted
             // 
+            this.cmdRemoveTrusted.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdRemoveTrusted.Location = new System.Drawing.Point(380, 242);
             this.cmdRemoveTrusted.Name = "cmdRemoveTrusted";
             this.cmdRemoveTrusted.Size = new System.Drawing.Size(93, 23);
@@ -350,6 +357,7 @@
             // 
             // cmdAddTrusted
             // 
+            this.cmdAddTrusted.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdAddTrusted.Location = new System.Drawing.Point(281, 242);
             this.cmdAddTrusted.Name = "cmdAddTrusted";
             this.cmdAddTrusted.Size = new System.Drawing.Size(93, 23);
@@ -391,6 +399,76 @@
             this.colSenderName.HeaderText = "Name Of Sender";
             this.colSenderName.Name = "colSenderName";
             this.colSenderName.ReadOnly = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(14, 21);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(86, 17);
+            this.checkBox1.TabIndex = 47;
+            this.checkBox1.Tag = "EDDNPostJournalData;true";
+            this.checkBox1.Text = "Journal Data";
+            this.toolTip1.SetToolTip(this.checkBox1, resources.GetString("checkBox1.ToolTip"));
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // cmdRemoveRelay
+            // 
+            this.cmdRemoveRelay.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdRemoveRelay.Location = new System.Drawing.Point(379, 129);
+            this.cmdRemoveRelay.Name = "cmdRemoveRelay";
+            this.cmdRemoveRelay.Size = new System.Drawing.Size(93, 23);
+            this.cmdRemoveRelay.TabIndex = 25;
+            this.cmdRemoveRelay.Text = "Remove";
+            this.toolTip1.SetToolTip(this.cmdRemoveRelay, "Removes selected relay from list (select row header)");
+            this.cmdRemoveRelay.UseVisualStyleBackColor = true;
+            this.cmdRemoveRelay.Click += new System.EventHandler(this.cmdRemoveEDDNRelay_Click);
+            // 
+            // cmdAddRelay
+            // 
+            this.cmdAddRelay.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdAddRelay.Location = new System.Drawing.Point(280, 129);
+            this.cmdAddRelay.Name = "cmdAddRelay";
+            this.cmdAddRelay.Size = new System.Drawing.Size(93, 23);
+            this.cmdAddRelay.TabIndex = 24;
+            this.cmdAddRelay.Text = "Add";
+            this.toolTip1.SetToolTip(this.cmdAddRelay, "Adds a new relay to the list (format like \'tcp://eddn-relay.elite-markets.net:950" +
+        "0\')");
+            this.cmdAddRelay.UseVisualStyleBackColor = true;
+            this.cmdAddRelay.Click += new System.EventHandler(this.cmdAddEDDNRelay_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 144);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(73, 13);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "EDDN Relays";
+            this.toolTip1.SetToolTip(this.label4, "EDDN relays to connect to");
+            // 
+            // dgvEDDNRelays
+            // 
+            this.dgvEDDNRelays.AllowUserToAddRows = false;
+            this.dgvEDDNRelays.AllowUserToDeleteRows = false;
+            this.dgvEDDNRelays.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvEDDNRelays.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1});
+            this.dgvEDDNRelays.DoubleBuffer = true;
+            this.dgvEDDNRelays.Location = new System.Drawing.Point(9, 160);
+            this.dgvEDDNRelays.Name = "dgvEDDNRelays";
+            this.dgvEDDNRelays.RowHeadersWidth = 20;
+            this.dgvEDDNRelays.Size = new System.Drawing.Size(463, 72);
+            this.dgvEDDNRelays.TabIndex = 23;
+            this.toolTip1.SetToolTip(this.dgvEDDNRelays, "Defines the EDDN relays where ED-IBE should listen to");
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "Address";
+            this.dataGridViewTextBoxColumn1.HeaderText = "Address";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
             // 
             // tabControl1
             // 
@@ -449,6 +527,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Post Data To EDDN";
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.checkBox1);
+            this.groupBox8.Location = new System.Drawing.Point(192, 289);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(252, 50);
+            this.groupBox8.TabIndex = 55;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Other";
+            // 
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.cbPostOutfittingData);
@@ -505,6 +593,7 @@
             // 
             // cmdStopSender
             // 
+            this.cmdStopSender.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdStopSender.Location = new System.Drawing.Point(36, 57);
             this.cmdStopSender.Name = "cmdStopSender";
             this.cmdStopSender.Size = new System.Drawing.Size(93, 23);
@@ -515,6 +604,7 @@
             // 
             // cmdStartSender
             // 
+            this.cmdStartSender.DisabledTextColor = System.Drawing.Color.DimGray;
             this.cmdStartSender.Location = new System.Drawing.Point(36, 26);
             this.cmdStartSender.Name = "cmdStartSender";
             this.cmdStartSender.Size = new System.Drawing.Size(93, 23);
@@ -670,6 +760,10 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cmdRemoveRelay);
+            this.groupBox2.Controls.Add(this.cmdAddRelay);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.dgvEDDNRelays);
             this.groupBox2.Controls.Add(this.cmdRemoveTrusted);
             this.groupBox2.Controls.Add(this.cmdAddTrusted);
             this.groupBox2.Controls.Add(this.label2);
@@ -693,7 +787,7 @@
             // lblListenerStatus
             // 
             this.lblListenerStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblListenerStatus.Location = new System.Drawing.Point(346, 162);
+            this.lblListenerStatus.Location = new System.Drawing.Point(344, 81);
             this.lblListenerStatus.Name = "lblListenerStatus";
             this.lblListenerStatus.Size = new System.Drawing.Size(111, 13);
             this.lblListenerStatus.TabIndex = 18;
@@ -704,7 +798,7 @@
             // 
             this.pbListenerStatus.Image = global::IBE.Properties.Resources.green_led_off_md;
             this.pbListenerStatus.InitialImage = global::IBE.Properties.Resources.green_led_off_md;
-            this.pbListenerStatus.Location = new System.Drawing.Point(382, 119);
+            this.pbListenerStatus.Location = new System.Drawing.Point(380, 38);
             this.pbListenerStatus.Margin = new System.Windows.Forms.Padding(0);
             this.pbListenerStatus.Name = "pbListenerStatus";
             this.pbListenerStatus.Size = new System.Drawing.Size(40, 40);
@@ -715,7 +809,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(350, 103);
+            this.label1.Location = new System.Drawing.Point(348, 22);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(111, 13);
             this.label1.TabIndex = 16;
@@ -773,7 +867,8 @@
             // 
             // cmdStopListening
             // 
-            this.cmdStopListening.Location = new System.Drawing.Point(358, 58);
+            this.cmdStopListening.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdStopListening.Location = new System.Drawing.Point(242, 61);
             this.cmdStopListening.Name = "cmdStopListening";
             this.cmdStopListening.Size = new System.Drawing.Size(93, 23);
             this.cmdStopListening.TabIndex = 4;
@@ -783,7 +878,8 @@
             // 
             // cmdStartListening
             // 
-            this.cmdStartListening.Location = new System.Drawing.Point(358, 27);
+            this.cmdStartListening.DisabledTextColor = System.Drawing.Color.DimGray;
+            this.cmdStartListening.Location = new System.Drawing.Point(242, 30);
             this.cmdStartListening.Name = "cmdStartListening";
             this.cmdStartListening.Size = new System.Drawing.Size(93, 23);
             this.cmdStartListening.TabIndex = 2;
@@ -825,28 +921,6 @@
             this.tbEDDNOutput.Size = new System.Drawing.Size(479, 224);
             this.tbEDDNOutput.TabIndex = 3;
             // 
-            // groupBox8
-            // 
-            this.groupBox8.Controls.Add(this.checkBox1);
-            this.groupBox8.Location = new System.Drawing.Point(192, 289);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(252, 50);
-            this.groupBox8.TabIndex = 55;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Other";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(14, 21);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(86, 17);
-            this.checkBox1.TabIndex = 47;
-            this.checkBox1.Tag = "EDDNPostJournalData;true";
-            this.checkBox1.Text = "Journal Data";
-            this.toolTip1.SetToolTip(this.checkBox1, resources.GetString("checkBox1.ToolTip"));
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // EDDNView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -864,11 +938,14 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrustedSenders)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEDDNRelays)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabSend.ResumeLayout(false);
             this.tabSend.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox6.ResumeLayout(false);
@@ -889,8 +966,6 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbListenerStatus)).EndInit();
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -959,5 +1034,10 @@
         private System.Windows.Forms.CheckBox cbPostCompanionData;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.ButtonExt cmdRemoveRelay;
+        private System.Windows.Forms.ButtonExt cmdAddRelay;
+        private System.Windows.Forms.Label label4;
+        private Enums_and_Utility_Classes.DataGridViewExt dgvEDDNRelays;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
     }
 }

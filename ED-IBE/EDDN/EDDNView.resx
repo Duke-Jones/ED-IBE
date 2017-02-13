@@ -146,6 +146,14 @@ Use it with non-OCR interfaces (interfaces with Companion API).
 Use it with non-OCR interfaces (interfaces with Companion API). 
 "Add" or select row and "Delete" to change.</value>
   </data>
+  <data name="checkBox1.ToolTip" xml:space="preserve">
+    <value>Check to send data from the journal to EDDN.
+Journal data is: 
+ * FSDJump: information about the star system like name, coordinates, government etc.
+ * Docked: information about the station like name, government,  stationtype, economy etc.
+ * Scan: information about the physically character of scanned body (from the surface scanner)
+</value>
+  </data>
   <data name="lbEDDNInfo.Text" xml:space="preserve">
     <value>Have in mind:
 
@@ -154,14 +162,6 @@ It would be nice if you decide to share the information you get
 from the game. If you don't want to share market data you should
 at least allow sending journal/outfitting and shipyard data. 
 You can decide for each data type independently.
-</value>
-  </data>
-  <data name="checkBox1.ToolTip" xml:space="preserve">
-    <value>Check to send data from the journal to EDDN.
-Journal data is: 
- * FSDJump: information about the star system like name, coordinates, government etc.
- * Docked: information about the station like name, government,  stationtype, economy etc.
- * Scan: information about the physically character of scanned body (from the surface scanner)
 </value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />

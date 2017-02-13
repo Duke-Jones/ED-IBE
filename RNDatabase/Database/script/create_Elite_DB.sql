@@ -1047,6 +1047,15 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbShipyardBase` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `elite_db`.`tbEDDNRelays`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `elite_db`.`tbEDDNRelays` (
+  `Address` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`Address`))
+ENGINE = InnoDB;
+
 USE `elite_db` ;
 
 -- -----------------------------------------------------
@@ -1424,6 +1433,16 @@ INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`
 INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Low Temperature Diamond', '', 'Low Temperature Diamonds', '', NULL);
 INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Occupied Cryo Pod', '', 'Occupied CryoPod', '', NULL);
 INSERT INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Grid Assembly', '', 'Energy Grid Assembly', '', NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `elite_db`.`tbEDDNRelays`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `elite_db`;
+INSERT INTO `elite_db`.`tbEDDNRelays` (`Address`) VALUES ('tcp://eddn-relay.elite-markets.net:9500');
 
 COMMIT;
 

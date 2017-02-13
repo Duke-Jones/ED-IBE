@@ -307,7 +307,8 @@ namespace IBE.SQL
                                                             "tbdnmap_commodity",
                                                             "tbcommoditybase",
                                                             "tboutfittingbase",
-                                                            "tbshipyardbase"};
+                                                            "tbshipyardbase",
+                                                            "tbeddnrelays"};
 
         // dataset with base data
         private dsEliteDB m_BaseData = null;
