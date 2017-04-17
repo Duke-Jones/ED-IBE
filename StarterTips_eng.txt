@@ -75,6 +75,9 @@ Case something goes wrong and you want to delete the database again, you have to
 run the installer again and check the checkbox for "Delete and re-create."
 But have in mind all data will be lost.
 
+If the database fails to install try closing some programs that might already run a MYSQL service like ED Toolbox.
+Having an already running MYSQL service might stop the database installation and ID-EBE will not function properly.
+
 _________________________________________________________________________
 2. Start
 If ED-IBE starts, the database engine automatically starts, too ("mysqld.exe" in the TaskManager).
