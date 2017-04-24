@@ -40,7 +40,8 @@ namespace IBE.FileScanner
             MissionAbandoned,
             MissionCompleted,
             MissionFailed,
-            LoadGame
+            LoadGame, 
+            Bounty
         }
 
 #endregion
@@ -528,6 +529,8 @@ namespace IBE.FileScanner
                                             case JournalEvent.MissionCompleted:
                                             case JournalEvent.MissionAbandoned:
                                             case JournalEvent.MissionFailed:
+
+                                            case JournalEvent.Bounty:
 
                                             case JournalEvent.LoadGame:
 

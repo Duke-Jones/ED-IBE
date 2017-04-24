@@ -645,42 +645,64 @@ namespace IBE.IBECompanion
                                 extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
                                 extStation = Program.CompanionIO.GetValue("lastStarport.name");
 
-                                if(Program.CompanionIO.StationHasMarketData())
+                                if(Program.actualCondition.System.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && Program.actualCondition.Station.Equals(extStation, StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    Int32 count = Program.CompanionIO.ImportMarketData();
-                                
-                                    if(Program.MainForm.cbEDDNOverride.Checked)
+                                    if(Program.CompanionIO.StationHasMarketData())
                                     {
-                                        Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
+                                        Int32 count = Program.CompanionIO.ImportMarketData();
+                                
+                                        if(Program.MainForm.cbEDDNOverride.Checked)
+                                        {
+                                            Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
+                                        }
+
+                                        if(count > 0)
+                                            Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...{0} prices collected", count));                        
+                                        else
+                                            Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...no market data available !"));        
+                                                
+                                    }
+                                    Program.MainForm.SetQuickDecisionSwitch();
+
+                                    if(Program.CompanionIO.StationHasShipyardData())
+                                    {
+                                        Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                                    }
+                                    else if((Program.actualCondition.Station_ID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Station_ID)))
+                                    {
+                                        // probably companion error, try once again in 5 seconds
+                                        Program.CompanionIO.ReGet_StationData();                                
                                     }
 
-                                    if(count > 0)
-                                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...{0} prices collected", count));                        
+                                    if(Program.CompanionIO.StationHasOutfittingData())
+                                        Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+                                }
+                                else
+                                {
+                                    if((currentAttempt < maxAttempts) && (allowRetry))
+                                    {
+                                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - attempt " + (currentAttempt + 1)  + " (of max. " + maxAttempts + ") in 10 seconds (2)...");                        
+                                        System.Threading.Thread.Sleep(10000);
+                                        doRetry = true;
+                                        Program.CompanionIO.RestTimeReset();
+                                    }
+                                    else if(!allowRetry)
+                                    {
+                                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - inconsistent system and/or station info...");                        
+                                    }
                                     else
-                                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...no market data available !"));        
-                                                
+                                    {
+                                        Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - stopped attempts after " + maxAttempts + " faults (2)...");                        
+                                        System.Threading.Thread.Sleep(10000);
+                                    }
                                 }
-                                Program.MainForm.SetQuickDecisionSwitch();
-
-                                if(Program.CompanionIO.StationHasShipyardData())
-                                {
-                                    Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
-                                }
-                                else if((Program.actualCondition.Station_ID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Station_ID)))
-                                {
-                                    // probably companion error, try once again in 5 seconds
-                                    Program.CompanionIO.ReGet_StationData();                                
-                                }
-
-                                if(Program.CompanionIO.StationHasOutfittingData())
-                                    Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
 
                             }
                             else if(Program.actualCondition.Station_ID != null)
                             {
                                 if((currentAttempt < maxAttempts) && (allowRetry))
                                 {
-                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - attempt " + (currentAttempt + 1)  + " (of max. " + maxAttempts + ") in 10 seconds...");                        
+                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - attempt " + (currentAttempt + 1)  + " (of max. " + maxAttempts + ") in 10 seconds (1)...");                        
                                     System.Threading.Thread.Sleep(10000);
                                     doRetry = true;
                                     Program.CompanionIO.RestTimeReset();
@@ -691,7 +713,7 @@ namespace IBE.IBECompanion
                                 }
                                 else
                                 {
-                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - stopped attempts after " + maxAttempts + " faults...");                        
+                                    Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, "Companion-IO lags - stopped attempts after " + maxAttempts + " faults(1)...");                        
                                     System.Threading.Thread.Sleep(10000);
                                 }
                             }

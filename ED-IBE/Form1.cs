@@ -1238,6 +1238,7 @@ namespace IBE
                 st.Start();
 
                 Program.SplashScreen.InfoAdd("checking for updates");
+                //Updater.GetNewOfficialVersionStrings();
                 CheckUpdateExists(out newVersion, out newInfo);
                 Program.SplashScreen.InfoAppendLast("<OK>");
 
@@ -1353,6 +1354,8 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("init sequence finished !");
                 Program.SplashScreen.CloseDelayed();
 
+                RefreshHeadline();
+
                 this.Visible = true;
 
             }
@@ -1368,7 +1371,7 @@ namespace IBE
             Boolean retValue = false;
             try
             {
-                if (Updater.CheckVersion(out newVersion, out newInfo))
+                if (Updater.CheckLocalVersion(out newVersion, out newInfo))
                 {
                     lblUpdateInfo.Text = "newer version of ED-IBE found!";
                     lblUpdateInfo.ForeColor = Color.Black;
@@ -1450,10 +1453,13 @@ namespace IBE
             }
         }
 
+        String baseHeadline = "";
+
         private void Form_Load(object sender, EventArgs e)
         {
 
-            Text += VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
+            this.Text += VersionHelper.Parts(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, 3);
+            baseHeadline = this.Text;
             testToolStripMenuItem.Visible = Debugger.IsAttached;
 
             doInit();
@@ -3510,7 +3516,15 @@ namespace IBE
             try
             {
                 if(Program.CompanionIO.StationHasShipyardData())
-                    Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                {
+                    String extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
+                    String extStation = Program.CompanionIO.GetValue("lastStarport.name");
+
+                    if(Program.actualCondition.System.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && Program.actualCondition.Station.Equals(extStation, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                    }
+                }
 
                 ShowStatus();
             }
@@ -3913,6 +3927,25 @@ namespace IBE
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error in colorsToolStripMenuItem_Click");
+            }
+        }
+        public void RefreshHeadline()
+        {
+            try
+            {
+                if (InvokeRequired)
+                    Invoke(new MethodInvoker(RefreshHeadline));
+                else
+                { 
+                    this.Text = baseHeadline;
+
+                    if (Program.actualCondition.GameversionIsBeta_Jrnl)
+                        this.Text += " (runs on E:D BETA)";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while refreshing headline", ex);
             }
         }
     }

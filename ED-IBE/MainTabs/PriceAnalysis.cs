@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using IBE.Enums_and_Utility_Classes;
-using MySql.Data.MySqlClient;
 using System.Diagnostics;
 using IBE.SQL;
 using IBE.SQL.Datasets;

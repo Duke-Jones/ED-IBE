@@ -26,7 +26,7 @@ namespace IBE
         /// <param name="versionFound"></param>
         /// <param name="versionInfo"></param>
         /// <returns></returns>
-        public static Boolean CheckVersion(out Version versionFound, out String versionInfo)
+        public static Boolean CheckLocalVersion(out Version versionFound, out String versionInfo)
         {
             string sURL                 = @"https://api.github.com/repos/Duke-Jones/ED-IBE/releases";
             HttpWebRequest webRequest   = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
@@ -95,6 +95,49 @@ namespace IBE
                 return false;
             }
         }
+
+        ///// <summary>
+        ///// tries to connect to github for getting the latest official (non-beta versions)
+        ///// </summary>
+        //public static void GetNewOfficialVersionStrings()
+        //{
+        //    string sURL                 = @"https://raw.githubusercontent.com/Duke-Jones/ED-IBE/master/non_beta.txt";
+        //    HttpWebRequest webRequest   = System.Net.WebRequest.Create(sURL) as HttpWebRequest;
+        //    webRequest.Method           = "GET";
+        //    webRequest.UserAgent        = "ED-IBE";
+        //    webRequest.ServicePoint.Expect100Continue = false;
+
+        //    List<String> knownNumbers   = null;                
+        //    String releaseData          = null;
+
+        //    try
+        //    {
+
+        //        try
+        //        {
+        //            using (StreamReader responseReader = new StreamReader(webRequest.GetResponse().GetResponseStream()))
+        //                releaseData = responseReader.ReadToEnd();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Program.MainLog.Log ("Exception while checking new official versions: /n/d" + ex.Message + "/n/d" + ex.StackTrace);
+        //        }
+
+        //        if(releaseData != null)
+        //        {
+        //            knownNumbers = releaseData.Replace("\\d", "").Split(new char[1] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        //            foreach (String versionNumber in knownNumbers)
+        //            {
+        //                Program.DBCon.Execute(String.Format("insert ignore into tbKnownReleases(Version) values ({0})", DBConnector.SQLAEscape(versionNumber)));
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while checking for new official versions", ex);
+        //    }
+        //}
 
         /// <summary>
         /// this sub starts special things to do if this version runs
@@ -1773,7 +1816,31 @@ namespace IBE
                 Program.SplashScreen.InfoAdd("...");
 
 
-                sqlString = "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Advanceo Catalysers', '', 'Advanced Catalysers', '', NULL);                   \n" +
+                sqlString = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                                                                                          \n" +
+                            "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                                                                                           \n" +
+                            "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                                                                                         \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "delete from tbdnmap_commodity where CompanionName like binary GameName;                                                                                                                                           \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "ALTER TABLE `elite_db`.`tbDNMap_Commodity`                                                                                                                                                                        \n" +
+                            "ADD COLUMN `ts` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `GameAddition`;                                                                                                        \n" +
+                            "                                                                                                                                                                                                                  \n" + 
+                            "ALTER TABLE `elite_db`.`tmPA_S2S_BestTrips`                                                                                                                                                                       \n" +
+                            "CHANGE COLUMN `Profit` `Profit` INT(11) NULL DEFAULT NULL ;                                                                                                                                                       \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "CREATE TABLE IF NOT EXISTS `elite_db`.`tbEDDNRelays` (                                                                                                                                                            \n" +
+                            "  `Address` VARCHAR(255) NOT NULL,                                                                                                                                                                                \n" +
+                            "  PRIMARY KEY (`Address`))                                                                                                                                                                                        \n" +
+                            "ENGINE = InnoDB                                                                                                                                                                                                   \n" +
+                            "DEFAULT CHARACTER SET = utf8;                                                                                                                                                                                     \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbEDDNRelays` (`Address`) VALUES ('tcp://eddn-relay.elite-markets.net:9500');                                                                                                      \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                                                                                       \n" +
+                            "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                                                                                   \n" +
+                            "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                                                                             \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Advanceo Catalysers', '', 'Advanced Catalysers', '', NULL);                   \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Agricultural Medicines', '', 'Agri-Medicines', '', NULL);                     \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Ai Relics', '', 'AI Relics', '', NULL);                                       \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Animalmeat', '', 'Animal Meat', '', NULL);                                    \n" +
@@ -1817,30 +1884,7 @@ namespace IBE
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Low Temperature Diamond', '', 'Low Temperature Diamonds', '', NULL);          \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Occupied Cryo Pod', '', 'Occupied CryoPod', '', NULL);                        \n" +
                             "INSERT IGNORE INTO `elite_db`.`tbDNMap_Commodity` (`CompanionName`, `CompanionAddition`, `GameName`, `GameAddition`, `ts`) VALUES ('Power Grid Assembly', '', 'Energy Grid Assembly', '', NULL);                  \n" +
-                            "                                                                                                                                                                                                                  \n" +
-                            "delete from tbdnmap_commodity where CompanionName like binary GameName;                                                                                                                                           \n" +
-                            "                                                                                                                                                                                                                  \n" +
-                            "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                                                                                          \n" +
-                            "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                                                                                           \n" +
-                            "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                                                                                         \n" +
-                            "                                                                                                                                                                                                                  \n" +
-                            "ALTER TABLE `elite_db`.`tmPA_S2S_BestTrips`                                                                                                                                                                       \n" +
-                            "CHANGE COLUMN `Profit` `Profit` INT(11) NULL DEFAULT NULL ;                                                                                                                                                       \n" +
-                            "                                                                                                                                                                                                                  \n" +
-                            "ALTER TABLE `elite_db`.`tbDNMap_Commodity`                                                                                                                                                                        \n" +
-                            "ADD COLUMN `ts` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `GameAddition`;                                                                                                        \n" +
-                            "                                                                                                                                                                                                                  \n" + 
-                            "CREATE TABLE IF NOT EXISTS `elite_db`.`tbEDDNRelays` (                                                                                                                                                            \n" +
-                            "  `Address` VARCHAR(255) NOT NULL,                                                                                                                                                                                \n" +
-                            "  PRIMARY KEY (`Address`))                                                                                                                                                                                        \n" +
-                            "ENGINE = InnoDB                                                                                                                                                                                                   \n" +
-                            "DEFAULT CHARACTER SET = utf8;                                                                                                                                                                                     \n" +
-                            "                                                                                                                                                                                                                  \n" +
-                            "INSERT IGNORE INTO `elite_db`.`tbEDDNRelays` (`Address`) VALUES ('tcp://eddn-relay.elite-markets.net:9500');                                                                                                      \n" +
-                            "                                                                                                                                                                                                                  \n" +
-                            "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                                                                                       \n" +
-                            "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                                                                                   \n" +
-                            "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                                                                             \n";
+                            "                                                                                                                                                                                                                  \n";                                                                                                                                                                     
 
 
                 var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);

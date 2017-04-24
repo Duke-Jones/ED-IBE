@@ -1091,6 +1091,8 @@ bool disposed = false;
         /// <param name="stationData">json object with journal data</param>
         public void SendJournalData(JObject dataObject)
         {
+            Boolean inconsistentData = false;
+
             try
             {
                 if(m_SenderIsActivated && m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostJournalData", true.ToString(), false))
@@ -1102,7 +1104,7 @@ bool disposed = false;
                     journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
 
                     if(dataObject.SelectToken("StarSystem") == null)
-                        journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", Program.actualCondition.System));
+                        inconsistentData = true;
                     else
                         journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", dataObject.SelectToken("StarSystem").ToString()));
                         
@@ -1114,51 +1116,51 @@ bool disposed = false;
                     System.Text.RegularExpressions.Regex forbiddenPattern   = new System.Text.RegularExpressions.Regex("(CockpitBreach|BoostUsed|FuelLevel|FuelUsed|JumpDist|_Localised$|timestamp|event|StarSystem|StarPos)");
                     List<String> typeList = new List<String>() { "array", "boolean", "integer", "float", "double", "object", "string" };
 
-                    
-                    foreach (JToken dataItem in dataObject.SelectTokens("*"))
+                    if(!inconsistentData)
                     {
-                        if(!forbiddenPattern.IsMatch(dataItem.Path))
+                        foreach (JToken dataItem in dataObject.SelectTokens("*"))
                         {
-                            if(typeList.Contains(dataItem.Type.ToString().ToLower()))
+                            if(!forbiddenPattern.IsMatch(dataItem.Path))
                             {
-                                Debug.Print("allowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
-
-                                switch (dataItem.Type.ToString().ToLower())
+                                if(typeList.Contains(dataItem.Type.ToString().ToLower()))
                                 {
-                                    case "string":
-                                        journalStringEDDN.Append(String.Format("\"{0}\":\"{1}\", ",    dataItem.Path, dataItem));    
-                                        break;
+                                    Debug.Print("allowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
 
-                                    case "float":
-                                    case "double":
-                                        journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, SQL.DBConnector.SQLDecimal((double)dataItem)));    
-                                        break;
+                                    switch (dataItem.Type.ToString().ToLower())
+                                    {
+                                        case "string":
+                                            journalStringEDDN.Append(String.Format("\"{0}\":\"{1}\", ",    dataItem.Path, dataItem));    
+                                            break;
 
-                                    case "boolean":
-                                        journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem.ToString().ToLower()));
-                                        break;
+                                        case "float":
+                                        case "double":
+                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, SQL.DBConnector.SQLDecimal((double)dataItem)));    
+                                            break;
 
-                                    default:
-                                        journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem));
-                                        break;
+                                        case "boolean":
+                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem.ToString().ToLower()));
+                                            break;
+
+                                        default:
+                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem));
+                                            break;
+                                    }
                                 }
-                            }
-                            else
-                                Debug.Print("disallowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
+                                else
+                                    Debug.Print("disallowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
 
                             
+                            }
+                            else
+                                Debug.Print("disallowed : " + dataItem.Path);
                         }
-                        else
-                            Debug.Print("disallowed : " + dataItem.Path);
+
+                        journalStringEDDN.Remove(journalStringEDDN.Length-2, 2);
+                        journalStringEDDN.Append("}");
+
+                        _Send_Journal.Enqueue(journalStringEDDN);
+                        _SendDelayTimer_Journal.Start();
                     }
-
-                    journalStringEDDN.Remove(journalStringEDDN.Length-2, 2);
-                    journalStringEDDN.Append("}");
-
-
-                    _Send_Journal.Enqueue(journalStringEDDN);
-                    _SendDelayTimer_Journal.Start();
-
                 }
             }
             catch (Exception ex)
@@ -1191,7 +1193,7 @@ bool disposed = false;
                     Data        = new EDDNCommodity_v3();
 
                     // test or real ?
-                    if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                    if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                     else
                         Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3";
@@ -1348,7 +1350,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/outfitting/2";
@@ -1444,7 +1446,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
                     schema = "http://schemas.elite-markets.net/eddn/commodity/3/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/commodity/3";
@@ -1537,7 +1539,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/shipyard/2";
@@ -1634,7 +1636,7 @@ bool disposed = false;
                 };
 
                 // fill the schema : test or real ?
-                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta))
+                if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
                     schema = "http://schemas.elite-markets.net/eddn/journal/1/test";
                 else
                     schema = "http://schemas.elite-markets.net/eddn/journal/1";

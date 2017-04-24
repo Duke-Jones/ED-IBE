@@ -215,6 +215,7 @@ namespace IBE
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Fileheader:
                         JournalHeaderObject = (JObject)e.Data;
+                        Program.MainForm.RefreshHeadline();
                         break;
                 }
 
@@ -252,10 +253,16 @@ namespace IBE
         public JObject SupercruiseExitObject { get; set; }
 
 
-        /// <summary>
-        /// returns if the active E:D version is a beta or not
+        //public Boolean GameversionCouldBeBeta()
+        //{
+        //    return GameversionIsBeta_Jrnl; // || GameversionIsBeta_Val
+        //}
+
+
+            /// <summary>
+        /// returns if the active E:D version is a beta or not - based on the header object of the active journal file
         /// </summary>
-        public Boolean GameversionIsBeta
+        public Boolean GameversionIsBeta_Jrnl
         {
             get
             {
@@ -266,11 +273,45 @@ namespace IBE
                 }
                 else
                 {
-                    // we have no object  -> moral issue, decided for "no" beta
-                    return false;
+                    // we have no object  -> moral issue, decided for beta
+                    return true;
                 }
             }
         }
+
+        ///// <summary>
+        ///// returns if the active E:D version is a beta or not - based on the official released "ED-IBE" data from github (file 'non_beta.txt')
+        ///// </summary>
+        //public Boolean GameversionIsBeta_Val
+        //{
+        //    get
+        //    {
+        //        if((JournalHeaderObject != null) && (JournalHeaderObject.Values("build") != null))
+        //        {
+        //            // now we're sure we have a object
+        //            String build = JournalHeaderObject.SelectToken("build").ToString().ToLower();
+
+        //            return !IsOfficialRelease(build);
+        //        }
+        //        else
+        //        {
+        //            // we have no object  -> moral issue, decided for beta
+        //            return true;
+        //        }
+        //    }
+        //}
+
+        //public Boolean IsOfficialRelease(String versionNumber)
+        //{
+        //    try
+        //    {
+        //        return (Program.DBCon.Execute<Int32>(String.Format("select count(*) from tbKnownReleases where Version = {0};", SQL.DBConnector.SQLAEscape(versionNumber))) > 0);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Error while checking for official release", ex);
+        //    }                
+        //}
 
         
 

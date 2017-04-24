@@ -563,6 +563,7 @@ namespace IBE.MTCommandersLog
             {
                 //NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
                 NumberFormatInfo nfi = new CultureInfo("en-US", false).NumberFormat;
+                IBECompanion.CompanionConverter cmpConverter = null;
 
                 nfi = (NumberFormatInfo) nfi.Clone();
                 nfi.CurrencySymbol = "";
@@ -618,13 +619,13 @@ namespace IBE.MTCommandersLog
 
                     case FileScanner.EDJournalScanner.JournalEvent.Died:
 
-                        String killInfo= "";
-                        IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
+                        String bountyInfo= "";
+                        cmpConverter = new IBECompanion.CompanionConverter();  
 
                         if(e.Data.Value<String>("KillerName") != null)
                         {
                             
-                            killInfo =  String.Format("killed by \t: {0}\n" +
+                            bountyInfo =  String.Format("killed by \t: {0}\n" +
                                                       "ship \t: {1}\n" +
                                                       "rank \t: {2}", 
                                                       (e.Data.Value<String>("KillerName_Localised") != null) ? e.Data.Value<String>("KillerName_Localised") : e.Data.Value<String>("KillerName"), 
@@ -635,12 +636,12 @@ namespace IBE.MTCommandersLog
                         }
                         else if(e.Data.Value<Object>("Killers") != null)
                         {
-                            killInfo = "killed by wing:\n";
+                            bountyInfo = "killed by wing:\n";
                             Int32 counter = 1;
                             foreach (JToken killerData in e.Data.SelectTokens("Killers.[*]"))
                             {
 
-                                killInfo +=  String.Format("{4}{3}. \t{0}, \t{1}, \t{2}", 
+                                bountyInfo +=  String.Format("{4}{3}. \t{0}, \t{1}, \t{2}", 
                                                            killerData.Value<String>("Name"), 
                                                            cmpConverter.GetShipNameFromSymbol(Program.Data.BaseData.tbshipyardbase, killerData.Value<String>("Ship")), 
                                                            killerData.Value<String>("Rank"), 
@@ -659,7 +660,7 @@ namespace IBE.MTCommandersLog
                                   0, 
                                   Program.CompanionIO.SGetCreditsTotal(), 
                                   "Died", 
-                                  killInfo);
+                                  bountyInfo);
                         break;
 
                     case FileScanner.EDJournalScanner.JournalEvent.Resurrect:
@@ -763,13 +764,13 @@ namespace IBE.MTCommandersLog
                                 {
                                     TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
-                                    foreach (JProperty  material in e.Data.SelectToken("Materials"))
+                                    foreach (JObject material in e.Data.SelectTokens("Materials.[*]"))
                                     {
                                         if(materials.Length == 0)
                                             materials.AppendFormat(String.Format("\n{0} :   ", txtHelp.FixedLength("Materials", usedFont, fullLength)));
                                         else
                                             materials.AppendFormat(", ");
-                                        materials.AppendFormat("{0} : {1:N1}%", textInfo.ToTitleCase(material.Name), (Double)material.Value);
+                                        materials.AppendFormat("{0} : {1:N1}%", textInfo.ToTitleCase(material.Value<String>("Name")), material.Value<Double>("Percent"));
                                     }
                                     data.AppendLine(materials.ToString());
                                 }
@@ -1052,6 +1053,76 @@ namespace IBE.MTCommandersLog
                         }
 
                         break;
+
+                    //case FileScanner.EDJournalScanner.JournalEvent.Bounty:
+
+                        //String bountyInfo= "";
+                        //cmpConverter = new IBECompanion.CompanionConverter();  
+
+                        //if(e.Data.Value<Object>("Rewards") != null)
+                        //{
+                        //    TextHelper txtHelp = new TextHelper();
+                        //    Font usedFont = m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font != null ? m_GUI.dgvCommandersLog.Columns["notes"].DefaultCellStyle.Font : m_GUI.dgvCommandersLog.DefaultCellStyle.Font ; 
+                        //    System.Text.StringBuilder data  = new System.Text.StringBuilder();
+                        //    Int32 fullLength = 190;
+
+                        //    bountyInfo = "Bounty awarded:\n";
+                        //    Int32 counter = 1;
+                        //    foreach (JToken rewardData in e.Data.SelectTokens("Rewards.[*]"))
+                        //    {
+
+                        //        bountyInfo +=  String.Format("{4}{3}. {1} : {0} cr.", 
+                        //                                   txtHelp.FixedLength(rewardData.Value<String>("Faction"), usedFont, fullLength),
+                        //                                   txtHelp.FixedLength(rewardData.Value<Int32>("Reward").ToString(), usedFont, fullLength), 
+                        //                                   counter, 
+                        //                                   counter > 1 ? "\n":""); 
+                        //        counter++;
+                        //    }
+                        //}
+
+
+
+
+                        //if (e.Data.Value<String>("KillerName") != null)
+                        //{
+                            
+                        //    bountyInfo =  String.Format("killed by \t: {0}\n" +
+                        //                              "ship \t: {1}\n" +
+                        //                              "rank \t: {2}", 
+                        //                              (e.Data.Value<String>("KillerName_Localised") != null) ? e.Data.Value<String>("KillerName_Localised") : e.Data.Value<String>("KillerName"), 
+                        //                              cmpConverter.GetShipNameFromSymbol(Program.Data.BaseData.tbshipyardbase, e.Data.Value<String>("KillerShip")), 
+                        //                              e.Data.Value<String>("KillerRank")); 
+
+
+                        //}
+                        //else if(e.Data.Value<Object>("Killers") != null)
+                        //{
+                        //    bountyInfo = "killed by wing:\n";
+                        //    Int32 counter = 1;
+                        //    foreach (JToken killerData in e.Data.SelectTokens("Killers.[*]"))
+                        //    {
+
+                        //        bountyInfo +=  String.Format("{4}{3}. \t{0}, \t{1}, \t{2}", 
+                        //                                   killerData.Value<String>("Name"), 
+                        //                                   cmpConverter.GetShipNameFromSymbol(Program.Data.BaseData.tbshipyardbase, killerData.Value<String>("Ship")), 
+                        //                                   killerData.Value<String>("Rank"), 
+                        //                                   counter, 
+                        //                                   counter > 1 ? "\n":""); 
+                        //        counter++;
+                        //    }
+                        //}
+
+                        //SaveEvent(e.Data.Value<DateTime>("timestamp"), 
+                        //          Program.actualCondition.System, 
+                        //          "", 
+                        //          "", 
+                        //          "", 
+                        //          0, 
+                        //          0, 
+                        //          Program.CompanionIO.SGetCreditsTotal(), 
+                        //          "Died", 
+                        //          bountyInfo);
+                        //break;
                 }
 
             }

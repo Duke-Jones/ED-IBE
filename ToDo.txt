@@ -23,10 +23,19 @@ todo:
 * delete old log files
 * data backup
 
+* adding station type and distance to star to all PA tabs
+
 *************************************************************************************
 
 done:
- 
+
+
+v0.6.4
+  * fixed a rare crash when importing eddb-data to ED-IBE
+  * fixed a crash when adding scan-events of landable planets to commanders log
+  * fixed a problem that causes report of inconsistent system/station combinations to EDDN
+  * in case of doubt (e. g. missing journal header) ED-IBE now assumes a beta version of E:D
+-------------------------------------------------------------------------------------         
   * replaced hardcoded adresses for EDDN relays by editable database entries
 -------------------------------------------------------------------------------------         
   * fixed wrong column type for profit on station2station tab

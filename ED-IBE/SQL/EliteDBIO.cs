@@ -416,7 +416,7 @@ namespace IBE.SQL
         /// <param name="Tablename">name of the basetable WITHOUT leading 'tb'</param>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public object BaseTableNameToID(String Tablename, String Name, Boolean insertUnknown = false)
+        public object BaseTableNameToID(String Tablename, String Name, Boolean insertUnknown = false, String alternativeName = null)
         {
             
             try
@@ -446,7 +446,10 @@ namespace IBE.SQL
                         PrepareBaseTables(fullTableName, true);
                     }
 
-                    return (Int32)(m_BaseData.Tables[fullTableName].Select(String.Format("{0} = '{1}'", Tablename, Name))[0]["id"]);
+                    if(m_BaseData.Tables[fullTableName].Select(String.Format("{0} = '{1}'", Tablename, Name)).Count() > 0)
+                        return (Int32)(m_BaseData.Tables[fullTableName].Select(String.Format("{0} = '{1}'", Tablename, Name))[0]["id"]);
+                    else
+                        return (Int32)(m_BaseData.Tables[fullTableName].Select(String.Format("{0} = '{1}'", Tablename, alternativeName))[0]["id"]);
                 }
 
             }
@@ -2382,7 +2385,7 @@ namespace IBE.SQL
                     UInt32 CClassifID;
 
                     if(mappedName != null)
-                        CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", mappedName.GameName));
+                        CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", mappedName.GameName, false, Classification.Key));
                     else
                         CommodityID = (Int32)DBConvert.From(BaseTableNameToID("commodity", Classification.Key));
 
@@ -4906,8 +4909,6 @@ namespace IBE.SQL
                 CErr.processError(ex, "Error while deleting unused systems");
             }
         }
-
-
 
         #endregion
 

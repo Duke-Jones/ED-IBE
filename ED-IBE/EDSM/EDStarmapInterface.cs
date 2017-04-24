@@ -342,7 +342,7 @@ namespace IBE.EDSM
                     {
                         currentData     = m_SendQueue.Dequeue();
 
-                        if(m_GUIInterface.GetIniValue<Boolean>("SendToEDSM", true.ToString(), false) && (!Program.actualCondition.GameversionIsBeta))
+                        if(m_GUIInterface.GetIniValue<Boolean>("SendToEDSM", true.ToString(), false) && (!Program.actualCondition.GameversionIsBeta_Jrnl))
                         {
                             switch (currentData.TType)
                             {
