@@ -317,6 +317,17 @@ namespace IBE.MTPriceAnalysis
             {
                 stopTime = (DateTime.UtcNow - new TimeSpan(Program.DBCon.getIniValue<Int32>(IBE.MTPriceAnalysis.tabPriceAnalysis.DB_GROUPNAME, "TimeFilterDays", "30", true), 0, 0, 0));
 
+                sqlString = "CREATE TABLE IF NOT EXISTS `elite_db`.`tmFilteredStations` (" +
+                            "  `System_id` INT NOT NULL,                                 " +
+                            "  `Station_id` INT NOT NULL,                                " +
+                            "  `Distance` DOUBLE NULL,                                   " +
+                            "  `x` DOUBLE NULL,                                          " +
+                            "  `y` DOUBLE NULL,                                          " +
+                            "  `z` DOUBLE NULL,                                          " +
+                            "  PRIMARY KEY (`System_id`, `Station_id`))                  " +
+                            "ENGINE = InnoDB;                                            ";
+                m_lDBCon.Execute(sqlString);
+
                 sqlString = "truncate table tmFilteredStations;";
                 m_lDBCon.Execute(sqlString);
 
@@ -675,6 +686,18 @@ namespace IBE.MTPriceAnalysis
                 if(m_lDBCon.getIniValue<Boolean>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistance"))
                     maxTradingDistance = m_lDBCon.getIniValue<Int32>(tabPriceAnalysis.DB_GROUPNAME, "MaxTripDistanceValue");
 
+                sqlString = "CREATE TABLE IF NOT EXISTS `elite_db`.`tmNeighbourStations` (" +
+                            "  `System_ID_From` INT NULL,                                 " +
+                            "  `Station_ID_From` INT NOT NULL,                            " +
+                            "  `Distance_From` DOUBLE NULL,                               " +
+                            "  `System_ID_To` INT NULL,                                   " +
+                            "  `Station_ID_To` INT NOT NULL,                              " +
+                            "  `Distance_To` DOUBLE NULL,                                 " +
+                            "  `Distance_Between` DOUBLE NULL,                            " +
+                            "  PRIMARY KEY (`Station_ID_From`, `Station_ID_To`))          " +
+                            "ENGINE = InnoDB;                                             ";
+                m_lDBCon.Execute(sqlString);
+
                 // delete old content
                 sqlString = "truncate table tmNeighbourstations;";
                 m_lDBCon.Execute(sqlString);
@@ -879,6 +902,15 @@ namespace IBE.MTPriceAnalysis
                     Current     = 0;
                     Calculated.Clear();
 
+                    
+                    sqlString = "CREATE TABLE IF NOT EXISTS `elite_db`.`tmBestProfits` ( " + 
+                                "   `Station_Id_From` INT NOT NULL,                      " + 
+                                "   `Station_Id_To` INT NOT NULL,                        " + 
+                                "   `Max_Profit` INT NULL,                               " + 
+                                "   PRIMARY KEY (`Station_Id_From`, `Station_Id_To`))    " + 
+                                " ENGINE = InnoDB;                                       ";
+                    m_lDBCon.Execute(sqlString);
+
                     m_lDBCon.Execute("truncate table tmBestProfits");
 
                     // get the start stations for a cancellable loop
@@ -951,6 +983,27 @@ namespace IBE.MTPriceAnalysis
                         }
                     }
 
+                    sqlString = "CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_BestTrips` ( " +
+                                "  `System_ID_1` INT NULL,                                    " +
+                                "  `SystemName_1` VARCHAR(80) NULL,                           " +
+                                "  `Station_ID_1` INT NOT NULL,                               " +
+                                "  `StationName_1` VARCHAR(80) NULL,                          " +
+                                "  `TimeStamp_1` DATETIME NULL,                               " +
+                                "  `Station_Location_1` VARCHAR(80) NULL,                     " +
+                                "  `System_ID_2` INT NULL,                                    " +
+                                "  `SystemName_2` VARCHAR(80) NULL,                           " +
+                                "  `Station_ID_2` INT NOT NULL,                               " +
+                                "  `StationName_2` VARCHAR(80) NULL,                          " +
+                                "  `TimeStamp_2` DATETIME NULL,                               " +
+                                "  `Station_Location_2` VARCHAR(80) NULL,                     " +
+                                "  `Profit` INT NULL,                                         " +
+                                "  `Distance` DOUBLE NULL,                                    " +
+                                "  `DistanceToStar_1` DOUBLE NULL,                            " +
+                                "  `DistanceToStar_2` DOUBLE NULL,                            " +
+                                "  `DistanceToRoute` DOUBLE NULL,                             " +
+                                "  PRIMARY KEY (`Station_ID_1`, `Station_ID_2`))              " +
+                                "ENGINE = InnoDB;                                              ";
+                    m_lDBCon.Execute(sqlString);
 
                     m_lDBCon.Execute("truncate table tmPA_S2S_BestTrips");
 
