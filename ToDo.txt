@@ -29,7 +29,9 @@ todo:
 
 done:
 
-
+  
+  * fixed dead event-checkboxes on settings window
+-------------------------------------------------------------------------------------         
 v0.6.4
   * fixed a rare crash when importing eddb-data to ED-IBE
   * fixed a crash when adding scan-events of landable planets to commanders log

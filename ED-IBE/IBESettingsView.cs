@@ -699,10 +699,5 @@ namespace IBE
             if(e.KeyChar == (char)13)
                 cmdChangeSQLPort_Click(sender, e);
         }
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

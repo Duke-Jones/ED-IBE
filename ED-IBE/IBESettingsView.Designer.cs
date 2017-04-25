@@ -332,6 +332,7 @@
             this.cbAutoAdd_LoadGame.Tag = "AutoAdd_LoadGame;true";
             this.cbAutoAdd_LoadGame.Text = "\"LoadGame\"-Event";
             this.cbAutoAdd_LoadGame.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_LoadGame.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoAdd_MissionAbandoned
             // 
@@ -343,6 +344,7 @@
             this.cbAutoAdd_MissionAbandoned.Tag = "AutoAdd_MissionAbandoned;true";
             this.cbAutoAdd_MissionAbandoned.Text = "\"MissionAbandoned\"-Event";
             this.cbAutoAdd_MissionAbandoned.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_MissionAbandoned.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoAdd_MissionFailed
             // 
@@ -354,6 +356,7 @@
             this.cbAutoAdd_MissionFailed.Tag = "AutoAdd_MissionFailed;true";
             this.cbAutoAdd_MissionFailed.Text = "\"MissionFailed\"-Event";
             this.cbAutoAdd_MissionFailed.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_MissionFailed.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoAdd_MissionCompleted
             // 
@@ -365,7 +368,7 @@
             this.cbAutoAdd_MissionCompleted.Tag = "AutoAdd_MissionCompleted;true";
             this.cbAutoAdd_MissionCompleted.Text = "\"MissionCompleted\"-Event";
             this.cbAutoAdd_MissionCompleted.UseVisualStyleBackColor = true;
-            this.cbAutoAdd_MissionCompleted.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.cbAutoAdd_MissionCompleted.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoAdd_MissionAccepted
             // 
@@ -377,6 +380,7 @@
             this.cbAutoAdd_MissionAccepted.Tag = "AutoAdd_MissionAccepted;true";
             this.cbAutoAdd_MissionAccepted.Text = "\"MissionAccepted\"-Event";
             this.cbAutoAdd_MissionAccepted.UseVisualStyleBackColor = true;
+            this.cbAutoAdd_MissionAccepted.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
             // cbAutoAdd_Liftoff
             // 
@@ -875,7 +879,6 @@
             this.cbAutoMinimize.TabIndex = 1;
             this.cbAutoMinimize.Tag = "AutoMinimize;false";
             this.cbAutoMinimize.Text = "auto-minimize splashscreen on start";
-            this.cbAutoMinimize.ThreeState = true;
             this.cbAutoMinimize.UseVisualStyleBackColor = true;
             this.cbAutoMinimize.CheckedChanged += new System.EventHandler(this.ComboBox_CheckedChanged);
             // 
