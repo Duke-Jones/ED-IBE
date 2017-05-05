@@ -238,7 +238,15 @@ namespace IBE
                 switch (e.EventType)
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Basedata:
+
                         Program.Data.checkPotentiallyNewSystemOrStation(e.System, e.Station, e.Coordinates);
+
+                        System      = e.System;
+                        Station     = e.Station;
+
+                        if (e.Coordinates.Valid)
+                            this.Coordinates = Coordinates;
+
                         break;
                 }
 

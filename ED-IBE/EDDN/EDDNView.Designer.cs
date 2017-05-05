@@ -638,7 +638,7 @@
             this.tabRecieve.Padding = new System.Windows.Forms.Padding(3);
             this.tabRecieve.Size = new System.Drawing.Size(1055, 661);
             this.tabRecieve.TabIndex = 0;
-            this.tabRecieve.Text = "Recieve Data";
+            this.tabRecieve.Text = "Receive Data";
             this.tabRecieve.UseVisualStyleBackColor = true;
             // 
             // groupBox5

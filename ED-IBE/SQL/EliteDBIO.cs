@@ -4376,9 +4376,9 @@ namespace IBE.SQL
                                                           "insert ignore into tbVisitedsystems(system_id, time, visitType) values ({0},{5},{6});",
                                                           systemID, 
                                                           DBConnector.SQLAEscape(newSystemName), 
-                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
-                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
-                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
+                                                          ((coordinates != null) && (coordinates.Valid)) ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
+                                                          ((coordinates != null) && (coordinates.Valid)) ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
+                                                          ((coordinates != null) && (coordinates.Valid)) ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
                                                           DBConnector.SQLDateTime(DateTime.UtcNow), 
                                                           (sbyte)setVisitedType); 
                             }
@@ -4387,9 +4387,9 @@ namespace IBE.SQL
                                 sqlString = String.Format("insert into tbSystems(id, systemname, x, y, z, updated_at, visited) values ({0},{1},{2},{3},{4},{5},{6});",
                                                           systemID, 
                                                           DBConnector.SQLAEscape(newSystemName), 
-                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
-                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
-                                                          coordinates.Valid ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
+                                                          ((coordinates != null) && (coordinates.Valid)) ? DBConnector.SQLDecimal(coordinates.X.Value) : "null", 
+                                                          ((coordinates != null) && (coordinates.Valid)) ? DBConnector.SQLDecimal(coordinates.Y.Value) : "null", 
+                                                          ((coordinates != null) && (coordinates.Valid)) ? DBConnector.SQLDecimal(coordinates.Z.Value) : "null",
                                                           DBConnector.SQLDateTime(DateTime.UtcNow), 
                                                           (sbyte)setVisitedType); 
                             }
@@ -4408,7 +4408,7 @@ namespace IBE.SQL
 
                         newSystemRow.id         = systemID;
                         newSystemRow.systemname = DBConnector.SQLAEscape(newSystemName);
-                        if(coordinates.Valid)
+                        if((coordinates != null) && (coordinates.Valid))
                         {
                             newSystemRow.x          = coordinates.X.Value;
                             newSystemRow.y          = coordinates.X.Value;

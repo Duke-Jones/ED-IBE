@@ -29,6 +29,10 @@ todo:
 
 done:
 
+
+  * fixed a few minor bugs 
+  * reactivated scan events for sending to eddn
+-------------------------------------------------------------------------------------         
   * create truncatable tables new if they accidentally not more exististing
 -------------------------------------------------------------------------------------         
   * fixed dead event-checkboxes on settings window

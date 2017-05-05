@@ -78,8 +78,7 @@ namespace IBE.FileScanner
 
             public String                       Station      { get; set; }
 
-
-            
+           
         }
 
 
@@ -480,7 +479,8 @@ namespace IBE.FileScanner
                                             case JournalEvent.Location:
                                             case JournalEvent.Docked:
                                             case JournalEvent.FSDJump:
-                                            case JournalEvent.Resurrect:
+                                            case JournalEvent.SupercruiseEntry:
+                                            case JournalEvent.SupercruiseExit:
 
                                                 if(m_extLogging) logger.Log("accepted (pre) : " + eventName.ToString());
                                                 Debug.Print("accepted (pre) : " + eventName.ToString());

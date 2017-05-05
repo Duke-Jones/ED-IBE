@@ -631,7 +631,7 @@ namespace IBE.MTPriceAnalysis
                     Program.DBCon.Execute(sqlString, Data);
                 }
 
-                if (Data.Rows.Count > 0)
+                if ((Data.Rows.Count > 0) && !DBNull.Value.Equals(Data.Rows[0]["x"]) && !DBNull.Value.Equals(Data.Rows[0]["y"]) & !DBNull.Value.Equals(Data.Rows[0]["z"]))
                 {
                     Int32     SystemID          = (Int32)Data.Rows[0]["ID"];
                     Point3Dbl baseCoodinates    = new Point3Dbl((Double)Data.Rows[0]["x"], (Double)Data.Rows[0]["y"], (Double)Data.Rows[0]["z"]);

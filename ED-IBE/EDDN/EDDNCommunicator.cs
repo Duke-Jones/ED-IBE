@@ -770,12 +770,7 @@ bool disposed = false;
                         commodityStringEDDN.Append(String.Format("\"message\": {{"));
 
                         commodityStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("lastSystem.name").ToString()));
-                        //commodityStringEDDN.Append(String.Format("\"systemId\":\"{0}\", "      , dataObject.SelectToken("lastSystem.id").ToString()));
-                        //commodityStringEDDN.Append(String.Format("\"systemAddress\":\"{0}\", " , dataObject.SelectToken("lastSystem.address").ToString()));
-                        
-
                         commodityStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
-                        //commodityStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
                         commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
 
@@ -914,12 +909,7 @@ bool disposed = false;
                         outfittingStringEDDN.Append(String.Format("\"message\": {{"));
 
                         outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("lastSystem.name").ToString()));
-                        //outfittingStringEDDN.Append(String.Format("\"systemId\":\"{0}\", "      , dataObject.SelectToken("lastSystem.id").ToString()));
-                        //outfittingStringEDDN.Append(String.Format("\"systemAddress\":\"{0}\", " , dataObject.SelectToken("lastSystem.address").ToString()));
-                        
-
                         outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
-                        //outfittingStringEDDN.Append(String.Format("\"stationId\":\"{0}\", "   , dataObject.SelectToken("lastStarport.id").ToString()));
 
                         outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
 
@@ -1104,7 +1094,8 @@ bool disposed = false;
                     journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
 
                     if(dataObject.SelectToken("StarSystem") == null)
-                        inconsistentData = true;
+                        //inconsistentData = true;
+                        journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", Program.actualCondition.System));
                     else
                         journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", dataObject.SelectToken("StarSystem").ToString()));
                         

@@ -3266,28 +3266,22 @@ namespace IBE
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Location:
                         
-                        if(Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem")) && 
-                           Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName")))
-                            AddComboboxLine(txtEventInfo,             "Current location confirmed");
-                        else
-                            AddComboboxLine(txtEventInfo,             "Got new location");
+                        AddComboboxLine(txtEventInfo,             "Location event received");
 
-
-                        Program.actualCondition.System          = e.Data.Value<String>("StarSystem");
-                        Program.actualCondition.Coordinates     = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
-
+                        //Program.actualCondition.System          = e.Data.Value<String>("StarSystem");
+                        //Program.actualCondition.Coordinates     = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
 
                         if(e.Data.Value<Boolean>("Docked"))
                         {
-                            Program.actualCondition.Station    = e.Data.Value<String>("StationName");
+                            //Program.actualCondition.Station    = e.Data.Value<String>("StationName");
 
                             // from now it is allowed to send data to eddn immediately again
                             Program.EDDNComm.SendingReset();
                         }
-                        else
-                        {
-                            Program.actualCondition.Station    = "";
-                        }
+                        //else
+                        //{
+                        //    Program.actualCondition.Station    = "";
+                        //}
 
                         Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
                         Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
@@ -3300,13 +3294,13 @@ namespace IBE
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
                         AddComboboxLine(txtEventInfo,             "FSD jump recognized");
 
-                        Program.actualCondition.Station = "";
+                        //Program.actualCondition.Station = "";
 
                         // from now it is allowed to send data to eddn immediately again
                         Program.EDDNComm.SendingReset();
 
-                        Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
-                        Program.actualCondition.Coordinates = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
+                        //Program.actualCondition.System      = e.Data.Value<String>("StarSystem");
+                        //Program.actualCondition.Coordinates = new Point3Dbl((Double)e.Data["StarPos"][0], (Double)e.Data["StarPos"][1], (Double)e.Data["StarPos"][2]);
 
                         Program.actualCondition.Body        = String.IsNullOrWhiteSpace(e.Data.Value<String>("Body")) ? "" : e.Data.Value<String>("Body");
                         Program.actualCondition.BodyType    = String.IsNullOrWhiteSpace(e.Data.Value<String>("BodyType")) ? "" : e.Data.Value<String>("BodyType");
@@ -3322,8 +3316,8 @@ namespace IBE
                         //{
                             AddComboboxLine(txtEventInfo,       "Docked");
 
-                            Program.actualCondition.System     = e.Data.Value<String>("StarSystem");
-                            Program.actualCondition.Station    = e.Data.Value<String>("StationName");
+                            //Program.actualCondition.System     = e.Data.Value<String>("StarSystem");
+                            //Program.actualCondition.Station    = e.Data.Value<String>("StationName");
 
                             ShowLocationData();
                             ShowStatus();
