@@ -304,9 +304,12 @@ bool disposed = false;
             enSchema ownSchema;
             enSchema dataSchema;
             bool isTrusty = false;
+            bool logOwnMessages = true;
 
             try
             {
+
+                ownSchema = m_lDBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
 
                 if (m_lDBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
                 {
@@ -317,10 +320,21 @@ bool disposed = false;
                         else
                             m_EDDNSpooler = File.AppendText(Program.GetDataPath(@"Logs\EddnOutput.txt"));
                     }
-                    m_EDDNSpooler.WriteLine(e.RawData);
-                }
 
-                ownSchema = m_lDBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
+                    if(m_lDBCon.getIniValue<Boolean>("EDDN", "SpoolOnlyOwn", false.ToString(), false))
+                    {
+                        JObject dataJObject = (JObject)e.Data;
+
+                        if ((dataJObject != null) && (dataJObject.SelectToken("header.uploaderID").ToString() == UserIdentification()))
+                        {
+                            m_EDDNSpooler.WriteLine($"{e.Adress}::{e.RawData}");
+                        }
+                    }
+                    else
+                    {
+                        m_EDDNSpooler.WriteLine($"{e.Adress}::{e.RawData}");
+                    }
+                }
 
                 switch (e.InfoType)
                 {
@@ -1185,9 +1199,9 @@ bool disposed = false;
 
                     // test or real ?
                     if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
-                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3/test";
+                        Data.SchemaRef = "https://eddn.edcd.io/schemas/commodity/3/test";
                     else
-                        Data.SchemaRef = "http://schemas.elite-markets.net/eddn/commodity/3";
+                        Data.SchemaRef = "https://eddn.edcd.io/schemas/commodity/3";
 
                     if(_Send_MarketData_API.Count > 0)
                     {
@@ -1261,7 +1275,7 @@ bool disposed = false;
                         {
                             Debug.Print(JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
 
-                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
+                            client.UploadString("https://eddn.edcd.io:4430/upload/", "POST", JsonConvert.SerializeObject(Data, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore }));
 
                             if(activeQueue == _Send_MarketData_API)
                             { 
@@ -1342,9 +1356,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
-                    schema = "http://schemas.elite-markets.net/eddn/outfitting/2/test";
+                    schema = "https://eddn.edcd.io/schemas/outfitting/2/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/outfitting/2";
+                    schema = "https://eddn.edcd.io/schemas/outfitting/2";
 
                 do
                 {
@@ -1366,7 +1380,7 @@ bool disposed = false;
                         {
                             Debug.Print(outfittingMessage.ToString());
 
-                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", outfittingMessage.ToString());
+                            client.UploadString("https://eddn.edcd.io:4430/upload/", "POST", outfittingMessage.ToString());
 
                             m_OutfittingSendingError = false;
                             DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Outfitting_V2, enTransmittedStates.Sent));
@@ -1438,9 +1452,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
-                    schema = "http://schemas.elite-markets.net/eddn/commodity/3/test";
+                    schema = "https://eddn.edcd.io/schemas/commodity/3/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/commodity/3";
+                    schema = "https://eddn.edcd.io/schemas/commodity/3";
 
                 // create full message
                 commodityMessage.Append(String.Format("{{" +
@@ -1459,7 +1473,7 @@ bool disposed = false;
                     {
                         Debug.Print(commodityMessage.ToString());
 
-                        client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", commodityMessage.ToString());
+                        client.UploadString("https://eddn.edcd.io:4430/upload/", "POST", commodityMessage.ToString());
 
                         m_CommoditySendingError = false;
                         DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Commodity_V3, enTransmittedStates.Sent));
@@ -1531,9 +1545,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
-                    schema = "http://schemas.elite-markets.net/eddn/shipyard/2/test";
+                    schema = "https://eddn.edcd.io/schemas/shipyard/2/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/shipyard/2";
+                    schema = "https://eddn.edcd.io/schemas/shipyard/2";
 
                 do
                 {
@@ -1555,7 +1569,7 @@ bool disposed = false;
                         {
                             Debug.Print(shipyardMessage.ToString());
 
-                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", shipyardMessage.ToString());
+                            client.UploadString("https://eddn.edcd.io:4430/upload/", "POST", shipyardMessage.ToString());
 
                             m_ShipyardSendingError   = false;
                             DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Shipyard_V1, enTransmittedStates.Sent));
@@ -1628,9 +1642,9 @@ bool disposed = false;
 
                 // fill the schema : test or real ?
                 if((m_lDBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false) == "Test") || (Program.actualCondition.GameversionIsBeta_Jrnl))
-                    schema = "http://schemas.elite-markets.net/eddn/journal/1/test";
+                    schema = "https://eddn.edcd.io/schemas/journal/1/test";
                 else
-                    schema = "http://schemas.elite-markets.net/eddn/journal/1";
+                    schema = "https://eddn.edcd.io/schemas/journal/1";
 
                 do
                 {
@@ -1652,7 +1666,7 @@ bool disposed = false;
                         {
                             Debug.Print(journalMessage.ToString());
 
-                            client.UploadString("http://eddn-gateway.elite-markets.net:8080/upload/", "POST", journalMessage.ToString());
+                            client.UploadString("https://eddn.edcd.io:4430/upload/", "POST", journalMessage.ToString());
 
                             m_JournalSendingError   = false;
                             DataTransmittedEvent.Raise(this, new DataTransmittedEventArgs(enTransmittedTypes.Journal_V1, enTransmittedStates.Sent));

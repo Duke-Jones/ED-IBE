@@ -97,6 +97,7 @@
             this.lbEddnImplausible = new System.Windows.Forms.ListBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tbEDDNOutput = new System.Windows.Forms.TextBox();
+            this.cbSpoolOnlyOwn = new System.Windows.Forms.CheckBox();
             this.groupBox4.SuspendLayout();
             this.gbSendingDefault.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -760,6 +761,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cbSpoolOnlyOwn);
             this.groupBox2.Controls.Add(this.cmdRemoveRelay);
             this.groupBox2.Controls.Add(this.cmdAddRelay);
             this.groupBox2.Controls.Add(this.label4);
@@ -818,7 +820,7 @@
             // cbEDDNAutoListen
             // 
             this.cbEDDNAutoListen.AutoSize = true;
-            this.cbEDDNAutoListen.Location = new System.Drawing.Point(10, 67);
+            this.cbEDDNAutoListen.Location = new System.Drawing.Point(10, 86);
             this.cbEDDNAutoListen.Name = "cbEDDNAutoListen";
             this.cbEDDNAutoListen.Size = new System.Drawing.Size(187, 17);
             this.cbEDDNAutoListen.TabIndex = 15;
@@ -830,7 +832,7 @@
             // cbSpoolImplausibleToFile
             // 
             this.cbSpoolImplausibleToFile.AutoSize = true;
-            this.cbSpoolImplausibleToFile.Location = new System.Drawing.Point(10, 50);
+            this.cbSpoolImplausibleToFile.Location = new System.Drawing.Point(10, 69);
             this.cbSpoolImplausibleToFile.Name = "cbSpoolImplausibleToFile";
             this.cbSpoolImplausibleToFile.Size = new System.Drawing.Size(208, 17);
             this.cbSpoolImplausibleToFile.TabIndex = 14;
@@ -920,6 +922,18 @@
             this.tbEDDNOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbEDDNOutput.Size = new System.Drawing.Size(479, 224);
             this.tbEDDNOutput.TabIndex = 3;
+            // 
+            // cbSpoolOnlyOwn
+            // 
+            this.cbSpoolOnlyOwn.AutoSize = true;
+            this.cbSpoolOnlyOwn.Location = new System.Drawing.Point(21, 52);
+            this.cbSpoolOnlyOwn.Name = "cbSpoolOnlyOwn";
+            this.cbSpoolOnlyOwn.Size = new System.Drawing.Size(96, 17);
+            this.cbSpoolOnlyOwn.TabIndex = 26;
+            this.cbSpoolOnlyOwn.Tag = "SpoolOnlyOwn;false";
+            this.cbSpoolOnlyOwn.Text = "spool only own";
+            this.cbSpoolOnlyOwn.UseVisualStyleBackColor = true;
+            this.cbSpoolOnlyOwn.CheckedChanged += new System.EventHandler(this.CheckBox_CheckedChanged);
             // 
             // EDDNView
             // 
@@ -1039,5 +1053,6 @@
         private System.Windows.Forms.Label label4;
         private Enums_and_Utility_Classes.DataGridViewExt dgvEDDNRelays;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.CheckBox cbSpoolOnlyOwn;
     }
 }

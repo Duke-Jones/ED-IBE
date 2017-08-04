@@ -1443,6 +1443,7 @@ COMMIT;
 START TRANSACTION;
 USE `elite_db`;
 INSERT INTO `elite_db`.`tbEDDNRelays` (`Address`) VALUES ('tcp://eddn-relay.elite-markets.net:9500');
+INSERT INTO `elite_db`.`tbEDDNRelays` (`Address`) VALUES ('tcp://eddn.edcd.io:9500 ');
 
 COMMIT;
 

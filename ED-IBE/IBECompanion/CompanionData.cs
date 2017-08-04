@@ -86,7 +86,16 @@ namespace IBE.IBECompanion
                         var profileExists = Program.CompanionIO.LoadProfile(Program.DBCon.getIniValue(CompanioDataView.DB_GROUPNAME, "EmailAddress"));
                         if (profileExists)
                         {
-                            var loginResult = Login();
+                            LoginResponse loginResult = new LoginResponse();
+
+                            try
+                            {
+                                loginResult = Login();
+                            }
+                            catch (Exception)
+                            {
+                                loginResult.Status = LoginStatus.UnknownError;
+                            }
 
                             if(loginResult.Status != LoginStatus.Ok)
                             {
