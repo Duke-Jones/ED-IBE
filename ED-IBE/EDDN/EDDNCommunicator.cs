@@ -1107,14 +1107,19 @@ bool disposed = false;
                     journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
                     journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
 
-                    if(dataObject.SelectToken("StarSystem") == null)
-                        //inconsistentData = true;
-                        journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", Program.actualCondition.System));
+                    if (dataObject.SelectToken("StarSystem") == null)
+                        if (!String.IsNullOrWhiteSpace(Program.actualCondition.System))
+                            journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", Program.actualCondition.System));
+                        else
+                            inconsistentData = true;
                     else
                         journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", dataObject.SelectToken("StarSystem").ToString()));
                         
                     if(dataObject.SelectToken("StarPos") == null)
-                        journalStringEDDN.Append(String.Format("\"StarPos\":[{0},{1},{2}], ", SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.X.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Y.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Z.Value)));
+                        if(Program.actualCondition.Coordinates.Valid)
+                            journalStringEDDN.Append(String.Format("\"StarPos\":[{0},{1},{2}], ", SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.X.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Y.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Z.Value)));
+                        else
+                            inconsistentData = true;
                     else
                         journalStringEDDN.Append(String.Format("\"StarPos\":{0}, ",    dataObject.SelectToken("StarPos")));
 

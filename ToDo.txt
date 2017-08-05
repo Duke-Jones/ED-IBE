@@ -29,7 +29,9 @@ todo:
 
 done:
 
-
+v0.6.5
+  * fixed a bug when updating internal system coordinates from jump event
+-------------------------------------------------------------------------------------         
   * fixed a rare crash when connecting to companion api
   * changed internal communication with EDDN (new server adress and schema names)
 -------------------------------------------------------------------------------------         

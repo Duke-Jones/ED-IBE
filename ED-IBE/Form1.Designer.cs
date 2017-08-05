@@ -1303,11 +1303,11 @@
             // 
             this.lblSubtitle.AutoSize = true;
             this.lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubtitle.Location = new System.Drawing.Point(49, 111);
+            this.lblSubtitle.Location = new System.Drawing.Point(214, 111);
             this.lblSubtitle.Name = "lblSubtitle";
-            this.lblSubtitle.Size = new System.Drawing.Size(551, 21);
+            this.lblSubtitle.Size = new System.Drawing.Size(316, 21);
             this.lblSubtitle.TabIndex = 3;
-            this.lblSubtitle.Text = "-=- Built-in OCR -=- Price Analysis -=- Commander\'s Log -=- Web Control -=-";
+            this.lblSubtitle.Text = "-=- Price Analysis -=- Commander\'s Log -=-";
             // 
             // lblRegulatedNoise
             // 

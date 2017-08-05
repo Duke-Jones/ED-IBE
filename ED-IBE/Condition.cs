@@ -245,7 +245,7 @@ namespace IBE
                         Station     = e.Station;
 
                         if (e.Coordinates.Valid)
-                            this.Coordinates = Coordinates;
+                            this.Coordinates = e.Coordinates;
 
                         break;
                 }
