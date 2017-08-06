@@ -578,26 +578,18 @@ namespace IBE.IBECompanion
                         RestTimeReset();
                         SetDocked(true);
 
-                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
-                        {
-                            var t = new Task(() => RefreshAndImport(true, false));
-                            t.Start();
-                            await t;
-                        }
+                        var t1 = new Task(() => RefreshAndImport(true, false));
+                        t1.Start();
+                        await t1;
 
                         break;
 
                     case  FileScanner.EDJournalScanner.JournalEvent.Undocked:
                         RestTimeReset();
 
-                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
-                        {
-                            var t = new Task(() => RefreshAndImport(false, true));
-                            t.Start();
-                            await t;
-                        }
+                        var t = new Task(() => RefreshAndImport(false, true));
+                        t.Start();
+                        await t;
 
                         SetDocked(false);                        
 

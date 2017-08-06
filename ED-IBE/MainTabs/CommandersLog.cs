@@ -573,13 +573,7 @@ namespace IBE.MTCommandersLog
                 {
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
 
-                        if((!Program.actualCondition.System.EqualsNullOrEmpty(e.Data.Value<String>("StarSystem"))) || 
-                           (!Program.actualCondition.Station.EqualsNullOrEmpty(e.Data.Value<String>("StationName"))))
-                        {
-                            if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false))
-                                SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
-                        }
-                        else if(e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2))) != null)
+                        if(e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2))) != null)
                         {
                             var resurrectEvent = e.History.Find(x => ((x.EventType == FileScanner.EDJournalScanner.JournalEvent.Resurrect) && (e.History.IndexOf(x) < 2)));
 
@@ -598,7 +592,9 @@ namespace IBE.MTCommandersLog
                                                     resurrectEvent.Data.Value<Boolean>("Bankrupt") ? "yes" : "no"));
 
                         }
-                        
+                        else if (Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_Visited", true.ToString(), false))
+                            SaveEvent(DateTime.UtcNow, e.Data.Value<String>("StarSystem"), e.Data.Value<String>("StationName"), "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), "Visited", "");
+
                         break;
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
                         if(Program.DBCon.getIniValue<Boolean>(IBESettingsView.DB_GROUPNAME, "AutoAdd_JumpedTo", true.ToString(), false))
