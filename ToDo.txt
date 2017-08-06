@@ -29,6 +29,9 @@ todo:
 
 done:
   
+v0.6.6
+  * not existing eddn relays do not longer cause a crash
+-------------------------------------------------------------------------------------         
   * correction on journal-event-handling logic
 -------------------------------------------------------------------------------------         
 v0.6.5

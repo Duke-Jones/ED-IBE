@@ -132,7 +132,14 @@ namespace IBE.EDDN
                 {
                     socket.SubscribeAll();
 
-                    socket.Connect(m_Adress);
+                    try
+                    {
+                        socket.Connect(m_Adress);
+                    }
+                    catch (Exception)
+                    {
+                        m_Active = false;
+                    }
 
                     while (m_Active)
                     {
