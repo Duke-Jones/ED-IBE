@@ -28,7 +28,12 @@ todo:
 *************************************************************************************
 
 done:
-  
+
+
+  * sending "Location" events to EDDN
+  * added "Body" and "BodyType" to "Docked" event-message when stationtype is "SurfaceStation""
+  * added missing localised strings to journal
+-------------------------------------------------------------------------------------         
 v0.6.6
   * not existing eddn relays do not longer cause a crash
 -------------------------------------------------------------------------------------         

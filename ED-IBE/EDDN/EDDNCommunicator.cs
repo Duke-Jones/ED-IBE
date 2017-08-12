@@ -1123,7 +1123,7 @@ bool disposed = false;
                     else
                         journalStringEDDN.Append(String.Format("\"StarPos\":{0}, ",    dataObject.SelectToken("StarPos")));
 
-                    System.Text.RegularExpressions.Regex forbiddenPattern   = new System.Text.RegularExpressions.Regex("(CockpitBreach|BoostUsed|FuelLevel|FuelUsed|JumpDist|_Localised$|timestamp|event|StarSystem|StarPos)");
+                    System.Text.RegularExpressions.Regex forbiddenPattern   = new System.Text.RegularExpressions.Regex("(CockpitBreach|BoostUsed|FuelLevel|FuelUsed|JumpDist|_Localised$|timestamp|event|StarSystem|StarPos|Latitude|Longitude)");
                     List<String> typeList = new List<String>() { "array", "boolean", "integer", "float", "double", "object", "string" };
 
                     if(!inconsistentData)
@@ -1651,7 +1651,9 @@ bool disposed = false;
                 else
                     schema = "https://eddn.edcd.io/schemas/journal/1";
 
-                do
+                Debug.Print("journal messages = " + _Send_Journal.Count);
+
+                while (_Send_Journal.Count > 0)
                 {
                     // create full message
                     journalMessage.Clear();
@@ -1704,8 +1706,10 @@ bool disposed = false;
                             client.Dispose();
                         }
                     }
-                } while (_Send_Journal.Count > 0);
 
+                    Debug.Print("gesendet - journal messages = " + _Send_Journal.Count);
+
+                }
             }
             catch (Exception ex)
             {
@@ -1927,8 +1931,14 @@ bool disposed = false;
                     case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
                     case FileScanner.EDJournalScanner.JournalEvent.Docked:
                     case FileScanner.EDJournalScanner.JournalEvent.Scan:
+                    case FileScanner.EDJournalScanner.JournalEvent.Location:
                         SendJournalData((JObject)e.Data);
                         break;
+
+                    //case FileScanner.EDJournalScanner.JournalEvent.Location:
+                    //    if((e.Data.SelectToken("Docked") != null) && ((Boolean)e.Data.SelectToken("Docked")))
+                    //        SendJournalData((JObject)e.Data);
+                    //    break;
                 }
 
             }

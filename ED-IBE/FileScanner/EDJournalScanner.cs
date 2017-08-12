@@ -473,6 +473,21 @@ namespace IBE.FileScanner
 
                                         SubmitReferenceEvents(ref latestLocationEvent, ref latestFileHeader, ref logger);
 
+                                        // special actions
+                                        switch (eventName)
+                                        {
+
+                                            case JournalEvent.Docked:
+                                                if (journalEntry.SelectToken("StationType").ToString().Equals("SurfaceStation") &&
+                                                    (!String.IsNullOrEmpty(Program.actualCondition.Body)))
+                                                {
+                                                    journalEntry.Last.AddAfterSelf(new JProperty("Body", Program.actualCondition.Body));
+                                                    journalEntry.Last.AddAfterSelf(new JProperty("BodyType", "Planet"));
+                                                }
+
+                                            break;
+                                        }
+
                                         // pre-check for base data which is currently not in the database.
                                         switch (eventName)
                                         {

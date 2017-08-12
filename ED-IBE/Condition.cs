@@ -213,6 +213,12 @@ namespace IBE
             {
                 switch (e.EventType)
                 {
+                    case FileScanner.EDJournalScanner.JournalEvent.Resurrect:
+                        // Not sure at which body we are now. So we will delete this information. 
+                        Program.actualCondition.Body     = "";
+                        Program.actualCondition.BodyType = "";
+                        break;
+
                     case FileScanner.EDJournalScanner.JournalEvent.Fileheader:
                         JournalHeaderObject = (JObject)e.Data;
                         Program.MainForm.RefreshHeadline();

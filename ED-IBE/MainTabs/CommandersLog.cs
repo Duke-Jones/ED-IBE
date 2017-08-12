@@ -826,8 +826,12 @@ namespace IBE.MTCommandersLog
 
                             if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Target")))
                                 data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Target", usedFont, fullLength),  e.Data.Value<String>("Target")));
-                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType")))
-                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength),  e.Data.Value<String>("TargetType")));
+
+                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType_Localised")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength), e.Data.Value<String>("TargetType_Localised")));
+                            else if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength), e.Data.Value<String>("TargetType")));
+                                
                             if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetFaction")))
                                 data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetFaction", usedFont, fullLength),  e.Data.Value<String>("TargetFaction")));
 
@@ -897,9 +901,13 @@ namespace IBE.MTCommandersLog
 
                             if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("Target")))
                                 data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("Target", usedFont, fullLength),  e.Data.Value<String>("Target")));
-                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType")))
-                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength),  e.Data.Value<String>("TargetType")));
-                            if(!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetFaction")))
+
+                            if (!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType_Localised")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength), e.Data.Value<String>("TargetType_Localised")));
+                            else if (!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetType")))
+                                data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetType", usedFont, fullLength), e.Data.Value<String>("TargetType")));
+
+                            if (!String.IsNullOrWhiteSpace(e.Data.Value<String>("TargetFaction")))
                                 data.AppendLine(String.Format("{0} :   {1}", txtHelp.FixedLength("TargetFaction", usedFont, fullLength),  e.Data.Value<String>("TargetFaction")));
 
                             if (!String.IsNullOrWhiteSpace(e.Data.Value<String>("Reward")))

@@ -698,6 +698,8 @@ namespace IBE.MTPriceAnalysis
                             "ENGINE = InnoDB;                                             ";
                 m_lDBCon.Execute(sqlString);
 
+                /****************************************** start calculate neighbour stations **********************************************/
+
                 // delete old content
                 sqlString = "truncate table tmNeighbourstations;";
                 m_lDBCon.Execute(sqlString);
@@ -755,7 +757,12 @@ namespace IBE.MTPriceAnalysis
 
                 PV.progressStop();
 
-                if(Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
+                /****************************************** end calculate neighbour stations **********************************************/
+
+
+                /*********************************** start calculate profits for neighbour stations ***************************************/
+
+                if (Program.DBCon.getIniValue(tabPriceAnalysis.DB_GROUPNAME, "RoutingType", "round trip", false).Equals("round trip", StringComparison.InvariantCultureIgnoreCase))
                 {
                     // get for one station and all of it's neighbours the tradings for all commodity combinations
                     // result gives per "station to station" route only the one best profit for all combinations of commodities
@@ -855,7 +862,7 @@ namespace IBE.MTPriceAnalysis
                 String wherePart_Send           = "";
                 String havingPart_Return        = "";
                 String havingPart_Send          = "";
-                String havingPart_MinSupply      = "";
+                String havingPart_MinSupply     = "";
 
                 
 
@@ -982,6 +989,12 @@ namespace IBE.MTPriceAnalysis
                             break;
                         }
                     }
+
+
+                    /*********************************** end calculate profits for neighbour stations ***************************************/
+
+
+                    /*********************************** start  ***************************************/
 
                     sqlString = "CREATE TABLE IF NOT EXISTS `elite_db`.`tmPA_S2S_BestTrips` ( " +
                                 "  `System_ID_1` INT NULL,                                    " +
