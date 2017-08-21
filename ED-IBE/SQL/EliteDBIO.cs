@@ -3265,49 +3265,57 @@ namespace IBE.SQL
 
                 if(importParams != null)
                 {
+                    List<EDStation> filteredStationData = new List<EDStation>();
+
+                    StationData = StationData.OrderBy(x => x.SystemId).ToList();
+
                     DataTable data = Program.Data.GetNeighbourSystems(importParams.SystemID, importParams.Radius);
 
-                    String info = "filter out bubble data (radius " + importParams.Radius+ " ly) : " + data.Rows.Count +" systems...";
-                    eva = new ProgressEventArgs() { Info=info, NewLine=true};      
+                    String info = "filter out bubble data (radius " + importParams.Radius + " ly) : " + data.Rows.Count + " systems...";
+                    eva = new ProgressEventArgs() { Info = info, NewLine = true };
 
-                    if(!sendProgressEvent(eva))
+                    if (!sendProgressEvent(eva))
                     {
-                       if(data.Rows.Count > 0)
-                       {
-                           updateTables = true;
+                        if (data.Rows.Count > 0)
+                        {
+                            updateTables = true;
 
                             initialSize = StationData.Count();
+                                
+                            var currentSystemIndex = 0;
 
-                            for (int i = StationData.Count()-1 ; i >= 0 ; i--)
-                           {
-                               if(data.Rows.Find(StationData[i].SystemId) == null)    
-                               {
-                                   // system is not in the bubble
-                                   StationData.Remove(StationData[i]);
-                               }
-                               else
-                               { 
-                                   // force refresh the old visited flag from tbVisitedStations/-Systems
-                                   updateVisitedFlagsFromBase(StationData[i].SystemId, StationData[i].Id);
+                            for (int i = 0; i < StationData.Count(); i++)
+                            {
+                                var currentStation = StationData[i];
 
-                                   // system is in the bubble - set as virtuel visited (of not already marked as visited)
-                                   Program.Data.checkPotentiallyNewSystemOrStation(StationData[i].SystemName, StationData[i].Name, null, VisitedType.VirtualVisit);
-                               }
+                                while ((data.Rows.Count > currentSystemIndex) && (data.Rows[currentSystemIndex].Field<Int32>("Id") < currentStation.SystemId))
+                                    currentSystemIndex++;
 
-                               eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize-i, TotalValue=initialSize };
-                               sendProgressEvent(eva);
-                               if(eva.Cancelled)
-                                   break;
+                                if((data.Rows.Count > currentSystemIndex) && (data.Rows[currentSystemIndex].Field<Int32>("Id") == currentStation.SystemId))
+                                {
+                                    filteredStationData.Add(currentStation);
 
-                           }
+                                    // force refresh the old visited flag from tbVisitedStations/-Systems
+                                    updateVisitedFlagsFromBase(currentStation.SystemId, currentStation.Id);
 
-                       }
-                       else
-                           StationData.Clear();
+                                    // set as virtual visited (of not already marked as visited)
+                                    Program.Data.checkPotentiallyNewSystemOrStation(currentStation.SystemName, currentStation.Name, null, VisitedType.VirtualVisit);
+                                }
+
+                                eva = new ProgressEventArgs() { Info = info, CurrentValue = i, TotalValue = initialSize };
+                                sendProgressEvent(eva);
+                                if (eva.Cancelled)
+                                    break;
+                            }
+                        }
+                        else
+                            StationData.Clear();
                     }
 
-                    eva = new ProgressEventArgs() { Info=info, CurrentValue=initialSize, TotalValue=initialSize, ForceRefresh=true };
+                    eva = new ProgressEventArgs() { Info = info, CurrentValue = initialSize, TotalValue = initialSize, ForceRefresh = true };
                     sendProgressEvent(eva);
+
+                    StationData = filteredStationData;
                 }
 
                 if((!eva.Cancelled) && (updateTables))
@@ -4787,7 +4795,8 @@ namespace IBE.SQL
                 sqlBaseString =  " select FS.Id, FS.Systemname, sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) as Distance" +
                                  " from (select * from tbSystems " + 
                                  "         where id = {0}) BS" +
-                                 " join tbSystems FS on (sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) <=  {1});";
+                                 " join tbSystems FS on (sqrt(POW(FS.x - BS.x, 2) + POW(FS.y - BS.y, 2) +  POW(FS.z - BS.z, 2)) <=  {1})" +
+                                 " order by FS.Id;";
 
                 sqlString = String.Format(sqlBaseString, stationId, maxDistance);
 

@@ -30,6 +30,8 @@ todo:
 done:
 
 
+  * speed up the filtering of the "bubble data" during EDDB import
+-------------------------------------------------------------------------------------         
   * sending "Location" events to EDDN
   * added "Body" and "BodyType" to "Docked" event-message when stationtype is "SurfaceStation""
   * added missing localised strings to journal
