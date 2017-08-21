@@ -45,6 +45,8 @@
             this.rbFormatExtended = new System.Windows.Forms.RadioButton();
             this.gbRepeat = new System.Windows.Forms.GroupBox();
             this.gbPriceImport = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbSystemBase = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtBubbleSize = new System.Windows.Forms.TextBoxInt32();
@@ -81,6 +83,7 @@
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
             this.lbProgess = new System.Windows.Forms.ListBox();
             this.cmdCancel = new System.Windows.Forms.ButtonExt();
+            this.baseRefreshTimer = new System.Windows.Forms.Timer(this.components);
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -285,7 +288,7 @@
             this.gbRepeat.Controls.Add(this.cmdImportSystemsAndStations);
             this.gbRepeat.Location = new System.Drawing.Point(363, 12);
             this.gbRepeat.Name = "gbRepeat";
-            this.gbRepeat.Size = new System.Drawing.Size(345, 289);
+            this.gbRepeat.Size = new System.Drawing.Size(345, 321);
             this.gbRepeat.TabIndex = 4;
             this.gbRepeat.TabStop = false;
             this.gbRepeat.Text = "EDDB imports";
@@ -294,20 +297,39 @@
             // 
             // gbPriceImport
             // 
+            this.gbPriceImport.Controls.Add(this.label4);
+            this.gbPriceImport.Controls.Add(this.cmbSystemBase);
             this.gbPriceImport.Controls.Add(this.label3);
-            this.gbPriceImport.Controls.Add(this.label2);
             this.gbPriceImport.Controls.Add(this.txtBubbleSize);
             this.gbPriceImport.Controls.Add(this.rbImportPrices_All);
             this.gbPriceImport.Controls.Add(this.rbImportPrices_Bubble);
             this.gbPriceImport.Controls.Add(this.rbImportPrices_No);
+            this.gbPriceImport.Controls.Add(this.label2);
             this.gbPriceImport.Location = new System.Drawing.Point(45, 120);
             this.gbPriceImport.Name = "gbPriceImport";
-            this.gbPriceImport.Size = new System.Drawing.Size(253, 164);
+            this.gbPriceImport.Size = new System.Drawing.Size(253, 196);
             this.gbPriceImport.TabIndex = 5;
             this.gbPriceImport.TabStop = false;
             this.gbPriceImport.Tag = "PriceImport;ImportPricesNo";
             this.gbPriceImport.Text = "Import prices from EDDB ";
             this.ttToolTip.SetToolTip(this.gbPriceImport, "Do you want to import prices from EDDB");
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(43, 90);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(87, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "center of bubble:";
+            // 
+            // cmbSystemBase
+            // 
+            this.cmbSystemBase.FormattingEnabled = true;
+            this.cmbSystemBase.Location = new System.Drawing.Point(46, 103);
+            this.cmbSystemBase.Name = "cmbSystemBase";
+            this.cmbSystemBase.Size = new System.Drawing.Size(175, 21);
+            this.cmbSystemBase.TabIndex = 16;
             // 
             // label3
             // 
@@ -342,7 +364,7 @@
             // rbImportPrices_All
             // 
             this.rbImportPrices_All.AutoSize = true;
-            this.rbImportPrices_All.Location = new System.Drawing.Point(25, 92);
+            this.rbImportPrices_All.Location = new System.Drawing.Point(25, 133);
             this.rbImportPrices_All.Name = "rbImportPrices_All";
             this.rbImportPrices_All.Size = new System.Drawing.Size(191, 56);
             this.rbImportPrices_All.TabIndex = 2;
@@ -705,7 +727,7 @@
             // lbProgess
             // 
             this.lbProgess.FormattingEnabled = true;
-            this.lbProgess.Location = new System.Drawing.Point(12, 310);
+            this.lbProgess.Location = new System.Drawing.Point(12, 340);
             this.lbProgess.Name = "lbProgess";
             this.lbProgess.ScrollAlwaysVisible = true;
             this.lbProgess.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
@@ -716,7 +738,7 @@
             // cmdCancel
             // 
             this.cmdCancel.DisabledTextColor = System.Drawing.Color.DimGray;
-            this.cmdCancel.Location = new System.Drawing.Point(533, 542);
+            this.cmdCancel.Location = new System.Drawing.Point(533, 572);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(153, 41);
             this.cmdCancel.TabIndex = 1;
@@ -724,10 +746,14 @@
             this.cmdCancel.UseVisualStyleBackColor = true;
             this.cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
             // 
+            // baseRefreshTimer
+            // 
+            this.baseRefreshTimer.Tick += new System.EventHandler(this.baseRefreshTimer_Tick);
+            // 
             // frmDataIO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.ClientSize = new System.Drawing.Size(1238, 599);
+            this.ClientSize = new System.Drawing.Size(1238, 637);
             this.Controls.Add(this.groupBox9);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.cmdCancel);
@@ -826,5 +852,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBoxInt32 txtBubbleSize;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbSystemBase;
+        private System.Windows.Forms.Timer baseRefreshTimer;
     }
 }

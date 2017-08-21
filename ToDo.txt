@@ -29,7 +29,8 @@ todo:
 
 done:
 
-
+  * import of "bubble data": import bubble now can have a different center
+-------------------------------------------------------------------------------------         
   * speed up the filtering of the "bubble data" during EDDB import
 -------------------------------------------------------------------------------------         
   * sending "Location" events to EDDN

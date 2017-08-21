@@ -66,6 +66,9 @@ namespace IBE
         private DownloadData m_CurrentDownloadInfo; 
         private PerformanceTimer m_PerfTimer;
 
+        private System.Data.DataSet dataSet;
+        private BindingSource bubbleCenterBindingSource;
+
 
         [Flags] public enum enImportTypes
         {
@@ -104,7 +107,7 @@ namespace IBE
             m_DownLoader.DownloadFileCompleted   += new AsyncCompletedEventHandler(webClient_DownloadFileCompleted);
             m_DownLoader.DownloadProgressChanged += new DownloadProgressChangedEventHandler(webClient_DownloadProgressChanged);
             m_PerfTimer = new PerformanceTimer();
-        }
+    }
 
         private void frmDataIO_Load(object sender, EventArgs e)
         {
@@ -115,12 +118,18 @@ namespace IBE
 
                 m_GUIInterface.loadAllSettings(this);
 
+                dataSet = new System.Data.DataSet();
+                dataSet.Tables.Add("bubbleCenter");
+                bubbleCenterBindingSource = new BindingSource(dataSet, "bubbleCenter");
+
+                cmbSystemBase.DataSource = bubbleCenterBindingSource;
             }
             catch (Exception ex)
             {
                 CErr.processError(ex, "Error in Load-Event");
             }
         }
+
 
         private void SetButtons(Boolean setEnabled)
         {
@@ -1088,18 +1097,43 @@ namespace IBE
                     importFlags |= enImportTypes.EDDB_MarketData;
 
                     if(rbImportPrices_Bubble.Checked)
-                    { 
-                        if(String.IsNullOrEmpty(Program.actualCondition.System))
-                        { 
-                            MessageBox.Show(this, "Import is not possible because your current system is unknown !\r\n\r\n"+
-                                                  "Be sure 'VerboseLogging' is enabled in your ED 'AppConfig.xml'\r\n" +
-                                                  "and restart the game\r\n\r\n" +
-                                                  "Retry import if your system is shown in the 'Current System' field.", "Import not possible !",
-                                                   MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            cantImport = true;
+                    {
+                        string system = "";
+
+                        if (cmbSystemBase.Text != "<current system>")
+                        {
+                            system = cmbSystemBase.Text;
+
+                            var sId = Program.DBCon.Execute<int?>($"select ID from tbSystems where Systemname = {SQL.DBConnector.SQLAEscape(system)}");
+
+                            if (!sId.HasValue)
+                            {
+                                MessageBox.Show(this, "Import is not possible because select system is unknown !\r\n\r\n" +
+                                                      "Retry import if your selected system is known", "Import not possible !",
+                                                       MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                cantImport = true;
+                            }
+                            else
+                                importParams = new PriceImportParameters() { Radius = txtBubbleSize.Int32Value, SystemID = sId.Value };
+
                         }
                         else
-                            importParams = new PriceImportParameters() { Radius = txtBubbleSize.Int32Value, SystemID = Program.actualCondition.System_ID.Value};
+                        {
+                            system = Program.actualCondition.System;
+
+                            if (String.IsNullOrEmpty(Program.actualCondition.System))
+                            {
+                                MessageBox.Show(this, "Import is not possible because your current system is unknown !\r\n\r\n" +
+                                                      "Be sure 'VerboseLogging' is enabled in your ED 'AppConfig.xml'\r\n" +
+                                                      "and restart the game\r\n\r\n" +
+                                                      "Retry import if your system is shown in the 'Current System' field.", "Import not possible !",
+                                                       MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                cantImport = true;
+                            }
+                            else
+                                importParams = new PriceImportParameters() { Radius = txtBubbleSize.Int32Value, SystemID = Program.actualCondition.System_ID.Value };
+                        }
+
 
                     }
                 }
@@ -1502,6 +1536,15 @@ namespace IBE
             try
             {
                 SetButtons(true);
+
+                cmbSystemBase.Text = "<current system>";
+
+                baseRefreshTimer.Enabled = false;
+                baseRefreshTimer.Interval = 500;
+                lastText = cmbSystemBase.Text;
+
+                this.cmbSystemBase.TextChanged += cmbSystemBase_TextChanged;
+
             }
             catch (Exception ex)
             {
@@ -1997,6 +2040,128 @@ namespace IBE
                 CErr.processError(ex, "Error in cmdDeleteUnusedSystemData_Click");
             }
         }
+
+        /// <summary>
+        /// when editing we try to load the matching systems into the Combobox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmbSystemBase_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lastText != cmbSystemBase.Text)
+                {
+                    baseRefreshTimer.Stop();
+                    baseRefreshTimer.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                CErr.processError(ex, "Error in cmbSystemBase_TextChanged");
+            }
+        }
+
+        private String lastText = "";
+
+        private void baseRefreshTimer_Tick(object sender, EventArgs e)
+        {
+            Program.enVisitedFilter VFilter;
+            String cText = "";
+            try
+            {
+                baseRefreshTimer.Stop();
+
+                this.cmbSystemBase.TextChanged -= cmbSystemBase_TextChanged;
+
+                cText = cmbSystemBase.Text;
+
+                VFilter = (Program.enVisitedFilter)Program.DBCon.getIniValue<Int32>(IBE.IBESettingsView.DB_GROUPNAME,
+                                                                                    "VisitedFilter",
+                                                                                    ((Int32)Program.enVisitedFilter.showAll).ToString(),
+                                                                                    false);
+
+                cmbSystemBase.SuspendLayout();
+                cmbSystemBase.BeginUpdate();
+
+                LoadSystemsForBaseComboBox(cText, dataSet.Tables["bubbleCenter"], VFilter);
+
+                if (cmbSystemBase.ValueMember == "")
+                {
+                    cmbSystemBase.DisplayMember = "SystemName";
+                    cmbSystemBase.ValueMember = "SystemID";
+                }
+
+                cmbSystemBase.DroppedDown = true;
+
+                cmbSystemBase.Text = cText;
+                cmbSystemBase.SelectionStart = cText.Length;
+
+                cmbSystemBase.ResumeLayout();
+                cmbSystemBase.EndUpdate();
+
+                lastText = cmbSystemBase.Text;
+
+                this.cmbSystemBase.TextChanged += cmbSystemBase_TextChanged;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting the list of all commodities for the combobox", ex);
+            }
+        }
+
+
+        /// <summary>
+        /// loads only the systems matching the current input
+        /// </summary>
+        /// <param name="systemString"></param>
+        /// <param name="cBox"></param>
+        internal void LoadSystemsForBaseComboBox(string systemString, System.Data.DataTable currentDt, Program.enVisitedFilter vFilter)
+        {
+            String sqlString = "";
+
+            try
+            {
+                if (systemString != "")
+                {
+                    if (vFilter != Program.enVisitedFilter.showAll)
+                    {
+                        // only visited systems
+                        sqlString = " (select 0 As SystemID, '<current system>' As Systemname)" +
+                                    "  union " +
+                                    " (select Sy.ID As SystemID, Sy.SystemName" +
+                                    "  from tbSystems Sy" +
+                                    "  where Sy.Visited   = 1" +
+                                    "  and   Sy.SystemName like " + DBConnector.SQLAString(DBConnector.SQLEscape(systemString) + "%") +
+                                    "  order by SystemName)";
+                    }
+                    else
+                    {
+                        // all systems
+                        sqlString = "(select 0 As SystemID, '<current system>' As Systemname)" +
+                                    " union " +
+                                    "(select Sy.ID As SystemID, Sy.SystemName" +
+                                    " from tbSystems Sy" +
+                                    " where Sy.SystemName like " + DBConnector.SQLAString(DBConnector.SQLEscape(systemString) + "%") +
+                                    " order by SystemName)";
+                    }
+
+                    Program.DBCon.Execute(sqlString, currentDt);
+                }
+                else
+                {
+                    // init datatable to be able to set ValueMember and DisplayMember in the Combobox
+                    sqlString = " select 0 As SystemID, '<current system>' As Systemname";
+                    Program.DBCon.Execute(sqlString, currentDt);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while loading specific stationdata for basetable", ex);
+            }
+        }
+
     }
 
     internal class DownloadData

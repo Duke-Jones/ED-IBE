@@ -814,6 +814,7 @@ namespace IBE.MTPriceAnalysis
             }
         }
 
+
         /// <summary>
         /// when editing we try to load the matching systems into the Combobox
         /// </summary>
@@ -823,6 +824,7 @@ namespace IBE.MTPriceAnalysis
         {
             try
             {
+
                 loadSystemsForBaseSystem();
                 SignalizeChangedData();
             }
