@@ -233,7 +233,7 @@ namespace IBE.EDDB_Data
                 }
                 else
                 {
-                    throw new Exception("unknown station id");
+                    return;
                 }
 
                 Name                  = stationID[0].StationName;

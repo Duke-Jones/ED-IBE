@@ -1345,7 +1345,7 @@ namespace IBE.SQL
                 JsonSerializer serializer = new JsonSerializer();
 
                 rawDataStream = new StreamReader(Filename);
-                jsonReader = new JsonTextReader(rawDataStream);
+                jsonReader = new JsonTextReader(rawDataStream) {  SupportMultipleContent  = true };
 
                 sendProgressEvent(new ProgressEventArgs() {  Info="import systems...", NewLine = true } );
 
@@ -1358,7 +1358,7 @@ namespace IBE.SQL
                 rawDataStream.Dispose();
 
                 rawDataStream = new StreamReader(Filename);
-                jsonReader = new JsonTextReader(rawDataStream);
+                jsonReader = new JsonTextReader(rawDataStream) { SupportMultipleContent = true };
 
                 while(jsonReader.Read())
                 {
@@ -1779,7 +1779,6 @@ namespace IBE.SQL
         {
             DBConnector               lDBCon = null;
             String sqlString;
-            List<EDStation> Stations;
             dsEliteDB.tbstations_orgRow[] FoundRows_org;
             dsEliteDB.tbstationsRow[] FoundRows;
             DateTime Timestamp_new, Timestamp_old;
@@ -1789,9 +1788,10 @@ namespace IBE.SQL
             UInt32 currentComodityClassificationID=0;
             Int32 updated = 0;
             Int32 added = 0;
+            Int32 stationsTotal = 0;
+            List<EDStation> Stations = new List<EDStation>();
 
-
-            Data = new dsEliteDB();
+                        Data = new dsEliteDB();
 
             try
             {
@@ -1800,9 +1800,59 @@ namespace IBE.SQL
                 // gettin' some freaky performance
                 lDBCon.Execute("set global innodb_flush_log_at_trx_commit=2");
 
-                Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename));
+                //Stations = JsonConvert.DeserializeObject<List<EDStation>>(File.ReadAllText(Filename), );
 
-                sendProgressEvent(new ProgressEventArgs() { Info="import systems", NewLine = true });
+                //sendProgressEvent(new ProgressEventArgs() { Info="import systems", NewLine = true });
+
+                //lDBCon.TransBegin();
+
+                //sqlString = "select * from tbStations lock in share mode";
+                //lDBCon.TableRead(sqlString, Data.tbstations);
+                //sqlString = "select * from tbStations_org lock in share mode";
+                //lDBCon.TableRead(sqlString, Data.tbstations_org);
+                //sqlString = "select * from tbStationEconomy lock in share mode";
+                //lDBCon.TableRead(sqlString, Data.tbstationeconomy);
+                //sqlString = "select * from tbsource";
+                //lDBCon.Execute(sqlString, Data.tbsource);
+                //sqlString = "select * from tbCommodityClassification lock in share mode";
+                //lDBCon.TableRead(sqlString, Data.tbcommodityclassification);
+                //sqlString = "select * from tbcommodity_has_attribute lock in share mode";
+                //lDBCon.TableRead(sqlString, Data.tbcommodity_has_attribute);
+                //sqlString = "select * from tbattribute lock in share mode";
+                //lDBCon.TableRead(sqlString, Data.tbattribute);
+
+                //currentComodityClassificationID = getFreeIndex("tbCommodityClassification");
+
+                //lDBCon.Execute(sqlString, Data.tbsource);
+
+                //foreach (EDStation Station in Stations)
+                //{
+
+
+                // *******************************
+
+
+                StreamReader rawDataStream;
+                JsonTextReader jsonReader;
+                JsonSerializer serializer = new JsonSerializer();
+
+                rawDataStream = new StreamReader(Filename);
+                jsonReader = new JsonTextReader(rawDataStream) { SupportMultipleContent = true };
+
+                sendProgressEvent(new ProgressEventArgs() { Info = "import stations...", NewLine = true });
+
+                while (jsonReader.Read())
+                    if ((jsonReader.TokenType == JsonToken.StartObject) && (jsonReader.Depth == 0))
+                        stationsTotal++;
+
+                jsonReader.Close();
+                rawDataStream.Close();
+                rawDataStream.Dispose();
+
+                rawDataStream = new StreamReader(Filename);
+                jsonReader = new JsonTextReader(rawDataStream) { SupportMultipleContent = true };
+
+                EDStation Station;
 
                 lDBCon.TransBegin();
 
@@ -1825,119 +1875,128 @@ namespace IBE.SQL
 
                 lDBCon.Execute(sqlString, Data.tbsource);
 
-                foreach (EDStation Station in Stations)
+                while (jsonReader.Read())
                 {
-
-                    FoundRows = (dsEliteDB.tbstationsRow[])Data.tbstations.Select("id=" + Station.Id.ToString());
-
-                    if (FoundRows.Count() > 0)
+                    if ((jsonReader.TokenType == JsonToken.StartObject) && (jsonReader.Depth == 0))
                     {
-                        // Location is existing
+                        Station = serializer.Deserialize<EDStation>(jsonReader);
 
-                        if ((bool)(FoundRows[0]["is_changed"]))
+                        Stations.Add(Station);
+
+                        // *******************************
+
+                        FoundRows = (dsEliteDB.tbstationsRow[])Data.tbstations.Select("id=" + Station.Id.ToString());
+
+                        if (FoundRows.Count() > 0)
                         {
-                            // data is changed by user - hold it ...
+                            // Location is existing
 
-                            // ...and check table "tbStations_org" for the original data
-                            FoundRows_org = (dsEliteDB.tbstations_orgRow[])Data.tbstations_org.Select("id=" + Station.Id.ToString());
-
-                            if ((FoundRows_org != null) && (FoundRows_org.Count() > 0))
+                            if ((bool)(FoundRows[0]["is_changed"]))
                             {
-                                // Location is in "tbStations_org" existing - keep the newer version 
-                                Timestamp_old = (DateTime)(FoundRows_org[0]["updated_at"]);
+                                // data is changed by user - hold it ...
+
+                                // ...and check table "tbStations_org" for the original data
+                                FoundRows_org = (dsEliteDB.tbstations_orgRow[])Data.tbstations_org.Select("id=" + Station.Id.ToString());
+
+                                if ((FoundRows_org != null) && (FoundRows_org.Count() > 0))
+                                {
+                                    // Location is in "tbStations_org" existing - keep the newer version 
+                                    Timestamp_old = (DateTime)(FoundRows_org[0]["updated_at"]);
+                                    Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(Station.UpdatedAt).DateTime;
+
+                                    if (Timestamp_new > Timestamp_old)
+                                    {
+                                        // data from file is newer
+                                        CopyEDStationToDataRow(Station, (DataRow)FoundRows_org[0], false, null, true);
+
+                                        CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
+                                        CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
+
+                                        ImportCounter += 1;
+
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                // Location is existing - keep the newer version 
+                                Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
                                 Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(Station.UpdatedAt).DateTime;
 
                                 if (Timestamp_new > Timestamp_old)
                                 {
                                     // data from file is newer
-                                    CopyEDStationToDataRow(Station, (DataRow)FoundRows_org[0], false, null, true);
+                                    CopyEDStationToDataRow(Station, (DataRow)FoundRows[0], false, null, true);
 
                                     CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
                                     CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
 
                                     ImportCounter += 1;
-
                                 }
                             }
-
                         }
                         else
                         {
-                            // Location is existing - keep the newer version 
-                            Timestamp_old = (DateTime)(FoundRows[0]["updated_at"]);
-                            Timestamp_new = DateTimeOffset.FromUnixTimeSeconds(Station.UpdatedAt).DateTime;
 
-                            if (Timestamp_new > Timestamp_old)
+                            // self-created stations don't have the correct id so they must be identified by name    
+                            FoundRows = (dsEliteDB.tbstationsRow[])Data.tbstations.Select("stationname = " + DBConnector.SQLAString(DBConnector.DTEscape(Station.Name.ToString())) + " and " +
+                                                                         "  system_id = " + Station.SystemId + " and " +
+                                                                         "  id        < 0");
+
+                            if (FoundRows.Count() > 0)
                             {
-                                // data from file is newer
+                                // self created station is existing -> correct id and get new data from EDDB
                                 CopyEDStationToDataRow(Station, (DataRow)FoundRows[0], false, null, true);
 
-                                CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
-                                CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
+                                // update immediately because otherwise the references are wrong after changing a id
+                                lDBCon.TableUpdate(Data.tbstations);
+                                lDBCon.TableUpdate(Data.tbstations_org);
+                                lDBCon.TableUpdate(Data.tbstationeconomy);
+                                lDBCon.TableUpdate(Data.tbcommodityclassification);
+                                lDBCon.TableUpdate(Data.tbcommodity_has_attribute);
+                                lDBCon.TableUpdate(Data.tbattribute);
 
-                                ImportCounter += 1;
+                                lDBCon.TableRefresh(Data.tbstationeconomy);
+                                lDBCon.TableRefresh(Data.tbcommodityclassification);
+                                lDBCon.TableRefresh(Data.tbcommodity_has_attribute);
+                                lDBCon.TableRefresh(Data.tbattribute);
                             }
+                            else
+                            {
+                                // add a new Location
+                                dsEliteDB.tbstationsRow newStationRow = (dsEliteDB.tbstationsRow)Data.tbstations.NewRow();
+
+                                CopyEDStationToDataRow(Station, (DataRow)newStationRow, false, null, true);
+                                Data.tbstations.Rows.Add(newStationRow);
+                                added++;
+                            }
+
+                            CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
+                            CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
+
+                            ImportCounter += 1;
                         }
-                    }
-                    else
-                    {
 
-                        // self-created stations don't have the correct id so they must be identified by name    
-                        FoundRows = (dsEliteDB.tbstationsRow[])Data.tbstations.Select("stationname = " + DBConnector.SQLAString(DBConnector.DTEscape(Station.Name.ToString())) + " and " +
-                                                                     "  system_id = " + Station.SystemId + " and " +
-                                                                     "  id        < 0");
-
-                        if (FoundRows.Count() > 0)
+                        if ((ImportCounter > 0) && ((ImportCounter % 100) == 0))
                         {
-                            // self created station is existing -> correct id and get new data from EDDB
-                            CopyEDStationToDataRow(Station, (DataRow)FoundRows[0], false, null, true);
+                            // save changes
+                            Debug.Print("added Stations : " + ImportCounter.ToString());
 
-                            // update immediately because otherwise the references are wrong after changing a id
                             lDBCon.TableUpdate(Data.tbstations);
                             lDBCon.TableUpdate(Data.tbstations_org);
                             lDBCon.TableUpdate(Data.tbstationeconomy);
                             lDBCon.TableUpdate(Data.tbcommodityclassification);
                             lDBCon.TableUpdate(Data.tbcommodity_has_attribute);
                             lDBCon.TableUpdate(Data.tbattribute);
-
-                            lDBCon.TableRefresh(Data.tbstationeconomy);
-                            lDBCon.TableRefresh(Data.tbcommodityclassification);
-                            lDBCon.TableRefresh(Data.tbcommodity_has_attribute);
-                            lDBCon.TableRefresh(Data.tbattribute);
-                        }
-                        else
-                        {
-                            // add a new Location
-                            dsEliteDB.tbstationsRow newStationRow = (dsEliteDB.tbstationsRow)Data.tbstations.NewRow();
-
-                            CopyEDStationToDataRow(Station, (DataRow)newStationRow, false, null, true);
-                            Data.tbstations.Rows.Add(newStationRow);
-                            added++;
                         }
 
-                        CopyEDStationEconomiesToDataRows(Station, Data.tbstationeconomy);
-                        CopyEDStationCommodityToDataRow(Station, Data, ref currentComodityClassificationID);
+                        Counter++;
 
-                        ImportCounter += 1;
+                        if (sendProgressEvent(new ProgressEventArgs() { Info = String.Format("import stations : analysed={0}, updated={1}, added={2}", Counter, ImportCounter - added, added), CurrentValue = Counter, TotalValue = stationsTotal }))
+                            break;
                     }
 
-                    if ((ImportCounter > 0) && ((ImportCounter % 100) == 0))
-                    {
-                        // save changes
-                        Debug.Print("added Stations : " + ImportCounter.ToString());
-
-                        lDBCon.TableUpdate(Data.tbstations);
-                        lDBCon.TableUpdate(Data.tbstations_org);
-                        lDBCon.TableUpdate(Data.tbstationeconomy);
-                        lDBCon.TableUpdate(Data.tbcommodityclassification);
-                        lDBCon.TableUpdate(Data.tbcommodity_has_attribute);
-                        lDBCon.TableUpdate(Data.tbattribute);
-                    }
-
-                    Counter++;
-
-                    if(sendProgressEvent(new ProgressEventArgs() { Info = String.Format("import stations : analysed={0}, updated={1}, added={2}", Counter, ImportCounter-added, added), CurrentValue=Counter, TotalValue=Stations.Count}))
-                        break;
                 }
 
                 // save changes
@@ -1966,6 +2025,8 @@ namespace IBE.SQL
             {
                 if(lDBCon != null)
                 {
+
+
                     if (lDBCon.TransActive())
                         lDBCon.TransRollback();
 
@@ -3515,22 +3576,35 @@ namespace IBE.SQL
                             if(currentStation != null)
                                 currentStation.ListingExtendMode = false;
 
-                            if(foundIndex.TryGetValue(currentID, out Index))
+                            if (foundIndex.TryGetValue(currentID, out Index))
+                            {
                                 currentStation = foundValues[Index];
+                                LastID = currentRow.StationId;
+                                currentStation.ListingExtendMode = true;
+                            }
                             else
                             {
-                                currentStation  = new EDStation(currentRow);
+                                currentStation = new EDStation(currentRow);
+                                if (currentStation.Id != 0)
+                                {
+                                    foundValues.Add(currentStation);
+                                    foundIndex.Add(currentID, foundValues.Count - 1);
+                                    LastID = currentRow.StationId;
+                                    currentStation.ListingExtendMode = true;
 
-                                foundValues.Add(currentStation);
-                                foundIndex.Add(currentID, foundValues.Count-1);
+                                }
+                                else
+                                {
+                                    currentStation = null;
+                                    LastID = Int32.MinValue;
+                                }
+
                             }
-                            LastID = currentRow.StationId;
-
-                            currentStation.ListingExtendMode = true;
 
                         }
 
-                        currentStation.addListing(currentRow);
+                        if (currentStation != null)
+                            currentStation.addListing(currentRow);
                     }
                 
                     eva = new ProgressEventArgs() { Info="converting data...", CurrentValue=currentItem, TotalValue=CSV_Strings.GetUpperBound(0)};

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ED-IBE", "ED-IBE\ED-IBE.csproj", "{D720EB9A-C879-4E3B-AA19-B820E8192B7A}"
 EndProject
@@ -71,5 +71,8 @@ Global
 		{698016C8-55A8-4052-9AD7-F68661EC5E63} = {B0F0F5F7-B516-4A06-AB76-A8374E644BF4}
 		{54CA2D38-6381-4ED5-9150-7F32D77E61A2} = {B0F0F5F7-B516-4A06-AB76-A8374E644BF4}
 		{50546805-F69D-4C2E-B2C5-2442864AB465} = {DF616AE1-EEE9-415F-9E32-6D893FDA1958}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90240122-C0EA-4FE8-9D50-F1CF092B7D99}
 	EndGlobalSection
 EndGlobal

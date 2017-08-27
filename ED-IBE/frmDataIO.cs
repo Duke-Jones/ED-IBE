@@ -46,12 +46,12 @@ namespace IBE
         private String              m_DataPath          = Program.GetDataPath("data");
 
 
-        private List<String>        m_DL_Files          = new List<string> {"systems.json", 
-                                                                            "stations.json", 
+        private List<String>        m_DL_Files          = new List<string> {"systems.jsonl", 
+                                                                            "stations.jsonl", 
                                                                             "commodities.json"};
 
-        private List<String>        m_DL_Files_Pop      = new List<string> {"systems_populated.json", 
-                                                                            "stations.json", 
+        private List<String>        m_DL_Files_Pop      = new List<string> {"systems_populated.jsonl", 
+                                                                            "stations.jsonl", 
                                                                             "commodities.json"};
 
         private List<String>        m_DL_FilesPrice     = new List<string> {"listings.csv"};
@@ -659,7 +659,7 @@ namespace IBE
                         {
                             // import the systems and stations from EDDB
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import systems...", AddSeparator=true});
-                            FileName = "systems.json";
+                            FileName = "systems.jsonl";
 
                             if(RNData)
                                 FileName = @"Data\" + FileName;
@@ -682,7 +682,7 @@ namespace IBE
                         {
                             // import the systems and stations from EDDB
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import populated systems...", AddSeparator=true});
-                            FileName = "systems_populated.json";
+                            FileName = "systems_populated.jsonl";
 
                             if(RNData)
                                 FileName = @"Data\" + FileName;
@@ -714,7 +714,7 @@ namespace IBE
                         if ((!m_CancelAction) && importFlags.HasFlag(enImportTypes.EDDB_Stations))
                         {
                             Data_Progress(this, new SQL.EliteDBIO.ProgressEventArgs() {Info="import stations...", AddSeparator=true});
-                            FileName = "stations.json";
+                            FileName = "stations.jsonl";
 
                             if(RNData)
                                 FileName = @"Data\" + FileName;
