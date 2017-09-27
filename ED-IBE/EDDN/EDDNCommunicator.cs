@@ -1100,12 +1100,12 @@ bool disposed = false;
             try
             {
                 if(m_SenderIsActivated && m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostJournalData", true.ToString(), false))
-                {                                                                                             
+                {
                     StringBuilder journalStringEDDN = new StringBuilder();
                     journalStringEDDN.Append(String.Format("\"message\": {{"));
-                    
+
                     journalStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
-                    journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ",      dataObject.SelectToken("event").ToString()));
+                    journalStringEDDN.Append(String.Format("\"event\":\"{0}\", ", dataObject.SelectToken("event").ToString()));
 
                     if (dataObject.SelectToken("StarSystem") == null)
                         if (!String.IsNullOrWhiteSpace(Program.actualCondition.System))
@@ -1114,62 +1114,92 @@ bool disposed = false;
                             inconsistentData = true;
                     else
                         journalStringEDDN.Append(String.Format("\"StarSystem\":\"{0}\", ", dataObject.SelectToken("StarSystem").ToString()));
-                        
-                    if(dataObject.SelectToken("StarPos") == null)
-                        if(Program.actualCondition.Coordinates.Valid)
+
+                    if (dataObject.SelectToken("StarPos") == null)
+                        if (Program.actualCondition.Coordinates.Valid)
                             journalStringEDDN.Append(String.Format("\"StarPos\":[{0},{1},{2}], ", SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.X.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Y.Value), SQL.DBConnector.SQLDecimal(Program.actualCondition.Coordinates.Z.Value)));
                         else
                             inconsistentData = true;
                     else
-                        journalStringEDDN.Append(String.Format("\"StarPos\":{0}, ",    dataObject.SelectToken("StarPos")));
+                        journalStringEDDN.Append(String.Format("\"StarPos\":{0}, ", dataObject.SelectToken("StarPos")));
 
-                    System.Text.RegularExpressions.Regex forbiddenPattern   = new System.Text.RegularExpressions.Regex("(CockpitBreach|BoostUsed|FuelLevel|FuelUsed|JumpDist|_Localised$|timestamp|event|StarSystem|StarPos|Latitude|Longitude)");
+                    System.Text.RegularExpressions.Regex forbiddenPattern = new System.Text.RegularExpressions.Regex("(CockpitBreach|BoostUsed|FuelLevel|FuelUsed|JumpDist|_Localised$|timestamp|event|StarSystem|StarPos|Latitude|Longitude)");
                     List<String> typeList = new List<String>() { "array", "boolean", "integer", "float", "double", "object", "string" };
 
-                    if(!inconsistentData)
+                    var SystemAllegiance = false;
+                    var SystemFaction = false;
+                    var StationGovernment = false;
+                    var currentEvent = dataObject.SelectToken("event").ToString();
+
+                    if (!inconsistentData)
                     {
                         foreach (JToken dataItem in dataObject.SelectTokens("*"))
                         {
-                            if(!forbiddenPattern.IsMatch(dataItem.Path))
+                            if (!forbiddenPattern.IsMatch(dataItem.Path))
                             {
-                                if(typeList.Contains(dataItem.Type.ToString().ToLower()))
+                                if (typeList.Contains(dataItem.Type.ToString().ToLower()))
                                 {
                                     Debug.Print("allowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
 
                                     switch (dataItem.Type.ToString().ToLower())
                                     {
                                         case "string":
-                                            journalStringEDDN.Append(String.Format("\"{0}\":\"{1}\", ",    dataItem.Path, dataItem));    
+                                            if (dataItem.Path.Equals("SystemAllegiance"))
+                                                SystemAllegiance = (SystemAllegiance || ((!String.IsNullOrWhiteSpace(dataItem.ToString())) && (!dataItem.ToString().Contains("None"))));
+
+                                            if (dataItem.Path.Equals("SystemFaction"))
+                                                SystemFaction = (SystemFaction || ((!String.IsNullOrWhiteSpace(dataItem.ToString())) && (!dataItem.ToString().Contains("None"))));
+
+                                            if (dataItem.Path.Equals("StationGovernment"))
+                                                StationGovernment = (SystemFaction || ((!String.IsNullOrWhiteSpace(dataItem.ToString())) && (!dataItem.ToString().Contains("None"))));
+                                            
+                                            journalStringEDDN.Append(String.Format("\"{0}\":\"{1}\", ", dataItem.Path, dataItem));
                                             break;
 
                                         case "float":
                                         case "double":
-                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, SQL.DBConnector.SQLDecimal((double)dataItem)));    
+                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ", dataItem.Path, SQL.DBConnector.SQLDecimal((double)dataItem)));
                                             break;
 
                                         case "boolean":
-                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem.ToString().ToLower()));
+                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ", dataItem.Path, dataItem.ToString().ToLower()));
                                             break;
 
                                         default:
-                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ",    dataItem.Path, dataItem));
+                                            journalStringEDDN.Append(String.Format("\"{0}\":{1}, ", dataItem.Path, dataItem));
                                             break;
                                     }
                                 }
                                 else
                                     Debug.Print("disallowed : " + dataItem.Path + "(" + dataItem.Type.ToString() + ")");
 
-                            
+
                             }
                             else
                                 Debug.Print("disallowed : " + dataItem.Path);
                         }
 
-                        journalStringEDDN.Remove(journalStringEDDN.Length-2, 2);
+                        journalStringEDDN.Remove(journalStringEDDN.Length - 2, 2);
                         journalStringEDDN.Append("}");
 
-                        _Send_Journal.Enqueue(journalStringEDDN);
-                        _SendDelayTimer_Journal.Start();
+                        if (SystemAllegiance && (!SystemFaction) && (currentEvent.Equals("FSDJump") || currentEvent.Equals("Location")))
+                        {
+                            // assuming event from training mission
+                            inconsistentData = true;
+                        }
+
+                        if ((!StationGovernment) && currentEvent.Equals("Docked"))
+                        {
+                            // assuming event from training mission
+                            inconsistentData = true;
+                        }
+
+                        if (!inconsistentData)
+                        {
+
+                            _Send_Journal.Enqueue(journalStringEDDN);
+                            _SendDelayTimer_Journal.Start();
+                        }
                     }
                 }
             }

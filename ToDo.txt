@@ -29,6 +29,9 @@ todo:
 
 done:
 
+  * added a filter for journal events from the training missions
+  * Bugfix for import jsonl files
+-------------------------------------------------------------------------------------         
   * changed EDDB import files from json to jsonl where existing
 -------------------------------------------------------------------------------------         
   * import of "bubble data": import bubble now can have a different center

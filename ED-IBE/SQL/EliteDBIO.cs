@@ -1350,7 +1350,7 @@ namespace IBE.SQL
                 sendProgressEvent(new ProgressEventArgs() {  Info="import systems...", NewLine = true } );
 
                 while (jsonReader.Read())
-                    if((jsonReader.TokenType == JsonToken.StartObject) && (jsonReader.Depth == 1))
+                    if((jsonReader.TokenType == JsonToken.StartObject) && (jsonReader.Depth == 0))
                         systemsTotal++;
 
                 jsonReader.Close();
@@ -1362,7 +1362,7 @@ namespace IBE.SQL
 
                 while(jsonReader.Read())
                 {
-                    if((jsonReader.TokenType == JsonToken.StartObject) && (jsonReader.Depth == 1))
+                    if((jsonReader.TokenType == JsonToken.StartObject) && (jsonReader.Depth == 0))
                     {
                         dataChanged = false;
 
