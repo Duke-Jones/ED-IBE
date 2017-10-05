@@ -3258,10 +3258,10 @@ namespace IBE.SQL
 
             try
             {
-                system   = companionData["lastSystem"]["name"].ToString();
-                starPort = companionData["lastStarport"]["name"].ToString();
+                system   = companionData["profile"]["lastSystem"]["name"].ToString();
+                starPort = companionData["profile"]["lastStarport"]["name"].ToString();
 
-                foreach (Newtonsoft.Json.Linq.JToken commodity in companionData.SelectTokens("lastStarport.commodities[*]"))
+                foreach (Newtonsoft.Json.Linq.JToken commodity in companionData.SelectTokens("market.commodities[*]"))
                 {                                                  
                     if(!commodity.Value<String>("categoryname").Equals("NonMarketable", StringComparison.InvariantCultureIgnoreCase))
                     {

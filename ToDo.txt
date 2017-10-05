@@ -24,11 +24,17 @@ todo:
 * data backup
 
 * adding station type and distance to star to all PA tabs
+* Commander's Log : show distance to current position in Log
+
 
 *************************************************************************************
 
 done:
-
+  
+  * changed cAPI to E:D2.4
+  * EDDN: add illegal goods and economies
+  * EDDN: take care of the legality-flag
+------------------------------------------------------------------------------------         
   * added a filter for journal events from the training missions
   * Bugfix for import jsonl files
 -------------------------------------------------------------------------------------         

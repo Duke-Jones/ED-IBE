@@ -761,6 +761,7 @@ bool disposed = false;
         public void SendCommodityData(JObject dataObject)
         {
             Int32 objectCount = 0;
+            Int32 totalObjectCount = 0;
             Boolean writeToFile = false;
             StreamWriter writer = null;
             String debugFile = @"C:\temp\commodity_ibe.csv";
@@ -772,27 +773,27 @@ bool disposed = false;
                    m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostCompanionData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
-                    String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
-                    String stationName  = dataObject.SelectToken("lastStarport.name").ToString();
+                    String systemName   = dataObject.SelectToken("profile.lastSystem.name").ToString();
+                    String stationName  = dataObject.SelectToken("profile.lastStarport.name").ToString();
 
-                    if((m_ID_of_Commodity_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
-                    { 
-                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName +"|" + stationName, DateTime.UtcNow);
+                    if ((m_ID_of_Commodity_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Commodity_Station.Item2).TotalMinutes >= 60))
+                    {
+                        m_ID_of_Commodity_Station = new Tuple<String, DateTime>(systemName + "|" + stationName, DateTime.UtcNow);
 
                         StringBuilder commodityStringEDDN = new StringBuilder();
 
                         commodityStringEDDN.Append(String.Format("\"message\": {{"));
 
-                        commodityStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("lastSystem.name").ToString()));
-                        commodityStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
+                        commodityStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ", dataObject.SelectToken("profile.lastSystem.name").ToString()));
+                        commodityStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ", dataObject.SelectToken("profile.lastStarport.name").ToString()));
 
                         commodityStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
 
                         commodityStringEDDN.Append(String.Format("\"commodities\": ["));
 
-                        if(writeToFile)
-                        { 
-                            if(File.Exists(debugFile))
+                        if (writeToFile)
+                        {
+                            if (File.Exists(debugFile))
                                 File.Delete(debugFile);
 
                             writer = new StreamWriter(File.OpenWrite(debugFile));
@@ -801,78 +802,143 @@ bool disposed = false;
                         baseData = new SQL.Datasets.dsEliteDB.tbcommoditybaseDataTable();
                         m_lDBCon.Execute("select * from tbcommodityBase;", (System.Data.DataTable)baseData);
 
-                        foreach (JToken commodityItem in dataObject.SelectTokens("lastStarport.commodities[*]"))
+                        foreach (JToken commodityItem in dataObject.SelectTokens("market.commodities[*]"))
                         {
+                            if (commodityItem.Value<String>("name") == "CoolingHoses")
+                                Debug.Print("!");
 
-                            if(!commodityItem.Value<String>("categoryname").Equals("NonMarketable", StringComparison.InvariantCultureIgnoreCase))
+                            if ((!commodityItem.Value<String>("categoryname").Equals("NonMarketable", StringComparison.InvariantCultureIgnoreCase)) &&
+                               (string.IsNullOrEmpty(commodityItem.Value<String>("legality"))))
                             {
 
                                 CommodityObject commodity = cmpConverter.GetCommodityFromFDevIDs(baseData, commodityItem, false);
                                 //commodityObject commodity = cmpConverter.GetcommodityFromCompanion(commodityItem, false);
 
-                                int? dbValue = String.IsNullOrWhiteSpace(commodityItem.Value<String>("demandBracket")) ? null : commodityItem.Value<int?>("demandBracket");
+                                //int? dbValue = String.IsNullOrWhiteSpace(commodityItem.Value<String>("demandBracket")) ? null : commodityItem.Value<int?>("demandBracket");
 
-                                if((commodity != null) && (dbValue.HasValue))
-                                { 
+                                if ((commodity != null)) // && (dbValue.HasValue))
+                                {
+                                    //if (!dbValue.HasValue)
+                                    //    Debug.Print("!");
 
                                     if (objectCount > 0)
                                         commodityStringEDDN.Append(", {");
                                     else
                                         commodityStringEDDN.Append("{");
 
-                                    if(writeToFile)
+                                    if (writeToFile)
                                     {
-                                        writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
-                                            systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Average, 
+                                        writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+                                            systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Average,
                                             DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
                                     }
 
-                                    commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ",    commodityItem.Value<String>("name")));
+                                    commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ", commodityItem.Value<String>("name")));
                                     //commodityStringEDDN.Append(String.Format("\"id\":\"{0}\", ",    commodity.Id));
-                                    commodityStringEDDN.Append(String.Format("\"meanPrice\":{0}, ",   commodityItem.Value<Int32>("meanPrice")));
-                                    commodityStringEDDN.Append(String.Format("\"buyPrice\":{0}, ",    commodityItem.Value<Int32>("buyPrice")));
-                                    commodityStringEDDN.Append(String.Format("\"sellPrice\":{0}, ",   commodityItem.Value<Int32>("sellPrice")));
-                                    
+                                    commodityStringEDDN.Append(String.Format("\"meanPrice\":{0}, ", commodityItem.Value<Int32>("meanPrice")));
+                                    commodityStringEDDN.Append(String.Format("\"buyPrice\":{0}, ", commodityItem.Value<Int32>("buyPrice")));
+                                    commodityStringEDDN.Append(String.Format("\"sellPrice\":{0}, ", commodityItem.Value<Int32>("sellPrice")));
 
-                                    commodityStringEDDN.Append(String.Format("\"demandBracket\":{0}, ", commodityItem.Value<int?>("demandBracket")));
-
-                                    if (commodityItem.Value<int?>("demandBracket") == 0)
-                                        commodityStringEDDN.Append(String.Format("\"demand\":{0}, ",      0));
+                                    if (string.IsNullOrWhiteSpace(commodityItem.Value<string>("demandBracket")))
+                                        commodityStringEDDN.Append(String.Format("\"demandBracket\":\"\", "));
                                     else
-                                        commodityStringEDDN.Append(String.Format("\"demand\":{0}, ",      commodityItem.Value<Int32>("demand")));
+                                        commodityStringEDDN.Append(String.Format("\"demandBracket\":{0}, ", commodityItem.Value<string>("demandBracket")));
+
+                                    if (string.IsNullOrWhiteSpace(commodityItem.Value<string>("demandBracket")) || (commodityItem.Value<int?>("demandBracket") == 0))
+                                        commodityStringEDDN.Append(String.Format("\"demand\":{0}, ", 0));
+                                    else
+                                        commodityStringEDDN.Append(String.Format("\"demand\":{0}, ", commodityItem.Value<Int32>("demand")));
 
 
                                     commodityStringEDDN.Append(String.Format("\"stockBracket\":{0}, ", commodityItem.Value<int?>("stockBracket")));
 
                                     if (commodityItem.Value<int?>("stockBracket") == 0)
-                                        commodityStringEDDN.Append(String.Format("\"stock\":{0}, ",      0));
+                                        commodityStringEDDN.Append(String.Format("\"stock\":{0}, ", 0));
                                     else
-                                        commodityStringEDDN.Append(String.Format("\"stock\":{0}, ",      commodityItem.Value<Int32>("stock")));
+                                        commodityStringEDDN.Append(String.Format("\"stock\":{0}, ", commodityItem.Value<Int32>("stock")));
 
-                                    
-                                    if(commodityItem.SelectTokens("statusFlags.[*]").Count() > 0 )
+
+                                    if (commodityItem.SelectTokens("statusFlags.[*]").Count() > 0)
                                     {
                                         commodityStringEDDN.Append(String.Format("\"statusFlags\": ["));
                                         foreach (JToken statusItem in commodityItem.SelectTokens("statusFlags.[*]"))
                                         {
-                                            commodityStringEDDN.Append(String.Format("\"{0}\", ",      statusItem.Value<String>()));
+                                            commodityStringEDDN.Append(String.Format("\"{0}\", ", statusItem.Value<String>()));
                                         }
 
-                                        commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);
-                                        commodityStringEDDN.Replace(",", "], ", commodityStringEDDN.Length-1, 1);
+                                        commodityStringEDDN.Remove(commodityStringEDDN.Length - 1, 1);
+                                        commodityStringEDDN.Replace(",", "], ", commodityStringEDDN.Length - 1, 1);
                                     }
 
-                                    commodityStringEDDN.Remove(commodityStringEDDN.Length-1, 1);
-                                    commodityStringEDDN.Replace(",", "}", commodityStringEDDN.Length-1, 1);
+                                    commodityStringEDDN.Remove(commodityStringEDDN.Length - 1, 1);
+                                    commodityStringEDDN.Replace(",", "}", commodityStringEDDN.Length - 1, 1);
 
                                     objectCount++;
+                                    totalObjectCount++;
                                 }
                             }
-                        } 
+                        }
 
-                        commodityStringEDDN.Append("]}");
+                        commodityStringEDDN.Append("]");
 
-                        if(objectCount > 0)
+                        objectCount = 0;
+
+                        int? economies = dataObject.SelectToken("market.economies")?.Count();
+                        if (economies.HasValue && economies > 0)
+                        {
+                            commodityStringEDDN.Append(String.Format(", \"economies\": ["));
+
+                            var ecoItems = dataObject.SelectTokens("market.economies.*").ToList();
+
+                            foreach (JToken economyItem in ecoItems)
+                            {
+                                if (objectCount > 0)
+                                    commodityStringEDDN.Append(", {");
+                                else
+                                    commodityStringEDDN.Append("{");
+
+                                commodityStringEDDN.Append(String.Format("\"name\":\"{0}\", ", economyItem.Value<String>("name")));
+                                commodityStringEDDN.Append(String.Format("\"proportion\":{0}, ", economyItem.Value<float>("proportion").ToString(CultureInfo.InvariantCulture)));
+
+                                commodityStringEDDN.Remove(commodityStringEDDN.Length - 1, 1);
+                                commodityStringEDDN.Replace(",", "}", commodityStringEDDN.Length - 1, 1);
+
+                                objectCount++;
+                                totalObjectCount++;
+                            }
+
+                            commodityStringEDDN.Append("]");
+                        }
+
+                        objectCount = 0;
+
+                        int? prohibited = dataObject.SelectToken("market.prohibited")?.Count();
+                        if (prohibited.HasValue && prohibited > 0)
+                        {
+                            commodityStringEDDN.Append(String.Format(", \"prohibited\": ["));
+
+                            var prohItems = dataObject.SelectTokens("market.prohibited.*").ToList();
+
+                            foreach (JToken prohibitedItem in prohItems)
+                            {
+                                if (objectCount > 0)
+                                    commodityStringEDDN.Append(", ");
+
+                                commodityStringEDDN.Append(String.Format("\"{0}\", ", prohibitedItem.Value<string>()));
+
+                                commodityStringEDDN.Remove(commodityStringEDDN.Length - 1, 1);
+                                commodityStringEDDN.Replace(",", "", commodityStringEDDN.Length - 1, 1);
+
+                                objectCount++;
+                                totalObjectCount++;
+                            }
+
+                            commodityStringEDDN.Append("]");
+                        }
+
+                        commodityStringEDDN.Append("}");
+
+                        if (totalObjectCount > 0)
                         { 
                             _Send_Commodity.Enqueue(commodityStringEDDN);
                             _SendDelayTimer_Commodity.Start();
@@ -911,8 +977,8 @@ bool disposed = false;
                 if(m_SenderIsActivated && m_lDBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "EDDNPostOutfittingData", true.ToString(), false))
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();
-                    String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
-                    String stationName  = dataObject.SelectToken("lastStarport.name").ToString();
+                    String systemName   = dataObject.SelectToken("profile.lastSystem.name").ToString();
+                    String stationName  = dataObject.SelectToken("profile.lastStarport.name").ToString();
 
                     if((m_ID_of_Outfitting_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Outfitting_Station.Item2).TotalMinutes >= 60))
                     { 
@@ -922,8 +988,8 @@ bool disposed = false;
 
                         outfittingStringEDDN.Append(String.Format("\"message\": {{"));
 
-                        outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("lastSystem.name").ToString()));
-                        outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("lastStarport.name").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"systemName\":\"{0}\", "    , dataObject.SelectToken("profile.lastSystem.name").ToString()));
+                        outfittingStringEDDN.Append(String.Format("\"stationName\":\"{0}\", " , dataObject.SelectToken("profile.lastStarport.name").ToString()));
 
                         outfittingStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
 
@@ -941,7 +1007,7 @@ bool disposed = false;
                         m_lDBCon.Execute("select * from tbOutfittingBase;", (System.Data.DataTable)baseData);
                         
 
-                        foreach (JToken outfittingItem in dataObject.SelectTokens("lastStarport.modules.*"))
+                        foreach (JToken outfittingItem in dataObject.SelectTokens("shipyard.modules.*"))
                         {
 
                             if(allowedPattern.IsMatch(outfittingItem.Value<String>("name")) && 
@@ -1011,8 +1077,8 @@ bool disposed = false;
                 {
                     IBECompanion.CompanionConverter cmpConverter = new IBECompanion.CompanionConverter();  
 
-                    String systemName   = dataObject.SelectToken("lastSystem.name").ToString();
-                    String stationName = dataObject.SelectToken("lastStarport.name").ToString();
+                    String systemName   = dataObject.SelectToken("profile.lastSystem.name").ToString();
+                    String stationName = dataObject.SelectToken("profile.lastStarport.name").ToString();
 
                     if((m_ID_of_Shipyard_Station.Item1 != systemName + "|" + stationName) || ((DateTime.UtcNow - m_ID_of_Shipyard_Station.Item2).TotalMinutes >= 60))
                     { 
@@ -1020,8 +1086,8 @@ bool disposed = false;
 
                         shipyardStringEDDN.Append(String.Format("\"message\": {{"));
 
-                        shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("lastSystem.name").ToString()));
-                        shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("lastStarport.name").ToString()));
+                        shipyardStringEDDN.Append(String.Format("\"systemName\":\"{0}\", ",dataObject.SelectToken("profile.lastSystem.name").ToString()));
+                        shipyardStringEDDN.Append(String.Format("\"stationName\":\"{0}\", ",dataObject.SelectToken("profile.lastStarport.name").ToString()));
 
                         shipyardStringEDDN.Append(String.Format("\"timestamp\":\"{0}\", ", DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
 
@@ -1035,13 +1101,13 @@ bool disposed = false;
                             writer = new StreamWriter(File.OpenWrite(debugFile));
                         }
 
-                        if(dataObject.SelectToken("lastStarport.ships", false) != null)
+                        if(dataObject.SelectToken("shipyard.ships", false) != null)
                         { 
                             baseData = new SQL.Datasets.dsEliteDB.tbshipyardbaseDataTable();
                             m_lDBCon.Execute("select * from tbShipyardBase;", (System.Data.DataTable)baseData);
 
-                            List<JToken> allShips = dataObject.SelectTokens("lastStarport.ships.shipyard_list.*").ToList();
-                            allShips.AddRange(dataObject.SelectTokens("lastStarport.ships.unavailable_list.[*]").ToList());
+                            List<JToken> allShips = dataObject.SelectTokens("shipyard.ships.shipyard_list.*").ToList();
+                            allShips.AddRange(dataObject.SelectTokens("shipyard.ships.unavailable_list.[*]").ToList());
 
                             foreach (JToken outfittingItem in allShips)
                             {

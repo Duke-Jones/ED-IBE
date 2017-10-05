@@ -20,6 +20,14 @@ namespace EDCompanionAPI.Models
         /// </summary>
         public string Json { get; set; }
         /// <summary>
+        /// Raw json data returned from api
+        /// </summary>
+        public string Json_MarketData { get; set; }
+        /// <summary>
+        /// Raw json data returned from api
+        /// </summary>
+        public string Json_ShipYard { get; set; }
+        /// <summary>
         /// Json data is cached for 60 seconds. This indicates if returned data came from cache or not
         /// </summary>
         public bool Cached { get; set; }

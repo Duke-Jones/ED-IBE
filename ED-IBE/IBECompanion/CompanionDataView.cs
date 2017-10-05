@@ -71,7 +71,7 @@ namespace IBE.IBECompanion
                         switch (response.LoginStatus)
 	                    {
 		                    case EDCompanionAPI.Models.LoginStatus.Ok:
-                                var name = (String )Program.CompanionIO.GetData().SelectToken("commander.name", false);
+                                var name = (String )Program.CompanionIO.GetData().SelectToken("profile.commander.name", false);
 
                                 if(String.IsNullOrEmpty(name))
                                     txtStatus.Text =  "Connected and at call, Commander !";

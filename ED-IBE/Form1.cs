@@ -3471,7 +3471,7 @@ namespace IBE
                     if ((Program.DBCon.getIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "Identification", "useUserName") == "useUserID") && 
                         String.IsNullOrEmpty(Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "UserName")))
                     {
-                        String userName = (String)Program.CompanionIO.GetData().SelectToken("commander.name", false) ?? "";
+                        String userName = (String)Program.CompanionIO.GetData().SelectToken("profile.commander.name", false) ?? "";
 
                         if(!String.IsNullOrEmpty(userName))
                         {
@@ -3511,8 +3511,8 @@ namespace IBE
             {
                 if(Program.CompanionIO.StationHasShipyardData())
                 {
-                    String extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
-                    String extStation = Program.CompanionIO.GetValue("lastStarport.name");
+                    String extSystem  = Program.CompanionIO.GetValue("profile.lastSystem.name");
+                    String extStation = Program.CompanionIO.GetValue("profile.lastStarport.name");
 
                     if(Program.actualCondition.System.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && Program.actualCondition.Station.Equals(extStation, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -3735,8 +3735,8 @@ namespace IBE
 
                         if(stationID == null)
                         {
-                            var extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
-                            var extStation = Program.CompanionIO.GetValue("lastStarport.name");
+                            var extSystem  = Program.CompanionIO.GetValue("profile.lastSystem.name");
+                            var extStation = Program.CompanionIO.GetValue("profile.lastStarport.name");
 
                             String sqlString = String.Format("select St.id from tbSystems Sy, tbStations St" +
                                                              " where Sy.id = St.System_id" +

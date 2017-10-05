@@ -363,7 +363,7 @@ namespace IBE.IBECompanion
         {
             try
             {
-                return Program.CompanionIO.GetValue<Boolean>("commander.docked");
+                return Program.CompanionIO.GetValue<Boolean>("profile.commander.docked");
             }
             catch (Exception ex)
             {
@@ -379,10 +379,17 @@ namespace IBE.IBECompanion
         {
             try
             {
-                IEnumerable<JToken> stationData = GetData().SelectTokens("lastStarport.commodities[*]");
+                var data = GetData();
 
-                if((stationData != null) && (stationData.Count() > 0))
-                    return true;
+                if (data["profile"]["lastStarport"]["services"].SelectToken("commodities") != null)
+                {
+                    IEnumerable<JToken> stationData = data.SelectTokens("market.commodities[*]");
+
+                    if ((stationData != null) && (stationData.Count() > 0))
+                        return true;
+                    else
+                        return false;
+                }
                 else
                     return false;
             }
@@ -400,12 +407,20 @@ namespace IBE.IBECompanion
         {
             try
             {
-                IEnumerable<JToken> stationData = GetData().SelectTokens("lastStarport.modules.*"); 
+                var data = GetData();
 
-                if((stationData != null) && (stationData.Count() > 0))
-                    return true;
+                if (data["profile"]["lastStarport"]["services"].SelectToken("outfitting") != null)
+                {
+                    IEnumerable<JToken> stationData = data.SelectTokens("shipyard.modules.*");
+
+                    if ((stationData != null) && (stationData.Count() > 0))
+                        return true;
+                    else
+                        return false;
+                }
                 else
                     return false;
+
             }
             catch (Exception ex)
             {
@@ -421,19 +436,27 @@ namespace IBE.IBECompanion
         {
             try
             {
-                IEnumerable<JToken> stationData = GetData().SelectTokens("lastStarport.ships.shipyard_list.*"); 
+                var data = GetData();
 
-                if((stationData != null) && (stationData.Count() > 0))
-                    return true;
-                else
+                if (data["profile"]["lastStarport"]["services"].SelectToken("shipyard") != null)
                 {
-                    stationData = GetData().SelectTokens("lastStarport.ships.unavailable_list.[*]"); 
+                    IEnumerable<JToken> stationData = data.SelectTokens("shipyard.ships.shipyard_list.*");
 
-                    if((stationData != null) && (stationData.Count() > 0))
+                    if ((stationData != null) && (stationData.Count() > 0))
                         return true;
                     else
-                        return false;
+                    {
+                        stationData = data.SelectTokens("shipyard.ships.unavailable_list.[*]");
+
+                        if ((stationData != null) && (stationData.Count() > 0))
+                            return true;
+                        else
+                            return false;
+                    }
                 }
+                else
+                    return false;
+
             }
             catch (Exception ex)
             {
@@ -449,7 +472,7 @@ namespace IBE.IBECompanion
             try
             {
                 if(Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
-                    m_joCompanion["commander"]["docked"] = isLanded;
+                    m_joCompanion["profile"]["commander"]["docked"] = isLanded;
             }
             catch (Exception ex)
             {
@@ -531,7 +554,7 @@ namespace IBE.IBECompanion
             try
             {
                 if (CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
-                    creditsTotal = GetValue<Int32>("commander.credits");
+                    creditsTotal = GetValue<Int32>("profile.commander.credits");
             }
             catch (Exception)
             {
@@ -643,10 +666,9 @@ namespace IBE.IBECompanion
                         {
                             if(Program.CompanionIO.IsLanded())
                             {
-                                extSystem  = Program.CompanionIO.GetValue("lastSystem.name");
-                                extStation = Program.CompanionIO.GetValue("lastStarport.name");
-
-                                if(Program.actualCondition.System.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && Program.actualCondition.Station.Equals(extStation, StringComparison.InvariantCultureIgnoreCase))
+                                if (Program.CompanionIO.GetSystemAndStation(ref extSystem, ref extStation) && 
+                                    Program.actualCondition.System.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && 
+                                    Program.actualCondition.Station.Equals(extStation, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     if(Program.CompanionIO.StationHasMarketData())
                                     {
@@ -737,6 +759,40 @@ namespace IBE.IBECompanion
             {
                 CErr.processError(ex, "Error in cmdEventLanded_Click");
             }
+        }
+
+        /// <summary>
+        /// returns the system and station of the current data and their consistency
+        /// </summary>
+        /// <param name="system">station in data</param>
+        /// <param name="station">system in data</param>
+        /// <returns>true: data is ok, false: data is not ok</returns>
+        public bool GetSystemAndStation(ref string system, ref string station)
+        {
+            var data = Program.CompanionIO.GetData();
+            var retValue = true;
+
+
+            system  = data.SelectToken("profile.lastSystem.name").ToString();
+            station = data.SelectToken("profile.lastStarport.name").ToString();
+
+            if(data["profile"]["lastStarport"]["services"].SelectToken("commodities") != null)
+            {
+                var marketStation = Program.CompanionIO.GetValue("market.name");
+
+                if (!station.Equals(marketStation, StringComparison.InvariantCultureIgnoreCase))
+                    retValue = false;
+            }
+
+            if((data["profile"]["lastStarport"]["services"].SelectToken("outfitting") != null) || (data["profile"]["lastStarport"]["services"].SelectToken("shipyard") != null))
+            {
+                var shipyardStation = Program.CompanionIO.GetValue("shipyard.name");
+
+                if (!station.Equals(shipyardStation, StringComparison.InvariantCultureIgnoreCase))
+                    retValue = false;
+            }
+
+            return retValue;
         }
 
     }

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Web.Hosting;
 using System.Web.Security;
 using EDCompanionAPI.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace EDCompanionAPI
 {
@@ -302,7 +304,7 @@ namespace EDCompanionAPI
             return GetProfileDataInternal(force);
         }
 
-        private ProfileResponse GetProfileDataInternal(bool force)
+        private ProfileResponse GetProfileDataInternal(bool force = false)
         {
             //We don't want to allow hammering of the API, so we cache response for 60 seconds.
             var profileResponse = new ProfileResponse();
@@ -329,29 +331,122 @@ namespace EDCompanionAPI
                 }
             }
 
-            using (var response = _Http.Get(Constants.URL_PROFILE, null))
+            StringBuilder fullJson = new StringBuilder("{\"profile\" : **PH1** " +
+                                                       "," +
+                                                       "\"market\"   : **PH2** " +
+                                                       "," +
+                                                       "\"shipyard\" : **PH3** " +
+                                                       "}");
+
+            using (var response = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_PROFILE, null))
             {
+                string tempData;
                 profileResponse.Cached = false;
                 profileResponse.HttpStatusCode = response.StatusCode;
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                     {
-                        profileResponse.Json = sr.ReadToEnd();
+                        tempData = sr.ReadToEnd();
 
-                        if(profileResponse.Json.ToLower().Equals("profile unavailable"))
+                        if(tempData.ToLower().Equals("profile unavailable"))
                         {
                             profileResponse.LoginStatus = LoginStatus.UnknownError;
-                            profileResponse.Json        = "{}";
+                            tempData = "{}";
                         }
                     }
                 }
                 else
                 {
                     profileResponse.LoginStatus = LoginStatus.NotAccessible;
-                    profileResponse.Json        = "{}";
+                    tempData = "{}";
+                }
+
+                fullJson.Replace("**PH1**", tempData);
+
+                if (profileResponse.HttpStatusCode == HttpStatusCode.OK)
+                {
+                    // load more data ?
+                    var profileJson = JsonConvert.DeserializeObject<JObject>(tempData);
+                    if (profileJson["commander"].Value<Boolean>("docked"))
+                    {
+                        if (profileJson["lastStarport"]["services"].SelectToken("commodities") != null)
+                        {
+                            using (var response_md = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_MARKET, null))
+                            {
+                                string tempData_md;
+                                profileResponse.Cached = false;
+                                profileResponse.HttpStatusCode = response_md.StatusCode;
+                                if (response_md.StatusCode == HttpStatusCode.OK)
+                                {
+                                    using (StreamReader sr = new StreamReader(response_md.GetResponseStream()))
+                                    {
+                                        tempData_md = sr.ReadToEnd();
+
+                                        if (tempData_md.ToLower().Equals("profile unavailable"))
+                                        {
+                                            profileResponse.LoginStatus = LoginStatus.UnknownError;
+                                            tempData_md = "{}";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    profileResponse.LoginStatus = LoginStatus.NotAccessible;
+                                    tempData_md = "{}";
+                                }
+
+                                fullJson.Replace("**PH2**", tempData_md);
+                            }
+                        }
+                        else
+                        {
+                            fullJson.Replace("**PH2**", "{}");
+                        }
+
+                        if((profileJson["lastStarport"]["services"].SelectToken("outfitting") != null) || (profileJson["lastStarport"]["services"].SelectToken("shipyard") != null))
+                        {
+                            using (var response_sy = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_SHIPYARD, null))
+                            {
+                                string tempData_sy;
+                                profileResponse.Cached = false;
+                                profileResponse.HttpStatusCode = response_sy.StatusCode;
+                                if (response_sy.StatusCode == HttpStatusCode.OK)
+                                {
+                                    using (StreamReader sr = new StreamReader(response_sy.GetResponseStream()))
+                                    {
+                                        tempData_sy = sr.ReadToEnd();
+
+                                        if (tempData_sy.ToLower().Equals("profile unavailable"))
+                                        {
+                                            profileResponse.LoginStatus = LoginStatus.UnknownError;
+                                            tempData_sy = "{}";
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    profileResponse.LoginStatus = LoginStatus.NotAccessible;
+                                    tempData_sy = "{}";
+                                }
+
+                                fullJson.Replace("**PH3**", tempData_sy);
+                            }
+                        }
+                        else
+                        {
+                            fullJson.Replace("**PH3**", "{}");
+                        }
+                    }
+                }
+                else
+                {
+                    fullJson.Replace("**PH2**", "{}");
+                    fullJson.Replace("**PH3**", "{}");
                 }
             }
+
+            profileResponse.Json = fullJson.ToString();
 
             _Cache.Set(Constants.CACHE_PROFILEJSON, profileResponse.Json, DateTimeOffset.Now.AddSeconds(Constants.CACHE_PROFILE_SECONDS));
 
