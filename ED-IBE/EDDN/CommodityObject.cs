@@ -11,6 +11,6 @@ namespace IBE.EDDN
         public Int32 Id { get; set; }
         public String Category { get; set; }
         public String Name { get; set; }
-        public Int32 Average { get; set; }
+        public String Symbol { get; set; }
     }
 }

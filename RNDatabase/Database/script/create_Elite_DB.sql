@@ -1030,9 +1030,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `elite_db`.`tbCommodityBase` (
   `id` INT NOT NULL,
+  `symbol` VARCHAR(80) NULL,
   `category` VARCHAR(80) NULL,
   `name` VARCHAR(80) NULL,
-  `average` INT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -1305,7 +1305,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.6.6');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.6.7');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;

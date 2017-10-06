@@ -5014,15 +5014,15 @@ namespace IBE.SQL
                 switch (enImportTypes)
                 {
                     case frmDataIO.enImportTypes.EDCD_Commodity:
-                        headerDefinition = "id,category,name,average";
+                        headerDefinition = "id,symbol,category,name";
                         sqlBaseString    = "INSERT INTO tbCommodityBase" +
-                                           " (id, category, name, average)" +
+                                           " (id, symbol, category, name)" +
                                            " VALUES ({0}, {1}, {2}, {3}) " +
                                            " ON DUPLICATE KEY UPDATE " +
                                            " id          = Values(id)," +
+                                           " symbol      = Values(symbol)," +
                                            " category    = Values(category)," +
-                                           " name        = Values(name)," +
-                                           " average     = Values(average);";
+                                           " name        = Values(name);";
                         break;
 
                     case frmDataIO.enImportTypes.EDCD_Outfitting:
@@ -5102,8 +5102,8 @@ namespace IBE.SQL
                                             sqlString = String.Format(sqlBaseString, 
                                                                         csvParts[0], 
                                                                         DBConnector.SQLAEscape(csvParts[1]), 
-                                                                        DBConnector.SQLAEscape(csvParts[2]), 
-                                                                        String.IsNullOrEmpty(csvParts[3]) ? "null" : csvParts[3]);
+                                                                        DBConnector.SQLAEscape(csvParts[2]),
+                                                                        DBConnector.SQLAEscape(csvParts[3]));
                                             break;
 
                                         case frmDataIO.enImportTypes.EDCD_Outfitting:
@@ -5129,7 +5129,7 @@ namespace IBE.SQL
                                     }
 
 
-                                    changed += Program.DBCon.Execute(sqlString);
+                                    changed += Program.DBCon.Execute(sqlString) != 0 ? 1 : 0;
                                 }
                                 catch (Exception ex)
                                 {

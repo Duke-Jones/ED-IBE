@@ -143,7 +143,7 @@ namespace IBE.IBECompanion
                         commodityObject.Id         = itemData.id;
                         commodityObject.Name       = itemData.name;
                         commodityObject.Category   = itemData.category;
-                        commodityObject.Average    = itemData.average;
+                        commodityObject.Symbol     = itemData.symbol;
                     }
                     else
                         throw new NotSupportedException(String.Format("Unknown commodity : {0}", commodityItem));

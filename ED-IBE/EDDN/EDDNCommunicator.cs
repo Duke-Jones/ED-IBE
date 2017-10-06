@@ -829,7 +829,7 @@ bool disposed = false;
                                     if (writeToFile)
                                     {
                                         writer.WriteLine(String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
-                                            systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Average,
+                                            systemName, stationName, commodity.Id, commodity.Name, commodity.Category, commodity.Symbol,
                                             DateTime.UtcNow.ToString("u", CultureInfo.InvariantCulture).Replace(" ", "T")));
                                     }
 

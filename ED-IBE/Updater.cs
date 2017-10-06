@@ -210,6 +210,9 @@ namespace IBE
 
                     if (dbVersion < new Version(0, 6, 5))
                         UpdateTo_0_6_5(ref foundError);
+
+                    if (dbVersion < new Version(0, 7, 0))
+                        UpdateTo_0_7_0(ref foundError);
                     
 
                     if (!foundError) 
@@ -2008,6 +2011,80 @@ namespace IBE
             catch (Exception ex)
             {
                 throw new Exception("Error while updating to v0.6.5", ex);
+            }
+        }
+
+        private static void UpdateTo_0_7_0(ref Boolean foundError)
+        {
+            try
+            {
+                String sqlString;
+
+                Program.SplashScreen.InfoAdd("...updating structure of database to v0.7.0...");
+                Program.SplashScreen.InfoAdd("...please be patient, this can take a few minutes depending on your system and data...");
+                Program.SplashScreen.InfoAdd("...");
+
+
+                sqlString = "SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;                                                                                                                                                          \n" +
+                            "SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;                                                                                                                                           \n" +
+                            "SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';                                                                                                                                         \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "ALTER TABLE `elite_db`.`tbCommodityBase`                                                                                                                                                                          \n" +
+                            "DROP COLUMN `average`,                                                                                                                                                                                            \n" +
+                            "ADD COLUMN `symbol` VARCHAR(80) NULL DEFAULT NULL AFTER `id`;                                                                                                                                                     \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "SET SQL_MODE=@OLD_SQL_MODE;                                                                                                                                                                                       \n" +
+                            "SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;                                                                                                                                                                   \n" +
+                            "SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;                                                                                                                                                                             \n" +
+                            "                                                                                                                                                                                                                  \n" +
+                            "                                                                                                                                                                                                                  \n";
+
+
+                var sqlScript = new MySql.Data.MySqlClient.MySqlScript((MySql.Data.MySqlClient.MySqlConnection)Program.DBCon.Connection);
+                sqlScript.Query = sqlString;
+
+                sqlScript.Error += sqlScript_Error;
+                sqlScript.ScriptCompleted += sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted += sqlScript_StatementExecuted;
+
+                m_MREvent = new ManualResetEvent(false);
+
+                sqlScript.ExecuteAsync();
+
+                sqlScript.Error -= sqlScript_Error;
+                sqlScript.ScriptCompleted -= sqlScript_ScriptCompleted;
+                sqlScript.StatementExecuted -= sqlScript_StatementExecuted;
+
+                if (!m_MREvent.WaitOne(new TimeSpan(0, 5, 0)))
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else if (m_gotScriptErrors)
+                {
+                    foundError = true;
+                    Program.SplashScreen.InfoAppendLast("finished with errors !");
+                }
+                else
+                {
+                    Program.SplashScreen.InfoAdd("...updating structure of database to v0.7.0...<OK>");
+                }
+
+                // mysql settings: update timeout to one week
+                STA.Settings.INIFile dbIniFile;
+
+                if (Debugger.IsAttached)
+                    dbIniFile = new STA.Settings.INIFile(Path.Combine(Program.IniFile.GetValue("DB_Server", "WorkingDirectory", @"..\..\..\RNDatabase\Database"), "Elite.ini"), false, true, true);
+                else
+                    dbIniFile = new STA.Settings.INIFile(Program.GetDataPath(@"Database\Elite.ini"), false, true, true);
+
+                dbIniFile.SetValue("mysqld", "wait_timeout", (Int32)604800);
+                dbIniFile.SetValue("mysqld", "interactive_timeout", (Int32)604800);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while updating to v0.7.0", ex);
             }
         }
 

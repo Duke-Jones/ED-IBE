@@ -12,8 +12,6 @@ todo:
 * avoid resizing of fonts
 * VoiceAttack interface
 
-* background start
-
 * direct selection of the local station
 * call EDSM/EDDB directly
 
@@ -30,7 +28,11 @@ todo:
 *************************************************************************************
 
 done:
-  
+	
+
+  * internal change to v0.7.0
+  * update of EDCD IDs' (commodities) is working again
+------------------------------------------------------------------------------------         
   * changed cAPI to E:D2.4
   * EDDN: add illegal goods and economies
   * EDDN: take care of the legality-flag
