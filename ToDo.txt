@@ -29,7 +29,9 @@ todo:
 
 done:
 	
-
+v0.7.0
+  * updated database version
+------------------------------------------------------------------------------------         
   * internal change to v0.7.0
   * update of EDCD IDs' (commodities) is working again
 ------------------------------------------------------------------------------------         
