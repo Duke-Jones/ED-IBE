@@ -123,18 +123,6 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>128, 17</value>
   </metadata>
-  <data name="rbMarketDefault_NotSend.ToolTip" xml:space="preserve">
-    <value>"Quick Decision Checkbox" is OFF by default. To send market data from single stations
-check the "Quick Decision Checkbox". After sending the Checkbox will be unchecked again.
-No more data will be send  - until you recheck the "Quick Decision Checkbox".</value>
-  </data>
-  <data name="rbMarketDefault_Send.ToolTip" xml:space="preserve">
-    <value>"Quick Decision Checkbox" is ON by default. To avoid sending of market data from single stations
-uncheck the "Quick Decision Checkbox". After sending the Checkbox is checked again.
-Next time data will be send again - until you uncheck the "Quick Decision Checkbox" again.
-
-</value>
-  </data>
   <data name="label2.ToolTip" xml:space="preserve">
     <value>If a sender is registered here, it's data never will be rejected due to implausible values.
 Use it with non-OCR interfaces (interfaces with Companion API). 
@@ -145,24 +133,6 @@ Use it with non-OCR interfaces (interfaces with Companion API).
     <value>If a sender is registered here, it's data never will be rejected due to implausible values.
 Use it with non-OCR interfaces (interfaces with Companion API). 
 "Add" or select row and "Delete" to change.</value>
-  </data>
-  <data name="checkBox1.ToolTip" xml:space="preserve">
-    <value>Check to send data from the journal to EDDN.
-Journal data is: 
- * FSDJump: information about the star system like name, coordinates, government etc.
- * Docked: information about the station like name, government,  stationtype, economy etc.
- * Scan: information about the physically character of scanned body (from the surface scanner)
-</value>
-  </data>
-  <data name="lbEDDNInfo.Text" xml:space="preserve">
-    <value>Have in mind:
-
-The EDDN/EDDB lives from the data. 
-It would be nice if you decide to share the information you get 
-from the game. If you don't want to share market data you should
-at least allow sending journal/outfitting and shipyard data. 
-You can decide for each data type independently.
-</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

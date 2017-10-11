@@ -79,20 +79,6 @@ namespace IBE.EDDN
                     }
                 }
 
-                if (m_Communicator.SenderIsActivated != (lblSenderStatus.Text == "Active"))
-                {
-                    if(m_Communicator.SenderIsActivated)
-                    { 
-                        pbSenderStatus.Image = Properties.Resources.green_led_on_md;
-                        lblSenderStatus.Text = "Active";
-                    }
-                    else
-                    { 
-                        pbSenderStatus.Image = Properties.Resources.green_led_off_md;
-                        lblSenderStatus.Text = "Off";
-                    }
-                }
-
                 if(m_ChangedData != EDDNCommunicator.enDataTypes.NoChanges)
                 {
                     EDDNCommunicator.enDataTypes lChanged = m_ChangedData;
@@ -188,43 +174,6 @@ namespace IBE.EDDN
             {
                 if(m_GUIInterface.saveSetting(sender))
                 {
-                    if(sender.GetType() == typeof(CheckBox))
-                    {
-                        if(((CheckBox)sender).Name.Equals("cbEDDNAutoListen") && cbEDDNAutoListen.Checked && (!cbEDDNAutoSend.Checked))
-                        {
-                            if(MessageBox.Show(this, "The EDDN/EDDB lives from the data and it would be nice if you decide to feed the stream.\r\n" +
-                                                     "Shall I activate sending of EDDN data for you?\r\n\r\n" + 
-                                                     "If you don't want to share market data you should at least allow sending journal/outfitting and shipyard data.\r\n" + 
-                                                     "You can decide for each data type independently.", 
-                                                     "EDDN Network", 
-                                                     MessageBoxButtons.YesNo, 
-                                                     MessageBoxIcon.Question, 
-                                                     MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                cbEDDNAutoSend.Checked = true;
-
-                                if(!m_Communicator.SenderIsActivated)
-                                    m_Communicator.ActivateSender();
-                            }
-                        }
-                        else if(((CheckBox)sender).Name.Equals("cbEDDNAutoSend") && (!cbEDDNAutoSend.Checked))
-                        {
-                            if(MessageBox.Show(this, "The EDDN/EDDB lives from the data and it would be nice if you decide to feed the stream.\r\n" +
-                                                     "Shall I activate sending of EDDN data for you?\r\n\r\n" + 
-                                                     "If you don't want to share market data you should at least allow sending journal/outfitting and shipyard data.\r\n" + 
-                                                     "You can decide for each data type independently.", 
-                                                     "EDDN Network", 
-                                                     MessageBoxButtons.YesNo, 
-                                                     MessageBoxIcon.Question, 
-                                                     MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                cbEDDNAutoSend.Checked = true;
-
-                                if(!m_Communicator.SenderIsActivated)
-                                    m_Communicator.ActivateSender();
-                            }
-                        }
-                    }
                 }
             }
             catch (Exception ex)
@@ -239,18 +188,6 @@ namespace IBE.EDDN
             {
                 m_Communicator.StartEDDNListening();
 
-                if(!m_Communicator.SenderIsActivated)
-                {
-                    if(MessageBox.Show(this, "Shall I also activate sending of market data for you?", 
-                                             "EDDN Network", 
-                                             MessageBoxButtons.YesNo, 
-                                             MessageBoxIcon.Question, 
-                                             MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
-                    {
-                        if(!m_Communicator.SenderIsActivated)
-                            m_Communicator.ActivateSender();
-                    }
-                }
             }
             catch (Exception ex)
             {
@@ -274,14 +211,14 @@ namespace IBE.EDDN
         {
             try
             {
-                if(!m_Communicator.SenderIsActivated)
-                {
-                    m_Communicator.ActivateSender();
-                }
-                else
-                {
-                    MessageBox.Show(this, "EDDNComminicator is already listing", "EDDN", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                //if(!m_Communicator.SenderIsActivated)
+                //{
+                //    m_Communicator.ActivateSender();
+                //}
+                //else
+                //{
+                //    MessageBox.Show(this, "EDDNComminicator is already listing", "EDDN", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //}
                 
             }
             catch (Exception ex)

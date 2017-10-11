@@ -201,6 +201,15 @@ namespace IBE.IBECompanion
 
                     if (!response.Cached)
                     {
+                        if (Program.DBCon.getIniValue<Boolean>("Debug", "extLog_Companion", false.ToString(), false))
+                        {
+                            Program.MainLog.Log($"C-HttpStatusCode: |||{response.HttpStatusCode}|||");
+                            Program.MainLog.Log($"C-LoginStatus: |||{response.LoginStatus}|||");
+                            Program.MainLog.Log($"C-Cached: |||{response.Cached}|||");
+                            Program.MainLog.Log($"C-PlainData: |||{response.PlainData?.ToString()}|||");
+                            Program.MainLog.Log($"C-Companion Data: |||{response.Json?.ToString()}|||");
+                        }
+
                         String json = response.Json ?? "{}";
 
                         m_joCompanion = JsonConvert.DeserializeObject<JObject>(json);
@@ -367,7 +376,7 @@ namespace IBE.IBECompanion
             }
             catch (Exception ex)
             {
-                throw new Exception("Error while checking if landed", ex);
+                return false;
             }
         }
 
@@ -674,22 +683,16 @@ namespace IBE.IBECompanion
                                     {
                                         Int32 count = Program.CompanionIO.ImportMarketData();
                                 
-                                        if(Program.MainForm.cbEDDNOverride.Checked)
-                                        {
-                                            Program.EDDNComm.SendCommodityData(Program.CompanionIO.GetData());
-                                        }
-
                                         if(count > 0)
                                             Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...{0} prices collected", count));                        
                                         else
                                             Program.MainForm.AddComboboxLine(Program.MainForm.txtEventInfo, String.Format("Getting market data...no market data available !"));        
                                                 
                                     }
-                                    Program.MainForm.SetQuickDecisionSwitch();
 
                                     if(Program.CompanionIO.StationHasShipyardData())
                                     {
-                                        Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                                        //Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
                                     }
                                     else if((Program.actualCondition.Station_ID != null) && (Program.DBCon.Execute<Boolean>("select has_shipyard from tbStations where id = " + Program.actualCondition.Station_ID)))
                                     {
@@ -697,8 +700,8 @@ namespace IBE.IBECompanion
                                         Program.CompanionIO.ReGet_StationData();                                
                                     }
 
-                                    if(Program.CompanionIO.StationHasOutfittingData())
-                                        Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
+                                    //if (Program.CompanionIO.StationHasOutfittingData()) 
+                                        //Program.EDDNComm.SendOutfittingData(Program.CompanionIO.GetData());
                                 }
                                 else
                                 {

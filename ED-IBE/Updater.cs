@@ -2240,34 +2240,34 @@ namespace IBE
                     }
 
 
-                    if(m_NewDBVersion == new Version(0,2,1,0))
-                    {
+                    //if(m_NewDBVersion == new Version(0,2,1,0))
+                    //{
 
-                        if(  Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoListen", false.ToString(), false) && 
-                           (!Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend",   false.ToString(), false)))
-                        {
-                            SplashScreenForm.SetTopmost(false);
+                    //    if(  Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoListen", false.ToString(), false) && 
+                    //       (!Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend",   false.ToString(), false)))
+                    //    {
+                    //        SplashScreenForm.SetTopmost(false);
 
-                            if(MessageBox.Show(parent, "You decided to recieve data from the EDDN permanently\r\n" +
-                                                       "but not to send to EDDN.\r\n\r\n" +
-                                                       "The EDDN/EDDB lives from the data. If you want to receive data\r\n" +
-                                                       "permanently, it would be fair in return also to send data.\r\n\r\n" +
-                                                       "Shall I activate sending of market data for you?", 
-                                                       "EDDN Network", 
-                                                       MessageBoxButtons.YesNo, 
-                                                       MessageBoxIcon.Question, 
-                                                       MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
-                            {
-                                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend", true.ToString());
+                    //        if(MessageBox.Show(parent, "You decided to recieve data from the EDDN permanently\r\n" +
+                    //                                   "but not to send to EDDN.\r\n\r\n" +
+                    //                                   "The EDDN/EDDB lives from the data. If you want to receive data\r\n" +
+                    //                                   "permanently, it would be fair in return also to send data.\r\n\r\n" +
+                    //                                   "Shall I activate sending of market data for you?", 
+                    //                                   "EDDN Network", 
+                    //                                   MessageBoxButtons.YesNo, 
+                    //                                   MessageBoxIcon.Question, 
+                    //                                   MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                    //        {
+                    //            Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "AutoSend", true.ToString());
 
-                                if(!Program.EDDNComm.SenderIsActivated)
-                                    Program.EDDNComm.ActivateSender();
-                            }
+                    //            if(!Program.EDDNComm.SenderIsActivated)
+                    //                Program.EDDNComm.ActivateSender();
+                    //        }
 
-                            SplashScreenForm.SetTopmost(true);
+                    //        SplashScreenForm.SetTopmost(true);
 
-                        }
-                    }
+                    //    }
+                    //}
 
                     if(m_NewDBVersion == new Version(0,3,0,0))
                     {

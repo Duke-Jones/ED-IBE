@@ -167,6 +167,7 @@
             this.cmdInjectEvent.TabIndex = 51;
             this.cmdInjectEvent.Text = "Inject Test Event";
             this.cmdInjectEvent.UseVisualStyleBackColor = true;
+            this.cmdInjectEvent.Visible = false;
             this.cmdInjectEvent.Click += new System.EventHandler(this.button1_Click);
             // 
             // label3

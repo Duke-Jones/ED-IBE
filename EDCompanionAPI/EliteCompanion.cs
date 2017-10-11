@@ -331,12 +331,7 @@ namespace EDCompanionAPI
                 }
             }
 
-            StringBuilder fullJson = new StringBuilder("{\"profile\" : **PH1** " +
-                                                       "," +
-                                                       "\"market\"   : **PH2** " +
-                                                       "," +
-                                                       "\"shipyard\" : **PH3** " +
-                                                       "}");
+            StringBuilder fullJson = new StringBuilder(Constants.RESPONSE_PATTERN);
 
             using (var response = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_PROFILE, null))
             {
@@ -349,9 +344,10 @@ namespace EDCompanionAPI
                     {
                         tempData = sr.ReadToEnd();
 
-                        if(tempData.ToLower().Equals("profile unavailable"))
+                        if (tempData.ToLower().Equals("profile unavailable"))
                         {
                             profileResponse.LoginStatus = LoginStatus.UnknownError;
+                            profileResponse.PlainData = tempData;
                             tempData = "{}";
                         }
                     }
@@ -366,77 +362,95 @@ namespace EDCompanionAPI
 
                 if (profileResponse.HttpStatusCode == HttpStatusCode.OK)
                 {
+                    JObject profileJson = null;
+
                     // load more data ?
-                    var profileJson = JsonConvert.DeserializeObject<JObject>(tempData);
-                    if (profileJson["commander"].Value<Boolean>("docked"))
+                    try
                     {
-                        if (profileJson["lastStarport"]["services"].SelectToken("commodities") != null)
-                        {
-                            using (var response_md = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_MARKET, null))
-                            {
-                                string tempData_md;
-                                profileResponse.Cached = false;
-                                profileResponse.HttpStatusCode = response_md.StatusCode;
-                                if (response_md.StatusCode == HttpStatusCode.OK)
-                                {
-                                    using (StreamReader sr = new StreamReader(response_md.GetResponseStream()))
-                                    {
-                                        tempData_md = sr.ReadToEnd();
+                        profileJson = JsonConvert.DeserializeObject<JObject>(tempData);
+                    }
+                    catch (Exception)
+                    {
+                        profileResponse.PlainData = tempData;
+                    }
 
-                                        if (tempData_md.ToLower().Equals("profile unavailable"))
+                    if (profileJson != null)
+                    {
+                        if (profileJson["commander"].Value<Boolean>("docked"))
+                        {
+                            if (profileJson["lastStarport"]["services"].SelectToken("commodities") != null)
+                            {
+                                using (var response_md = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_MARKET, null))
+                                {
+                                    string tempData_md;
+                                    profileResponse.Cached = false;
+                                    profileResponse.HttpStatusCode = response_md.StatusCode;
+                                    if (response_md.StatusCode == HttpStatusCode.OK)
+                                    {
+                                        using (StreamReader sr = new StreamReader(response_md.GetResponseStream()))
                                         {
-                                            profileResponse.LoginStatus = LoginStatus.UnknownError;
-                                            tempData_md = "{}";
+                                            tempData_md = sr.ReadToEnd();
                                         }
                                     }
-                                }
-                                else
-                                {
-                                    profileResponse.LoginStatus = LoginStatus.NotAccessible;
-                                    tempData_md = "{}";
-                                }
+                                    else
+                                    {
+                                        // error happened
+                                        profileResponse.LoginStatus = LoginStatus.NotAccessible;
+                                        tempData_md = "{}";
+                                    }
 
-                                fullJson.Replace("**PH2**", tempData_md);
+                                    fullJson.Replace("**PH2**", tempData_md);
+                                }
+                            }
+                            else
+                            {
+                                // station has no market
+                                fullJson.Replace("**PH2**", "{}");
+                            }
+
+                            if ((profileJson["lastStarport"]["services"].SelectToken("outfitting") != null) || (profileJson["lastStarport"]["services"].SelectToken("shipyard") != null))
+                            {
+                                using (var response_sy = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_SHIPYARD, null))
+                                {
+                                    string tempData_sy;
+                                    profileResponse.Cached = false;
+                                    profileResponse.HttpStatusCode = response_sy.StatusCode;
+                                    if (response_sy.StatusCode == HttpStatusCode.OK)
+                                    {
+                                        using (StreamReader sr = new StreamReader(response_sy.GetResponseStream()))
+                                        {
+                                            tempData_sy = sr.ReadToEnd();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // error happened
+                                        profileResponse.LoginStatus = LoginStatus.NotAccessible;
+                                        tempData_sy = "{}";
+                                    }
+
+                                    fullJson.Replace("**PH3**", tempData_sy);
+                                }
+                            }
+                            else
+                            {
+                                // station has no shipyard and no outfitting
+                                fullJson.Replace("**PH3**", "{}");
                             }
                         }
                         else
                         {
+                            // not docked
                             fullJson.Replace("**PH2**", "{}");
-                        }
-
-                        if((profileJson["lastStarport"]["services"].SelectToken("outfitting") != null) || (profileJson["lastStarport"]["services"].SelectToken("shipyard") != null))
-                        {
-                            using (var response_sy = _Http.Get(Constants.URL_BASE + Constants.URL_ADD_SHIPYARD, null))
-                            {
-                                string tempData_sy;
-                                profileResponse.Cached = false;
-                                profileResponse.HttpStatusCode = response_sy.StatusCode;
-                                if (response_sy.StatusCode == HttpStatusCode.OK)
-                                {
-                                    using (StreamReader sr = new StreamReader(response_sy.GetResponseStream()))
-                                    {
-                                        tempData_sy = sr.ReadToEnd();
-
-                                        if (tempData_sy.ToLower().Equals("profile unavailable"))
-                                        {
-                                            profileResponse.LoginStatus = LoginStatus.UnknownError;
-                                            tempData_sy = "{}";
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    profileResponse.LoginStatus = LoginStatus.NotAccessible;
-                                    tempData_sy = "{}";
-                                }
-
-                                fullJson.Replace("**PH3**", tempData_sy);
-                            }
-                        }
-                        else
-                        {
                             fullJson.Replace("**PH3**", "{}");
                         }
+                    }
+                    else
+                    {
+                        // error - profile not parsable
+                        profileResponse.LoginStatus = LoginStatus.DataError;
+                        fullJson.Clear();
+                        fullJson.Append(Constants.RESPONSE_EMPTY);
                     }
                 }
                 else

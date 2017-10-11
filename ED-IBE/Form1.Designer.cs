@@ -38,7 +38,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.cbEDDNOverride = new System.Windows.Forms.CheckBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copySystenmameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -51,18 +50,11 @@
             this.txtEventInfo = new System.Windows.Forms.ComboBox();
             this.cmdEventLanded = new System.Windows.Forms.Button();
             this.tlpData = new System.Windows.Forms.TableLayoutPanel();
-            this.panel12 = new System.Windows.Forms.Panel();
-            this.pbStatus_ShipyardDataEDDN = new System.Windows.Forms.PictureBox();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.pbStatus_ShipyardData = new System.Windows.Forms.PictureBox();
             this.panel6 = new System.Windows.Forms.Panel();
             this.pbStatus_OutfittingData = new System.Windows.Forms.PictureBox();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.pbStatus_OutfittingDataEDDN = new System.Windows.Forms.PictureBox();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.pbStatus_MarketDataEDDN = new System.Windows.Forms.PictureBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pbStatus_MarketData = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -70,6 +62,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.paStatusDocked = new System.Windows.Forms.Panel();
             this.pbStatus_IsLanded = new System.Windows.Forms.PictureBox();
+            this.panel11 = new System.Windows.Forms.Panel();
             this.msMainMenu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,6 +84,7 @@
             this.eDSMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.enableLoggingOfJournalMessagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cmdLoadCurrentSystem = new System.Windows.Forms.Button();
             this.label53 = new System.Windows.Forms.Label();
             this.txtEDTime = new System.Windows.Forms.TextBox();
@@ -249,24 +243,17 @@
             this.tsEDSMQueue = new System.Windows.Forms.ToolStripStatusLabel();
             this.label8 = new System.Windows.Forms.Label();
             this.tbCurrentBodyinfoFromLogs = new System.Windows.Forms.TextBox();
-            this.gradientButton1 = new System.Windows.Forms.GradientButton();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dsCommodities)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.namesBindingSource)).BeginInit();
             this.gbEvents.SuspendLayout();
             this.tlpData.SuspendLayout();
-            this.panel12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardDataEDDN)).BeginInit();
             this.panel7.SuspendLayout();
             this.panel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardData)).BeginInit();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingData)).BeginInit();
-            this.panel10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingDataEDDN)).BeginInit();
-            this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketDataEDDN)).BeginInit();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketData)).BeginInit();
             this.panel4.SuspendLayout();
@@ -328,7 +315,7 @@
             // 
             this.lbStatusDocked.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.lbStatusDocked.AutoSize = true;
-            this.lbStatusDocked.Location = new System.Drawing.Point(35, 5);
+            this.lbStatusDocked.Location = new System.Drawing.Point(55, 5);
             this.lbStatusDocked.Name = "lbStatusDocked";
             this.lbStatusDocked.Size = new System.Drawing.Size(45, 13);
             this.lbStatusDocked.TabIndex = 65;
@@ -340,7 +327,7 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 5);
+            this.label1.Location = new System.Drawing.Point(31, 5);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 65;
@@ -352,7 +339,7 @@
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(2, 5);
+            this.label2.Location = new System.Drawing.Point(22, 5);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(75, 13);
             this.label2.TabIndex = 65;
@@ -364,27 +351,13 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 4);
+            this.label3.Location = new System.Drawing.Point(23, 4);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 13);
             this.label3.TabIndex = 65;
             this.label3.Text = "Shipyard Data";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolTip1.SetToolTip(this.label3, "Until timer is running you\'ll work with cached data from the last call,");
-            // 
-            // cbEDDNOverride
-            // 
-            this.cbEDDNOverride.AutoSize = true;
-            this.cbEDDNOverride.Location = new System.Drawing.Point(17, 45);
-            this.cbEDDNOverride.Name = "cbEDDNOverride";
-            this.cbEDDNOverride.Size = new System.Drawing.Size(154, 17);
-            this.cbEDDNOverride.TabIndex = 65;
-            this.cbEDDNOverride.Text = "send market data to EDDN";
-            this.toolTip1.SetToolTip(this.cbEDDNOverride, "Quick decision switch for \"send market data to EDDN\". \r\nWill be reset to it\'s pre" +
-        "set after collecting data next time.\r\nDoes not affect the settings for outfittin" +
-        "g and shipyard data.\r\n\r\n");
-            this.cbEDDNOverride.UseVisualStyleBackColor = true;
-            this.cbEDDNOverride.CheckedChanged += new System.EventHandler(this.cbEDDNOverride_CheckedChanged);
             // 
             // contextMenuStrip1
             // 
@@ -436,7 +409,6 @@
             // 
             // gbEvents
             // 
-            this.gbEvents.Controls.Add(this.cbEDDNOverride);
             this.gbEvents.Controls.Add(this.txtRestTime);
             this.gbEvents.Controls.Add(this.label6);
             this.gbEvents.Controls.Add(this.txtEventInfo);
@@ -472,23 +444,19 @@
             // 
             // tlpData
             // 
-            this.tlpData.ColumnCount = 3;
+            this.tlpData.ColumnCount = 2;
             this.tlpData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tlpData.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlpData.Controls.Add(this.panel12, 2, 3);
             this.tlpData.Controls.Add(this.panel7, 0, 3);
             this.tlpData.Controls.Add(this.panel9, 1, 3);
             this.tlpData.Controls.Add(this.panel6, 1, 2);
-            this.tlpData.Controls.Add(this.panel10, 2, 2);
-            this.tlpData.Controls.Add(this.panel11, 2, 0);
-            this.tlpData.Controls.Add(this.panel8, 2, 1);
             this.tlpData.Controls.Add(this.panel5, 1, 1);
             this.tlpData.Controls.Add(this.panel4, 0, 2);
             this.tlpData.Controls.Add(this.panel3, 0, 1);
             this.tlpData.Controls.Add(this.panel1, 0, 0);
             this.tlpData.Controls.Add(this.paStatusDocked, 1, 0);
-            this.tlpData.Location = new System.Drawing.Point(495, 34);
+            this.tlpData.Location = new System.Drawing.Point(496, 33);
             this.tlpData.Margin = new System.Windows.Forms.Padding(0);
             this.tlpData.Name = "tlpData";
             this.tlpData.RowCount = 4;
@@ -500,28 +468,6 @@
             this.tlpData.Size = new System.Drawing.Size(121, 82);
             this.tlpData.TabIndex = 65;
             // 
-            // panel12
-            // 
-            this.panel12.Controls.Add(this.pbStatus_ShipyardDataEDDN);
-            this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel12.Location = new System.Drawing.Point(101, 60);
-            this.panel12.Margin = new System.Windows.Forms.Padding(0);
-            this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(20, 22);
-            this.panel12.TabIndex = 76;
-            // 
-            // pbStatus_ShipyardDataEDDN
-            // 
-            this.pbStatus_ShipyardDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbStatus_ShipyardDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_ShipyardDataEDDN.Image")));
-            this.pbStatus_ShipyardDataEDDN.Location = new System.Drawing.Point(0, 0);
-            this.pbStatus_ShipyardDataEDDN.Margin = new System.Windows.Forms.Padding(0);
-            this.pbStatus_ShipyardDataEDDN.Name = "pbStatus_ShipyardDataEDDN";
-            this.pbStatus_ShipyardDataEDDN.Size = new System.Drawing.Size(20, 22);
-            this.pbStatus_ShipyardDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus_ShipyardDataEDDN.TabIndex = 68;
-            this.pbStatus_ShipyardDataEDDN.TabStop = false;
-            // 
             // panel7
             // 
             this.panel7.Controls.Add(this.label3);
@@ -529,13 +475,13 @@
             this.panel7.Location = new System.Drawing.Point(0, 60);
             this.panel7.Margin = new System.Windows.Forms.Padding(0);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(80, 22);
+            this.panel7.Size = new System.Drawing.Size(100, 22);
             this.panel7.TabIndex = 74;
             // 
             // panel9
             // 
             this.panel9.Controls.Add(this.pbStatus_ShipyardData);
-            this.panel9.Location = new System.Drawing.Point(80, 60);
+            this.panel9.Location = new System.Drawing.Point(100, 60);
             this.panel9.Margin = new System.Windows.Forms.Padding(0);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(21, 22);
@@ -557,7 +503,7 @@
             // 
             this.panel6.Controls.Add(this.pbStatus_OutfittingData);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(80, 40);
+            this.panel6.Location = new System.Drawing.Point(100, 40);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(21, 20);
@@ -575,64 +521,11 @@
             this.pbStatus_OutfittingData.TabIndex = 1;
             this.pbStatus_OutfittingData.TabStop = false;
             // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.pbStatus_OutfittingDataEDDN);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(101, 40);
-            this.panel10.Margin = new System.Windows.Forms.Padding(0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(20, 20);
-            this.panel10.TabIndex = 74;
-            // 
-            // pbStatus_OutfittingDataEDDN
-            // 
-            this.pbStatus_OutfittingDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbStatus_OutfittingDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_OutfittingDataEDDN.Image")));
-            this.pbStatus_OutfittingDataEDDN.Location = new System.Drawing.Point(0, 0);
-            this.pbStatus_OutfittingDataEDDN.Margin = new System.Windows.Forms.Padding(0);
-            this.pbStatus_OutfittingDataEDDN.Name = "pbStatus_OutfittingDataEDDN";
-            this.pbStatus_OutfittingDataEDDN.Size = new System.Drawing.Size(20, 20);
-            this.pbStatus_OutfittingDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus_OutfittingDataEDDN.TabIndex = 67;
-            this.pbStatus_OutfittingDataEDDN.TabStop = false;
-            // 
-            // panel11
-            // 
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel11.Location = new System.Drawing.Point(101, 0);
-            this.panel11.Margin = new System.Windows.Forms.Padding(0);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(20, 20);
-            this.panel11.TabIndex = 75;
-            // 
-            // panel8
-            // 
-            this.panel8.Controls.Add(this.pbStatus_MarketDataEDDN);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(101, 20);
-            this.panel8.Margin = new System.Windows.Forms.Padding(0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(20, 20);
-            this.panel8.TabIndex = 74;
-            // 
-            // pbStatus_MarketDataEDDN
-            // 
-            this.pbStatus_MarketDataEDDN.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbStatus_MarketDataEDDN.Image = ((System.Drawing.Image)(resources.GetObject("pbStatus_MarketDataEDDN.Image")));
-            this.pbStatus_MarketDataEDDN.Location = new System.Drawing.Point(0, 0);
-            this.pbStatus_MarketDataEDDN.Margin = new System.Windows.Forms.Padding(0);
-            this.pbStatus_MarketDataEDDN.Name = "pbStatus_MarketDataEDDN";
-            this.pbStatus_MarketDataEDDN.Size = new System.Drawing.Size(20, 20);
-            this.pbStatus_MarketDataEDDN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbStatus_MarketDataEDDN.TabIndex = 66;
-            this.pbStatus_MarketDataEDDN.TabStop = false;
-            // 
             // panel5
             // 
             this.panel5.Controls.Add(this.pbStatus_MarketData);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(80, 20);
+            this.panel5.Location = new System.Drawing.Point(100, 20);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(21, 20);
@@ -657,7 +550,7 @@
             this.panel4.Location = new System.Drawing.Point(0, 40);
             this.panel4.Margin = new System.Windows.Forms.Padding(0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(80, 20);
+            this.panel4.Size = new System.Drawing.Size(100, 20);
             this.panel4.TabIndex = 69;
             // 
             // panel3
@@ -667,7 +560,7 @@
             this.panel3.Location = new System.Drawing.Point(0, 20);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(80, 20);
+            this.panel3.Size = new System.Drawing.Size(100, 20);
             this.panel3.TabIndex = 68;
             // 
             // panel1
@@ -677,14 +570,14 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(80, 20);
+            this.panel1.Size = new System.Drawing.Size(100, 20);
             this.panel1.TabIndex = 67;
             // 
             // paStatusDocked
             // 
             this.paStatusDocked.Controls.Add(this.pbStatus_IsLanded);
             this.paStatusDocked.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.paStatusDocked.Location = new System.Drawing.Point(80, 0);
+            this.paStatusDocked.Location = new System.Drawing.Point(100, 0);
             this.paStatusDocked.Margin = new System.Windows.Forms.Padding(0);
             this.paStatusDocked.Name = "paStatusDocked";
             this.paStatusDocked.Size = new System.Drawing.Size(21, 20);
@@ -702,6 +595,15 @@
             this.pbStatus_IsLanded.TabIndex = 1;
             this.pbStatus_IsLanded.TabStop = false;
             this.pbStatus_IsLanded.DoubleClick += new System.EventHandler(this.pbStatus_IsLanded_DoubleClick);
+            // 
+            // panel11
+            // 
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel11.Location = new System.Drawing.Point(101, 0);
+            this.panel11.Margin = new System.Windows.Forms.Padding(0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(20, 20);
+            this.panel11.TabIndex = 75;
             // 
             // msMainMenu
             // 
@@ -856,7 +758,8 @@
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.enableToolStripMenuItem});
+            this.enableToolStripMenuItem,
+            this.enableLoggingOfJournalMessagesToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -869,6 +772,14 @@
             this.enableToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.enableToolStripMenuItem.Text = "enable verbose log for journal scanner";
             this.enableToolStripMenuItem.Click += new System.EventHandler(this.enableToolStripMenuItem_Click);
+            // 
+            // enableLoggingOfJournalMessagesToolStripMenuItem
+            // 
+            this.enableLoggingOfJournalMessagesToolStripMenuItem.CheckOnClick = true;
+            this.enableLoggingOfJournalMessagesToolStripMenuItem.Name = "enableLoggingOfJournalMessagesToolStripMenuItem";
+            this.enableLoggingOfJournalMessagesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
+            this.enableLoggingOfJournalMessagesToolStripMenuItem.Text = "enable logging of journal messages";
+            this.enableLoggingOfJournalMessagesToolStripMenuItem.Click += new System.EventHandler(this.enableLoggingOfJournalMessagesToolStripMenuItem_Click);
             // 
             // cmdLoadCurrentSystem
             // 
@@ -2663,25 +2574,12 @@
             this.tbCurrentBodyinfoFromLogs.Size = new System.Drawing.Size(255, 20);
             this.tbCurrentBodyinfoFromLogs.TabIndex = 76;
             // 
-            // gradientButton1
-            // 
-            this.gradientButton1.BorderStyle = System.Windows.Forms.Border3DStyle.Raised;
-            this.gradientButton1.EndColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.gradientButton1.Location = new System.Drawing.Point(704, 97);
-            this.gradientButton1.Name = "gradientButton1";
-            this.gradientButton1.Size = new System.Drawing.Size(99, 38);
-            this.gradientButton1.StartColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.gradientButton1.TabIndex = 78;
-            this.gradientButton1.Text = "gradientButton1";
-            this.gradientButton1.Visible = false;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1164, 746);
-            this.Controls.Add(this.gradientButton1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.tbCurrentBodyinfoFromLogs);
             this.Controls.Add(this.StatusStrip1);
@@ -2720,18 +2618,12 @@
             this.gbEvents.ResumeLayout(false);
             this.gbEvents.PerformLayout();
             this.tlpData.ResumeLayout(false);
-            this.panel12.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardDataEDDN)).EndInit();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_ShipyardData)).EndInit();
             this.panel6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingData)).EndInit();
-            this.panel10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_OutfittingDataEDDN)).EndInit();
-            this.panel8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketDataEDDN)).EndInit();
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus_MarketData)).EndInit();
             this.panel4.ResumeLayout(false);
@@ -2964,13 +2856,7 @@
         private System.Windows.Forms.PictureBox pbStatus_ShipyardData;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox pbStatus_MarketDataEDDN;
-        private System.Windows.Forms.PictureBox pbStatus_ShipyardDataEDDN;
-        private System.Windows.Forms.PictureBox pbStatus_OutfittingDataEDDN;
-        private System.Windows.Forms.Panel panel8;
-        private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Panel panel11;
-        private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.ToolStripMenuItem colorsToolStripMenuItem;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtPosition_X;
@@ -2981,14 +2867,13 @@
         private System.Windows.Forms.ToolStripMenuItem eDSMToolStripMenuItem;
         private System.Windows.Forms.StatusStrip StatusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tsEDSMQueue;
-        public System.Windows.Forms.CheckBox cbEDDNOverride;
         private System.Windows.Forms.Label label8;
         public System.Windows.Forms.TextBox tbCurrentBodyinfoFromLogs;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem exportListOfVisitedSystemsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enableToolStripMenuItem;
-        private System.Windows.Forms.GradientButton gradientButton1;
+        private System.Windows.Forms.ToolStripMenuItem enableLoggingOfJournalMessagesToolStripMenuItem;
     }
 }
 

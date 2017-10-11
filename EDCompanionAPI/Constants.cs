@@ -16,5 +16,19 @@ namespace EDCompanionAPI
         public const string CACHE_PROFILEJSON = "edcompanion.profilejson";
         public const int CACHE_PROFILE_SECONDS = 59;
         public const string APPSETTING_DATAPATH = "edcompanion.datapath";
+
+        public const string RESPONSE_PATTERN = "{\"profile\" : **PH1** " +
+                                               "," +
+                                               "\"market\"   : **PH2** " +
+                                               "," +
+                                               "\"shipyard\" : **PH3** " +
+                                               "}";
+
+        public const string RESPONSE_EMPTY = "{\"profile\"  : {} " +
+                                              "," +
+                                              "\"market\"   : {} " +
+                                              "," +
+                                              "\"shipyard\" : {} " +
+                                              "}";
     }
 }

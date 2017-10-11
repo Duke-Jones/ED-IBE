@@ -624,8 +624,6 @@ namespace IBE
                 bStart_Click(null, null);
             }
 
-            SetQuickDecisionSwitch();
-
         }
 
        
@@ -1224,7 +1222,6 @@ namespace IBE
             try
             {
                 this.Visible = false;
-                gradientButton1.Enabled = Debugger.IsAttached;
 
                 enableToolStripMenuItem.Checked = Program.DBCon.getIniValue<Boolean>("Debug",   "extLog_Journal", false.ToString(), false);
                 debugToolStripMenuItem.Visible = enableToolStripMenuItem.Checked;
@@ -1304,27 +1301,22 @@ namespace IBE
                     Program.SplashScreen.InfoAppendLast("<OK>");
                 }
 
-                if (Program.DBCon.getIniValue<Boolean>("EDDN", "AutoSend", true.ToString(), false))
-                    Program.EDDNComm.ActivateSender();
+                //Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
+                //st.Start();
 
-                SetQuickDecisionSwitch();
+                //if (Program.DBCon.getIniValue<Boolean>(frmDataIO.DB_GROUPNAME, "AutoImportEDCDData", true.ToString(), false))
+                //{
+                //    // import new edcd data if available
+                //    var DataIO = new frmDataIO();
 
-                Debug.Print("Zeit (11) : " + st.ElapsedMilliseconds);
-                st.Start();
+                //    DataIO.InfoTarget = Program.SplashScreen;
 
-                if (Program.DBCon.getIniValue<Boolean>(frmDataIO.DB_GROUPNAME, "AutoImportEDCDData", true.ToString(), false))
-                {
-                    // import new edcd data if available
-                    var DataIO = new frmDataIO();
+                //    DataIO.StartEDCDCheck();
 
-                    DataIO.InfoTarget = Program.SplashScreen;
+                //    DataIO.Close();
+                //    DataIO.Dispose();
 
-                    DataIO.StartEDCDCheck();
-
-                    DataIO.Close();
-                    DataIO.Dispose();
-
-                }
+                //}
 
                 Debug.Print("Zeit (12) : " + st.ElapsedMilliseconds);
                 st.Start();
@@ -1398,60 +1390,6 @@ namespace IBE
             }
         }
 
-
-
-        /// <summary>
-        /// sets the "Quick Decision Checkbox" value in dependance of the settings
-        /// </summary>
-        public void SetQuickDecisionSwitch()
-        {
-            if(cbEDDNOverride.InvokeRequired)
-            {
-                cbEDDNOverride.Invoke(new MethodInvoker(SetQuickDecisionSwitch));
-            }
-            else
-            {
-                try
-                { 
-                    if (Program.EDDNComm.SenderIsActivated)
-                    {
-                        cbEDDNOverride.Enabled = true;
-
-                        String decValue = Program.DBCon.getIniValue<String>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold", false);
-
-                        switch (decValue)
-                        {
-                            case "Send":
-                                cbEDDNOverride.Checked = true;
-                                break;
-
-                            case "NotSend":
-                                cbEDDNOverride.Checked = false;
-                                break;
-
-                            case "Hold":
-                                cbEDDNOverride.Checked = Program.DBCon.getIniValue<Boolean>(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString(), false);
-                                break;
-
-                            default:
-                                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionDefault", "Hold");
-                                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", false.ToString());
-                                cbEDDNOverride.Checked = false;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        cbEDDNOverride.Checked = false;
-                        cbEDDNOverride.Enabled = false;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    CErr.processError(ex, "Error while setting the quick decision switch");
-                }
-            }
-        }
 
         String baseHeadline = "";
 
@@ -3516,7 +3454,7 @@ namespace IBE
 
                     if(Program.actualCondition.System.Equals(extSystem, StringComparison.InvariantCultureIgnoreCase) && Program.actualCondition.Station.Equals(extStation, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
+                        //Program.EDDNComm.SendShipyardData(Program.CompanionIO.GetData());
                     }
                 }
 
@@ -3687,6 +3625,10 @@ namespace IBE
         {
             Program.DBCon.setIniValue("Debug",   "extLog_Journal", enableToolStripMenuItem.Checked.ToString());
         }
+        private void enableLoggingOfJournalMessagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.DBCon.setIniValue("Debug", "extLog_Companion", enableLoggingOfJournalMessagesToolStripMenuItem.Checked.ToString());
+        }
 
         private void pbStatus_IsLanded_DoubleClick(object sender, EventArgs e)
         {
@@ -3698,18 +3640,6 @@ namespace IBE
             Int32.Parse("dsfsd");
         }
 
-        private void cbEDDNOverride_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                Program.DBCon.setIniValue(IBE.EDDN.EDDNView.DB_GROUPNAME, "QuickDecisionValue", cbEDDNOverride.Checked.ToString());
-            }
-            catch (Exception ex)
-            {
-                CErr.processError(ex, "Error in cbEDDNOverride_CheckedChanged");
-            }
-        }
-
         private void txtEventInfo_DropDownClosed(object sender, EventArgs e)
         {
             if(txtEventInfo.Items.Count > 0)
@@ -3717,6 +3647,7 @@ namespace IBE
 
             tabCtrlMain.Select();
         }
+
 
         /// <summary>
         /// update the status information of companion io
@@ -3771,26 +3702,6 @@ namespace IBE
                         else
                             pbStatus_ShipyardData.Image       = Properties.Resources.ledorange_off;
 
-                        if(Program.EDDNComm.CommodityDataTransmitted == EDDN.EDDNCommunicator.SendingState.Send)
-                            pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_on;
-                        else if(Program.EDDNComm.CommodityDataTransmitted == EDDN.EDDNCommunicator.SendingState.Error)
-                            pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledred_on;
-                        else
-                            pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
-                        
-                        if(Program.EDDNComm.OutfittingDataTransmitted == EDDN.EDDNCommunicator.SendingState.Send)
-                            pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledorange_on;
-                        else if(Program.EDDNComm.OutfittingDataTransmitted == EDDN.EDDNCommunicator.SendingState.Error)
-                            pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledred_on;
-                        else
-                            pbStatus_OutfittingDataEDDN.Image       = Properties.Resources.ledorange_off;
-
-                        if(Program.EDDNComm.ShipyardDataTransmitted == EDDN.EDDNCommunicator.SendingState.Send)
-                            pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_on;
-                        else if(Program.EDDNComm.ShipyardDataTransmitted == EDDN.EDDNCommunicator.SendingState.Error)
-                            pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledred_on;
-                        else
-                            pbStatus_ShipyardDataEDDN.Image       = Properties.Resources.ledorange_off;
 
                     }
                     else if((Program.CompanionIO.CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok))
@@ -3800,10 +3711,6 @@ namespace IBE
                         pbStatus_OutfittingData.Image       = Properties.Resources.ledorange_off;
                         pbStatus_ShipyardData.Image         = Properties.Resources.ledorange_off;
 
-                        pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
-                        pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
-                        pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
-
                     }
                     else
                     { 
@@ -3811,10 +3718,6 @@ namespace IBE
                         pbStatus_MarketData.Image           = Properties.Resources.ledred_on;
                         pbStatus_OutfittingData.Image       = Properties.Resources.ledred_on;
                         pbStatus_ShipyardData.Image         = Properties.Resources.ledred_on;
-
-                        pbStatus_MarketDataEDDN.Image       = Properties.Resources.ledorange_off;
-                        pbStatus_OutfittingDataEDDN.Image   = Properties.Resources.ledorange_off;
-                        pbStatus_ShipyardDataEDDN.Image     = Properties.Resources.ledorange_off;
 
                         switch (Program.CompanionIO.CompanionStatus)
                         {

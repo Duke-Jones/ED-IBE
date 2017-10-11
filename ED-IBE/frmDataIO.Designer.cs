@@ -48,11 +48,11 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cmbSystemBase = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.txtBubbleSize = new System.Windows.Forms.TextBoxInt32();
             this.rbImportPrices_All = new System.Windows.Forms.RadioButton();
             this.rbImportPrices_Bubble = new System.Windows.Forms.RadioButton();
             this.rbImportPrices_No = new System.Windows.Forms.RadioButton();
+            this.label2 = new System.Windows.Forms.Label();
             this.cmdImportSystemsAndStationsFromDownload = new System.Windows.Forms.ButtonExt();
             this.cmdDownloadSystemsAndStations = new System.Windows.Forms.ButtonExt();
             this.cmdImportSystemsAndStations = new System.Windows.Forms.ButtonExt();
@@ -148,6 +148,7 @@
             this.groupBox8.Text = "Companion IDs";
             this.ttToolTip.SetToolTip(this.groupBox8, "These IDs are used to identify unambiguous the recieved data from the companion i" +
         "nterface .\r\nYou should update them if there are changes due to udates in ED.");
+            this.groupBox8.Visible = false;
             // 
             // cbAutoImportEDCD
             // 
@@ -339,15 +340,6 @@
             this.label3.Size = new System.Drawing.Size(0, 13);
             this.label3.TabIndex = 6;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(43, 72);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(137, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Radius of import bubble [ly]:";
-            // 
             // txtBubbleSize
             // 
             this.txtBubbleSize.DefaultValue = 20;
@@ -398,6 +390,15 @@
             this.rbImportPrices_No.Text = "No, I want to collect data myself";
             this.rbImportPrices_No.UseVisualStyleBackColor = true;
             this.rbImportPrices_No.CheckedChanged += new System.EventHandler(this.Radiobutton_CheckedChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(43, 72);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(137, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Radius of import bubble [ly]:";
             // 
             // cmdImportSystemsAndStationsFromDownload
             // 

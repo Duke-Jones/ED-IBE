@@ -9,6 +9,7 @@
         IncorrectCredentials    =  2,
         UnknownError            =  3,
         TooManyRequests         =  4,
-        HttpError               =  5
+        HttpError               =  5,
+        DataError               =  6
     }
 }

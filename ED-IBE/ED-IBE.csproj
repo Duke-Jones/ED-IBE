@@ -435,6 +435,9 @@
     <Compile Include="SplashScreenForm.Designer.cs">
       <DependentUpon>SplashScreenForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SQL\Datasets\dsEliteDB.cs">
+      <DependentUpon>dsEliteDB.xsd</DependentUpon>
+    </Compile>
     <Compile Include="SQL\Datasets\dsEliteDB.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

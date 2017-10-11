@@ -309,7 +309,8 @@ bool disposed = false;
             try
             {
 
-                ownSchema = m_lDBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
+                //ownSchema = m_lDBCon.getIniValue<enSchema>(IBE.EDDN.EDDNView.DB_GROUPNAME, "Schema", "Real", false);
+                ownSchema = enSchema.Real;
 
                 if (m_lDBCon.getIniValue<Boolean>("EDDN", "SpoolEDDNToFile", false.ToString(), false))
                 {
@@ -741,7 +742,8 @@ bool disposed = false;
         /// </summary>
         public void ActivateSender()
         {
-            m_SenderIsActivated = true;
+            // possibility of sending removed - use EDMC instead
+            m_SenderIsActivated = false;
         }
 
         /// <summary>
@@ -2022,20 +2024,20 @@ bool disposed = false;
         {
             try
             {
-                switch (e.EventType)
-                {
-                    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
-                    case FileScanner.EDJournalScanner.JournalEvent.Docked:
-                    case FileScanner.EDJournalScanner.JournalEvent.Scan:
-                    case FileScanner.EDJournalScanner.JournalEvent.Location:
-                        SendJournalData((JObject)e.Data);
-                        break;
+                //switch (e.EventType)
+                //{
+                //    case FileScanner.EDJournalScanner.JournalEvent.FSDJump:
+                //    case FileScanner.EDJournalScanner.JournalEvent.Docked:
+                //    case FileScanner.EDJournalScanner.JournalEvent.Scan:
+                //    case FileScanner.EDJournalScanner.JournalEvent.Location:
+                //        SendJournalData((JObject)e.Data);
+                //        break;
 
-                    //case FileScanner.EDJournalScanner.JournalEvent.Location:
-                    //    if((e.Data.SelectToken("Docked") != null) && ((Boolean)e.Data.SelectToken("Docked")))
-                    //        SendJournalData((JObject)e.Data);
-                    //    break;
-                }
+                //    //case FileScanner.EDJournalScanner.JournalEvent.Location:
+                //    //    if((e.Data.SelectToken("Docked") != null) && ((Boolean)e.Data.SelectToken("Docked")))
+                //    //        SendJournalData((JObject)e.Data);
+                //    //    break;
+                //}
 
             }
             catch (Exception ex)
