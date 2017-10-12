@@ -29,6 +29,7 @@ todo:
 
 done:
 	
+v0.7.1
   * fixed problems with the companion interface
   * deactivated EDDN sending functionality
 ------------------------------------------------------------------------------------         
