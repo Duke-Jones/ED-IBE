@@ -7,7 +7,7 @@ for Elite Dangerous
     systemdata based on EDDB
     EDSM interface
     E:D Companion interface
-    optional connection to EDDN (export and/or import)
+    optional connection to EDDN (recieving of marketdata)
     open source
 
 **Installation:**  
