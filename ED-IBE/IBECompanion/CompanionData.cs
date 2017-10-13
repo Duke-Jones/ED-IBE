@@ -556,14 +556,15 @@ namespace IBE.IBECompanion
         /// save means, returns "0" if somethings wrong
         /// </summary>
         /// <returns></returns>
-        public Int32 SGetCreditsTotal()
+        public Int64 SGetCreditsTotal()
         {
-            Int32 creditsTotal = 0;
+            Int64 creditsTotal = 0;
 
             try
             {
                 if (CompanionStatus == EDCompanionAPI.Models.LoginStatus.Ok)
-                    creditsTotal = GetValue<Int32>("profile.commander.credits");
+                    creditsTotal = GetValue<Int64>("profile.commander.credits");
+
             }
             catch (Exception)
             {

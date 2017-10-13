@@ -375,7 +375,7 @@
             this.nbLogQuantity.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.nbLogQuantity.Location = new System.Drawing.Point(511, 69);
             this.nbLogQuantity.Maximum = new decimal(new int[] {
-            10000,
+            2000000000,
             0,
             0,
             0});
@@ -383,6 +383,7 @@
             this.nbLogQuantity.Size = new System.Drawing.Size(120, 20);
             this.nbLogQuantity.TabIndex = 17;
             this.nbLogQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nbLogQuantity.ThousandsSeparator = true;
             // 
             // label39
             // 
@@ -417,8 +418,8 @@
             this.nbTransactionAmount.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.nbTransactionAmount.Location = new System.Drawing.Point(511, 95);
             this.nbTransactionAmount.Maximum = new decimal(new int[] {
-            1410065408,
-            2,
+            -727379969,
+            232,
             0,
             0});
             this.nbTransactionAmount.Name = "nbTransactionAmount";
@@ -461,14 +462,15 @@
             this.nbCurrentCredits.ForeColor_ro = System.Drawing.SystemColors.WindowText;
             this.nbCurrentCredits.Location = new System.Drawing.Point(69, 95);
             this.nbCurrentCredits.Maximum = new decimal(new int[] {
-            1410065408,
-            2,
+            -727379969,
+            232,
             0,
             0});
             this.nbCurrentCredits.Name = "nbCurrentCredits";
             this.nbCurrentCredits.Size = new System.Drawing.Size(120, 20);
             this.nbCurrentCredits.TabIndex = 31;
             this.nbCurrentCredits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nbCurrentCredits.ThousandsSeparator = true;
             // 
             // label1
             // 

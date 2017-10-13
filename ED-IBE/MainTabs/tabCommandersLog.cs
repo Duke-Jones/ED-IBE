@@ -558,7 +558,7 @@ namespace IBE.MTCommandersLog
                     //Debug.Print(currentRow.Cells["stationname"].Value.ToString());
                     cbLogStationName.Text       = (String)currentRow.Cells["stationname"].Value.ToString();
                     nbTransactionAmount.Text    = (String)currentRow.Cells["credits_transaction"].Value.ToString();
-                    nbCurrentCredits.Value      = (Int32)currentRow.Cells["credits_total"].Value;
+                    nbCurrentCredits.Value      = (Int64)currentRow.Cells["credits_total"].Value;
                     cbLogCargoName.Text         = (String)currentRow.Cells["loccommodity"].Value.ToString();
                     cbLogCargoAction.Text       = (String)currentRow.Cells["action"].Value.ToString();
                     nbLogQuantity.Value         = (Int32)currentRow.Cells["cargovolume"].Value;
@@ -577,7 +577,7 @@ namespace IBE.MTCommandersLog
                     cbLogSystemName.Text        = (String)"";
                     cbLogStationName.Text       = (String)"";
                     nbTransactionAmount.Text    = (String)"";
-                    nbCurrentCredits.Value      = (Int32)0;
+                    nbCurrentCredits.Value      = (Int64)0;
                     cbLogCargoName.Text         = (String)"";
                     cbLogCargoAction.Text       = (String)"";
                     nbLogQuantity.Value         = (Int32)0;

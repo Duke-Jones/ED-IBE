@@ -29,6 +29,11 @@ todo:
 
 done:
 	
+v0.7.2
+  * added and updated some new commodity names
+  * update to new structure of EDDN marketdata dump (listings.csv)
+  * credits in log can be now more than 2,147,483,647
+------------------------------------------------------------------------------------         
 v0.7.1
   * fixed problems with the companion interface
   * deactivated EDDN sending functionality

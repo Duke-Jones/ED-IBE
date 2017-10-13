@@ -278,8 +278,8 @@ Commodity_ID;Language;Name
 94;eng;Wuthielo Ku Froth
 94;ger;Wuthielo Ku Froth
 94;fra;Wuthielo Ku Froth
-95;eng;AI Relics
-95;ger;AI Relics
+95;eng;Ai Relics
+95;ger;Ai Relics
 95;fra;Ai Relics
 96;eng;Antiquities
 96;ger;Antiquities
@@ -287,9 +287,9 @@ Commodity_ID;Language;Name
 97;eng;Osmium
 97;ger;Osmium
 97;fra;Osmium
-98;eng;SAP 8 CORE CONTAINER
+98;eng;Sap 8 Core Container
 98;ger;Container mit SAP 8-Kern
-98;fra;SAP 8 CORE CONTAINER
+98;fra;Sap 8 Core Container
 99;eng;Trinkets Of Hidden Fortune
 99;ger;Trinkets Of Fortune
 99;fra;Trinkets Of Hidden Fortune
@@ -617,9 +617,9 @@ Commodity_ID;Language;Name
 208;eng;Koro Kung Pellets
 208;ger;Koro Kung Pellets
 208;fra;Koro Kung Pellets
-209;eng;L F T Void Extract Coffee
-209;ger;L F T Void Extract Coffee
-209;fra;L F T Void Extract Coffee
+209;eng;Void Extract Coffee
+209;ger;Void Extract Coffee
+209;fra;Void Extract Coffee
 210;eng;Honesty Pills
 210;ger;Honesty Pills
 210;fra;Honesty Pills
@@ -728,9 +728,9 @@ Commodity_ID;Language;Name
 245;eng;Soontill Relics
 245;ger;Soontill Relics
 245;fra;Soontill Relics
-246;eng;Unknown Artefact
-246;ger;Unknown Artefact
-246;fra;Unknown Artefact
+246;eng;Thargoid Sensor
+246;ger;Thargoid Sensor
+246;fra;Thargoid Sensor
 247;eng;Hafnium 178
 247;ger;Hafnium178
 247;fra;Hafnium 178
@@ -827,9 +827,9 @@ Commodity_ID;Language;Name
 278;eng;Liquid Oxygen
 278;ger;Flüssiger Sauerstoff
 278;fra;Liquid Oxygen
-279;eng;Methanol Monohydrate Crystals
-279;ger;Methanol-Monohydrat-Kristalle
-279;fra;Cristaux de Méthanol Monohydraté
+279;eng;Methanol Monohydrate
+279;ger;Methanol-Monohydrat
+279;fra;Méthanol Monohydraté
 280;eng;Lithium Hydroxide
 280;ger;Lithiumhydroxid
 280;fra;Hydroxyde de Lithium
@@ -935,9 +935,48 @@ Commodity_ID;Language;Name
 314;eng;Fossil Remnants
 314;ger;Fossil Remnants
 314;fra;Fossil Remnants
-315;eng;Unknown Probe
-315;ger;Unknown Probe
-315;fra;Unknown Probe
+315;eng;Thargoid Probe
+315;ger;Thargoid Probe
+315;fra;Thargoid Probe
 316;eng;Precious Gems
 316;ger;Precious Gems
 316;fra;Precious Gems
+317;eng;Thargoid Link
+317;ger;Thargoid Link
+317;fra;Thargoid Link
+318;eng;Thargoid Biological Matter
+318;ger;Thargoid Biological Matter
+318;fra;Thargoid Biological Matter
+319;eng;Thargoid Resin
+319;ger;Thargoid Resin
+319;fra;Thargoid Resin
+320;eng;Thargoid Technology Samples
+320;ger;Thargoid Technology Samples
+320;fra;Thargoid Technology Samples
+321;eng;Ancient Relic
+321;ger;Ancient Relic
+321;fra;Ancient Relic
+322;eng;Ancient Orb
+322;ger;Ancient Orb
+322;fra;Ancient Orb
+323;eng;Ancient Casket
+323;ger;Ancient Casket
+323;fra;Ancient Casket
+324;eng;Ancient Tablet
+324;ger;Ancient Tablet
+324;fra;Ancient Tablet
+325;eng;Ancient Urn
+325;ger;Ancient Urn
+325;fra;Ancient Urn
+326;eng;Ancient Totem
+326;ger;Ancient Totem
+326;fra;Ancient Totem
+327;eng;Small Survey Data Cache
+327;ger;Small Survey Data Cache
+327;fra;Small Survey Data Cache
+328;eng;Large Survey Data Cache
+328;ger;Large Survey Data Cache
+328;fra;Large Survey Data Cache
+329;eng;Damaged Escape Pod
+329;ger;Damaged Escape Pod
+329;fra;Damaged Escape Pod

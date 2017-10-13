@@ -154,16 +154,6 @@ namespace IBE.SQL.Datasets {
         
         private global::System.Data.DataRelation relationfk_tbEconomyLevel_has_tbLanguage_tbLanguage1;
         
-        private global::System.Data.DataRelation relationfk_tbLog_tbCargoAction1;
-        
-        private global::System.Data.DataRelation relationfk_tbLog_tbCommodities1;
-        
-        private global::System.Data.DataRelation relationfk_tbLog_tbEventType1;
-        
-        private global::System.Data.DataRelation relationfk_tbLog_tbStations1;
-        
-        private global::System.Data.DataRelation relationfk_tbLog_tbSystems1;
-        
         private global::System.Data.DataRelation relationfk_tbPriceHistory_tbEconomyLevel1;
         
         private global::System.Data.DataRelation relationfk_tbPriceHistory_tbEconomyLevel2;
@@ -237,6 +227,16 @@ namespace IBE.SQL.Datasets {
         private global::System.Data.DataRelation relationfk_tbSystems_tbVisitedSystems;
         
         private global::System.Data.DataRelation relationfk_tbVisitedSystems_tbVisitType1;
+        
+        private global::System.Data.DataRelation relationfk_tbLog_tbSystems1;
+        
+        private global::System.Data.DataRelation relationfk_tbLog_tbStations1;
+        
+        private global::System.Data.DataRelation relationfk_tbLog_tbEventType1;
+        
+        private global::System.Data.DataRelation relationfk_tbLog_tbCommodities1;
+        
+        private global::System.Data.DataRelation relationfk_tbLog_tbCargoAction1;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -1478,11 +1478,6 @@ namespace IBE.SQL.Datasets {
             this.relationfk_tbLocalization_tbLanguage1 = this.Relations["fk_tbLocalization_tbLanguage1"];
             this.relationfk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1 = this.Relations["fk_tbEconomyLevel_has_tbLanguage_tbEconomyLevel1"];
             this.relationfk_tbEconomyLevel_has_tbLanguage_tbLanguage1 = this.Relations["fk_tbEconomyLevel_has_tbLanguage_tbLanguage1"];
-            this.relationfk_tbLog_tbCargoAction1 = this.Relations["fk_tbLog_tbCargoAction1"];
-            this.relationfk_tbLog_tbCommodities1 = this.Relations["fk_tbLog_tbCommodities1"];
-            this.relationfk_tbLog_tbEventType1 = this.Relations["fk_tbLog_tbEventType1"];
-            this.relationfk_tbLog_tbStations1 = this.Relations["fk_tbLog_tbStations1"];
-            this.relationfk_tbLog_tbSystems1 = this.Relations["fk_tbLog_tbSystems1"];
             this.relationfk_tbPriceHistory_tbEconomyLevel1 = this.Relations["fk_tbPriceHistory_tbEconomyLevel1"];
             this.relationfk_tbPriceHistory_tbEconomyLevel2 = this.Relations["fk_tbPriceHistory_tbEconomyLevel2"];
             this.relationfk_tbPriceHistory_tbSources1 = this.Relations["fk_tbPriceHistory_tbSources1"];
@@ -1520,6 +1515,11 @@ namespace IBE.SQL.Datasets {
             this.relationfk_tbVisitedStations_tbVisitType1 = this.Relations["fk_tbVisitedStations_tbVisitType1"];
             this.relationfk_tbSystems_tbVisitedSystems = this.Relations["fk_tbSystems_tbVisitedSystems"];
             this.relationfk_tbVisitedSystems_tbVisitType1 = this.Relations["fk_tbVisitedSystems_tbVisitType1"];
+            this.relationfk_tbLog_tbSystems1 = this.Relations["fk_tbLog_tbSystems1"];
+            this.relationfk_tbLog_tbStations1 = this.Relations["fk_tbLog_tbStations1"];
+            this.relationfk_tbLog_tbEventType1 = this.Relations["fk_tbLog_tbEventType1"];
+            this.relationfk_tbLog_tbCommodities1 = this.Relations["fk_tbLog_tbCommodities1"];
+            this.relationfk_tbLog_tbCargoAction1 = this.Relations["fk_tbLog_tbCargoAction1"];
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1692,26 +1692,6 @@ namespace IBE.SQL.Datasets {
                         this.tabletblanguage.idColumn}, new global::System.Data.DataColumn[] {
                         this.tabletblevellocalization.language_idColumn}, false);
             this.Relations.Add(this.relationfk_tbEconomyLevel_has_tbLanguage_tbLanguage1);
-            this.relationfk_tbLog_tbCargoAction1 = new global::System.Data.DataRelation("fk_tbLog_tbCargoAction1", new global::System.Data.DataColumn[] {
-                        this.tabletbcargoaction.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tabletblog.cargoaction_idColumn}, false);
-            this.Relations.Add(this.relationfk_tbLog_tbCargoAction1);
-            this.relationfk_tbLog_tbCommodities1 = new global::System.Data.DataRelation("fk_tbLog_tbCommodities1", new global::System.Data.DataColumn[] {
-                        this.tabletbcommodity.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tabletblog.commodity_idColumn}, false);
-            this.Relations.Add(this.relationfk_tbLog_tbCommodities1);
-            this.relationfk_tbLog_tbEventType1 = new global::System.Data.DataRelation("fk_tbLog_tbEventType1", new global::System.Data.DataColumn[] {
-                        this.tabletbeventtype.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tabletblog.event_idColumn}, false);
-            this.Relations.Add(this.relationfk_tbLog_tbEventType1);
-            this.relationfk_tbLog_tbStations1 = new global::System.Data.DataRelation("fk_tbLog_tbStations1", new global::System.Data.DataColumn[] {
-                        this.tabletbstations.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tabletblog.station_idColumn}, false);
-            this.Relations.Add(this.relationfk_tbLog_tbStations1);
-            this.relationfk_tbLog_tbSystems1 = new global::System.Data.DataRelation("fk_tbLog_tbSystems1", new global::System.Data.DataColumn[] {
-                        this.tabletbsystems.idColumn}, new global::System.Data.DataColumn[] {
-                        this.tabletblog.system_idColumn}, false);
-            this.Relations.Add(this.relationfk_tbLog_tbSystems1);
             this.relationfk_tbPriceHistory_tbEconomyLevel1 = new global::System.Data.DataRelation("fk_tbPriceHistory_tbEconomyLevel1", new global::System.Data.DataColumn[] {
                         this.tabletbeconomylevel.idColumn}, new global::System.Data.DataColumn[] {
                         this.tabletbpricehistory.DemandLevelColumn}, false);
@@ -1860,6 +1840,26 @@ namespace IBE.SQL.Datasets {
                         this.tabletbvisittype.idColumn}, new global::System.Data.DataColumn[] {
                         this.tabletbvisitedsystems.visitTypeColumn}, false);
             this.Relations.Add(this.relationfk_tbVisitedSystems_tbVisitType1);
+            this.relationfk_tbLog_tbSystems1 = new global::System.Data.DataRelation("fk_tbLog_tbSystems1", new global::System.Data.DataColumn[] {
+                        this.tabletbsystems.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tabletblog.system_idColumn}, false);
+            this.Relations.Add(this.relationfk_tbLog_tbSystems1);
+            this.relationfk_tbLog_tbStations1 = new global::System.Data.DataRelation("fk_tbLog_tbStations1", new global::System.Data.DataColumn[] {
+                        this.tabletbstations.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tabletblog.station_idColumn}, false);
+            this.Relations.Add(this.relationfk_tbLog_tbStations1);
+            this.relationfk_tbLog_tbEventType1 = new global::System.Data.DataRelation("fk_tbLog_tbEventType1", new global::System.Data.DataColumn[] {
+                        this.tabletbeventtype.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tabletblog.event_idColumn}, false);
+            this.Relations.Add(this.relationfk_tbLog_tbEventType1);
+            this.relationfk_tbLog_tbCommodities1 = new global::System.Data.DataRelation("fk_tbLog_tbCommodities1", new global::System.Data.DataColumn[] {
+                        this.tabletbcommodity.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tabletblog.commodity_idColumn}, false);
+            this.Relations.Add(this.relationfk_tbLog_tbCommodities1);
+            this.relationfk_tbLog_tbCargoAction1 = new global::System.Data.DataRelation("fk_tbLog_tbCargoAction1", new global::System.Data.DataColumn[] {
+                        this.tabletbcargoaction.idColumn}, new global::System.Data.DataColumn[] {
+                        this.tabletblog.cargoaction_idColumn}, false);
+            this.Relations.Add(this.relationfk_tbLog_tbCargoAction1);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8701,7 +8701,7 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tblogRow AddtblogRow(System.DateTime time, tbsystemsRow parenttbsystemsRowByfk_tbLog_tbSystems1, tbstationsRow parenttbstationsRowByfk_tbLog_tbStations1, tbeventtypeRow parenttbeventtypeRowByfk_tbLog_tbEventType1, tbcommodityRow parenttbcommodityRowByfk_tbLog_tbCommodities1, tbcargoactionRow parenttbcargoactionRowByfk_tbLog_tbCargoAction1, int cargovolume, int credits_transaction, int credits_total, string notes, double distance) {
+            public tblogRow AddtblogRow(System.DateTime time, tbsystemsRow parenttbsystemsRowByfk_tbLog_tbSystems1, tbstationsRow parenttbstationsRowByfk_tbLog_tbStations1, tbeventtypeRow parenttbeventtypeRowByfk_tbLog_tbEventType1, tbcommodityRow parenttbcommodityRowByfk_tbLog_tbCommodities1, tbcargoactionRow parenttbcargoactionRowByfk_tbLog_tbCargoAction1, int cargovolume, long credits_transaction, long credits_total, string notes, double distance) {
                 tblogRow rowtblogRow = ((tblogRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         time,
@@ -8789,9 +8789,9 @@ namespace IBE.SQL.Datasets {
                 base.Columns.Add(this.columncargoaction_id);
                 this.columncargovolume = new global::System.Data.DataColumn("cargovolume", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncargovolume);
-                this.columncredits_transaction = new global::System.Data.DataColumn("credits_transaction", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columncredits_transaction = new global::System.Data.DataColumn("credits_transaction", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncredits_transaction);
-                this.columncredits_total = new global::System.Data.DataColumn("credits_total", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columncredits_total = new global::System.Data.DataColumn("credits_total", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncredits_total);
                 this.columnnotes = new global::System.Data.DataColumn("notes", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnnotes);
@@ -18037,7 +18037,7 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public vilogRow AddvilogRow(System.DateTime time, string systemname, string stationname, string eventtype, string cargoaction, string loccommodity, int cargovolume, int credits_transaction, int credits_total, double distance, string notes) {
+            public vilogRow AddvilogRow(System.DateTime time, string systemname, string stationname, string eventtype, string cargoaction, string loccommodity, int cargovolume, long credits_transaction, long credits_total, double distance, string notes) {
                 vilogRow rowvilogRow = ((vilogRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         time,
@@ -18110,9 +18110,9 @@ namespace IBE.SQL.Datasets {
                 base.Columns.Add(this.columnloccommodity);
                 this.columncargovolume = new global::System.Data.DataColumn("cargovolume", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncargovolume);
-                this.columncredits_transaction = new global::System.Data.DataColumn("credits_transaction", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columncredits_transaction = new global::System.Data.DataColumn("credits_transaction", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncredits_transaction);
-                this.columncredits_total = new global::System.Data.DataColumn("credits_total", typeof(int), null, global::System.Data.MappingType.Element);
+                this.columncredits_total = new global::System.Data.DataColumn("credits_total", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columncredits_total);
                 this.columndistance = new global::System.Data.DataColumn("distance", typeof(double), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columndistance);
@@ -20423,23 +20423,23 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tblogRow[] GettblogRows() {
-                if ((this.Table.ChildRelations["fk_tbLog_tbCommodities1"] == null)) {
-                    return new tblogRow[0];
-                }
-                else {
-                    return ((tblogRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbLog_tbCommodities1"])));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public tbpricehistoryRow[] GettbpricehistoryRows() {
                 if ((this.Table.ChildRelations["fk_tbStations_has_tbCommodities1_tbCommodities1"] == null)) {
                     return new tbpricehistoryRow[0];
                 }
                 else {
                     return ((tbpricehistoryRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbStations_has_tbCommodities1_tbCommodities1"])));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public tblogRow[] GettblogRows() {
+                if ((this.Table.ChildRelations["fk_tbLog_tbCommodities1"] == null)) {
+                    return new tblogRow[0];
+                }
+                else {
+                    return ((tblogRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbLog_tbCommodities1"])));
                 }
             }
         }
@@ -21758,10 +21758,10 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int credits_transaction {
+            public long credits_transaction {
                 get {
                     try {
-                        return ((int)(this[this.tabletblog.credits_transactionColumn]));
+                        return ((long)(this[this.tabletblog.credits_transactionColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_transaction in Tabelle tblog ist DBNull.", e);
@@ -21774,10 +21774,10 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int credits_total {
+            public long credits_total {
                 get {
                     try {
-                        return ((int)(this[this.tabletblog.credits_totalColumn]));
+                        return ((long)(this[this.tabletblog.credits_totalColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_total in Tabelle tblog ist DBNull.", e);
@@ -21822,34 +21822,12 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tbcargoactionRow tbcargoactionRow {
+            public tbsystemsRow tbsystemsRow {
                 get {
-                    return ((tbcargoactionRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbCargoAction1"])));
+                    return ((tbsystemsRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbSystems1"])));
                 }
                 set {
-                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbCargoAction1"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tbcommodityRow tbcommodityRow {
-                get {
-                    return ((tbcommodityRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbCommodities1"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbCommodities1"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tbeventtypeRow tbeventtypeRow {
-                get {
-                    return ((tbeventtypeRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbEventType1"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbEventType1"]);
+                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbSystems1"]);
                 }
             }
             
@@ -21866,12 +21844,34 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tbsystemsRow tbsystemsRow {
+            public tbeventtypeRow tbeventtypeRow {
                 get {
-                    return ((tbsystemsRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbSystems1"])));
+                    return ((tbeventtypeRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbEventType1"])));
                 }
                 set {
-                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbSystems1"]);
+                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbEventType1"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public tbcommodityRow tbcommodityRow {
+                get {
+                    return ((tbcommodityRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbCommodities1"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbCommodities1"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public tbcargoactionRow tbcargoactionRow {
+                get {
+                    return ((tbcargoactionRow)(this.GetParentRow(this.Table.ParentRelations["fk_tbLog_tbCargoAction1"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["fk_tbLog_tbCargoAction1"]);
                 }
             }
             
@@ -23692,17 +23692,6 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tblogRow[] GettblogRows() {
-                if ((this.Table.ChildRelations["fk_tbLog_tbStations1"] == null)) {
-                    return new tblogRow[0];
-                }
-                else {
-                    return ((tblogRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbLog_tbStations1"])));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public tbpricehistoryRow[] GettbpricehistoryRows() {
                 if ((this.Table.ChildRelations["fk_tbStations_has_tbCommodities1_tbStations1"] == null)) {
                     return new tbpricehistoryRow[0];
@@ -23731,6 +23720,17 @@ namespace IBE.SQL.Datasets {
                 }
                 else {
                     return ((tbvisitedstationsRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbStations_tbVisitedStations"])));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public tblogRow[] GettblogRows() {
+                if ((this.Table.ChildRelations["fk_tbLog_tbStations1"] == null)) {
+                    return new tblogRow[0];
+                }
+                else {
+                    return ((tblogRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbLog_tbStations1"])));
                 }
             }
         }
@@ -25064,17 +25064,6 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public tblogRow[] GettblogRows() {
-                if ((this.Table.ChildRelations["fk_tbLog_tbSystems1"] == null)) {
-                    return new tblogRow[0];
-                }
-                else {
-                    return ((tblogRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbLog_tbSystems1"])));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public tbstationsRow[] GettbstationsRows() {
                 if ((this.Table.ChildRelations["fk_tbStations_tbSystems"] == null)) {
                     return new tbstationsRow[0];
@@ -25103,6 +25092,17 @@ namespace IBE.SQL.Datasets {
                 }
                 else {
                     return ((tbvisitedsystemsRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbSystems_tbVisitedSystems"])));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public tblogRow[] GettblogRows() {
+                if ((this.Table.ChildRelations["fk_tbLog_tbSystems1"] == null)) {
+                    return new tblogRow[0];
+                }
+                else {
+                    return ((tblogRow[])(base.GetChildRows(this.Table.ChildRelations["fk_tbLog_tbSystems1"])));
                 }
             }
         }
@@ -27678,10 +27678,10 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int credits_transaction {
+            public long credits_transaction {
                 get {
                     try {
-                        return ((int)(this[this.tablevilog.credits_transactionColumn]));
+                        return ((long)(this[this.tablevilog.credits_transactionColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_transaction in Tabelle vilog ist DBNull.", e);
@@ -27694,10 +27694,10 @@ namespace IBE.SQL.Datasets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
-            public int credits_total {
+            public long credits_total {
                 get {
                     try {
-                        return ((int)(this[this.tablevilog.credits_totalColumn]));
+                        return ((long)(this[this.tablevilog.credits_totalColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("Der Wert für Spalte credits_total in Tabelle vilog ist DBNull.", e);
@@ -65590,21 +65590,21 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._tbvisittypeTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbvisittype.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbvisittypeTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._tbstateTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbstateTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbsecurityTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbsecurityTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65626,15 +65626,6 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbvisittypeTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbvisittype.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbvisittypeTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
             if ((this._tbgovernmentTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tbgovernment.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
@@ -65653,12 +65644,12 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbsystems.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbsecurityTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbsystemsTableAdapter.Update(updatedRows));
+                    result = (result + this._tbsecurityTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65668,6 +65659,15 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbstationtypeTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbsystems.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbsystemsTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65698,6 +65698,24 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._tbcommodityclassificationTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbcommodityclassificationTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbeconomylevelTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbeconomylevelTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._tbeventtypeTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
@@ -65716,21 +65734,21 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._tblanguageTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tblanguageTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._tbsourceTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbsourceTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbeconomylevelTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbeconomylevelTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65743,48 +65761,12 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tblanguageTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbcommoditybaseTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbcommoditybase.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tblanguageTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbcommodityclassificationTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbcommodityclassificationTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbsystems_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbsystems_orgTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbtrustedsendersTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbtrustedsenders.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbtrustedsendersTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbvisitedsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbvisitedsystemsTableAdapter.Update(updatedRows));
+                    result = (result + this._tbcommoditybaseTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65797,39 +65779,21 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tmbestprofitsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbvisitedsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tmbestprofitsTableAdapter.Update(updatedRows));
+                    result = (result + this._tbvisitedsystemsTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tmpa_bystationTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_bystation.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tmpa_bystationTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tmpa_bycommodityTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_bycommodity.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tmpa_bycommodityTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tmfilteredstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmfilteredstations.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tmfilteredstationsTableAdapter.Update(updatedRows));
+                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65842,6 +65806,15 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._tmfilteredstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmfilteredstations.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tmfilteredstationsTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._tmpa_allcommoditiesTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
@@ -65851,30 +65824,21 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbpricehistoryTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tmpa_bycommodityTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_bycommodity.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbpricehistoryTableAdapter.Update(updatedRows));
+                    result = (result + this._tmpa_bycommodityTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbstationeconomyTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tmpa_bystationTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_bystation.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbstationeconomyTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbshipyardbaseTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbshipyardbase.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbshipyardbaseTableAdapter.Update(updatedRows));
+                    result = (result + this._tmpa_bystationTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65887,21 +65851,84 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
+            if ((this._tmbestprofitsTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tmbestprofitsTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbtrustedsendersTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbtrustedsenders.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbtrustedsendersTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbstationeconomyTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbstationeconomyTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbstations_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbstations_org.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbstations_orgTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbcommodity_has_attributeTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodity_has_attribute.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbcommodity_has_attributeTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbshipyardbaseTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbshipyardbase.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbshipyardbaseTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbeddnrelaysTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbeddnrelays.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbeddnrelaysTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbpricehistoryTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbpricehistoryTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
             if ((this._tboutfittingbaseTableAdapter != null)) {
                 global::System.Data.DataRow[] updatedRows = dataSet.tboutfittingbase.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tboutfittingbaseTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tblogTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tblogTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65920,6 +65947,15 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
                     result = (result + this._tbinitvalueTableAdapter.Update(updatedRows));
+                    allChangedRows.AddRange(updatedRows);
+                }
+            }
+            if ((this._tbcategorylocalizationTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbcategorylocalization.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
+                if (((updatedRows != null) 
+                            && (0 < updatedRows.Length))) {
+                    result = (result + this._tbcategorylocalizationTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -65950,57 +65986,21 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbcommoditybaseTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbcommoditybase.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tbsystems_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbcommoditybaseTableAdapter.Update(updatedRows));
+                    result = (result + this._tbsystems_orgTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
-            if ((this._tbcommodity_has_attributeTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbcommodity_has_attribute.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
+            if ((this._tblogTableAdapter != null)) {
+                global::System.Data.DataRow[] updatedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
                 updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
                 if (((updatedRows != null) 
                             && (0 < updatedRows.Length))) {
-                    result = (result + this._tbcommodity_has_attributeTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbcategorylocalizationTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbcategorylocalization.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbcategorylocalizationTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbstations_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbstations_org.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbstations_orgTableAdapter.Update(updatedRows));
-                    allChangedRows.AddRange(updatedRows);
-                }
-            }
-            if ((this._tbeddnrelaysTableAdapter != null)) {
-                global::System.Data.DataRow[] updatedRows = dataSet.tbeddnrelays.Select(null, null, global::System.Data.DataViewRowState.ModifiedCurrent);
-                updatedRows = this.GetRealUpdatedRows(updatedRows, allAddedRows);
-                if (((updatedRows != null) 
-                            && (0 < updatedRows.Length))) {
-                    result = (result + this._tbeddnrelaysTableAdapter.Update(updatedRows));
+                    result = (result + this._tblogTableAdapter.Update(updatedRows));
                     allChangedRows.AddRange(updatedRows);
                 }
             }
@@ -66022,19 +66022,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._tbvisittypeTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbvisittype.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbvisittypeTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._tbstateTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbstateTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbsecurityTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbsecurityTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66054,14 +66054,6 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbvisittypeTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbvisittype.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbvisittypeTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
             if ((this._tbgovernmentTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tbgovernment.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
@@ -66078,11 +66070,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbsystems.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbsecurityTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbsystemsTableAdapter.Update(addedRows));
+                    result = (result + this._tbsecurityTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66091,6 +66083,14 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbstationtypeTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbsystems.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbsystemsTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66118,6 +66118,22 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._tbcommodityclassificationTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbcommodityclassificationTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbeconomylevelTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbeconomylevelTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._tbeventtypeTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tbeventtype.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
@@ -66134,19 +66150,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._tblanguageTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tblanguageTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._tbsourceTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbsourceTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbeconomylevelTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbeconomylevelTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66158,43 +66174,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tblanguageTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbcommoditybaseTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbcommoditybase.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tblanguageTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbcommodityclassificationTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbcommodityclassificationTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbsystems_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbsystems_orgTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbtrustedsendersTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbtrustedsenders.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbtrustedsendersTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbvisitedsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbvisitedsystemsTableAdapter.Update(addedRows));
+                    result = (result + this._tbcommoditybaseTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66206,35 +66190,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tmbestprofitsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbvisitedsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tmbestprofitsTableAdapter.Update(addedRows));
+                    result = (result + this._tbvisitedsystemsTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tmpa_bystationTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmpa_bystation.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tmpa_bystationTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tmpa_bycommodityTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmpa_bycommodity.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tmpa_bycommodityTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tmfilteredstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmfilteredstations.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tmfilteredstationsTableAdapter.Update(addedRows));
+                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66246,6 +66214,14 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._tmfilteredstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmfilteredstations.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tmfilteredstationsTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._tmpa_allcommoditiesTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
@@ -66254,27 +66230,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbpricehistoryTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tmpa_bycommodityTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmpa_bycommodity.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbpricehistoryTableAdapter.Update(addedRows));
+                    result = (result + this._tmpa_bycommodityTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbstationeconomyTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tmpa_bystationTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmpa_bystation.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbstationeconomyTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbshipyardbaseTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbshipyardbase.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbshipyardbaseTableAdapter.Update(addedRows));
+                    result = (result + this._tmpa_bystationTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66286,19 +66254,75 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
+            if ((this._tmbestprofitsTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tmbestprofitsTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbtrustedsendersTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbtrustedsenders.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbtrustedsendersTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbstationeconomyTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbstationeconomyTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbstations_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbstations_org.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbstations_orgTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbcommodity_has_attributeTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbcommodity_has_attribute.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbcommodity_has_attributeTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbshipyardbaseTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbshipyardbase.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbshipyardbaseTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbeddnrelaysTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbeddnrelays.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbeddnrelaysTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbpricehistoryTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbpricehistory.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbpricehistoryTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
             if ((this._tboutfittingbaseTableAdapter != null)) {
                 global::System.Data.DataRow[] addedRows = dataSet.tboutfittingbase.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tboutfittingbaseTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tblogTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tblogTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66315,6 +66339,14 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
                     result = (result + this._tbinitvalueTableAdapter.Update(addedRows));
+                    allAddedRows.AddRange(addedRows);
+                }
+            }
+            if ((this._tbcategorylocalizationTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbcategorylocalization.Select(null, null, global::System.Data.DataViewRowState.Added);
+                if (((addedRows != null) 
+                            && (0 < addedRows.Length))) {
+                    result = (result + this._tbcategorylocalizationTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66342,51 +66374,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbcommoditybaseTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbcommoditybase.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tbsystems_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbcommoditybaseTableAdapter.Update(addedRows));
+                    result = (result + this._tbsystems_orgTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
-            if ((this._tbcommodity_has_attributeTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbcommodity_has_attribute.Select(null, null, global::System.Data.DataViewRowState.Added);
+            if ((this._tblogTableAdapter != null)) {
+                global::System.Data.DataRow[] addedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.Added);
                 if (((addedRows != null) 
                             && (0 < addedRows.Length))) {
-                    result = (result + this._tbcommodity_has_attributeTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbcategorylocalizationTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbcategorylocalization.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbcategorylocalizationTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbstations_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbstations_org.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbstations_orgTableAdapter.Update(addedRows));
-                    allAddedRows.AddRange(addedRows);
-                }
-            }
-            if ((this._tbeddnrelaysTableAdapter != null)) {
-                global::System.Data.DataRow[] addedRows = dataSet.tbeddnrelays.Select(null, null, global::System.Data.DataViewRowState.Added);
-                if (((addedRows != null) 
-                            && (0 < addedRows.Length))) {
-                    result = (result + this._tbeddnrelaysTableAdapter.Update(addedRows));
+                    result = (result + this._tblogTableAdapter.Update(addedRows));
                     allAddedRows.AddRange(addedRows);
                 }
             }
@@ -66400,51 +66400,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private int UpdateDeletedRows(dsEliteDB dataSet, global::System.Collections.Generic.List<global::System.Data.DataRow> allChangedRows) {
             int result = 0;
-            if ((this._tbeddnrelaysTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbeddnrelays.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tblogTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbeddnrelaysTableAdapter.Update(deletedRows));
+                    result = (result + this._tblogTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbstations_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbstations_org.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbsystems_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbstations_orgTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbcategorylocalizationTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbcategorylocalization.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbcategorylocalizationTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbcommodity_has_attributeTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbcommodity_has_attribute.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbcommodity_has_attributeTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbcommoditybaseTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbcommoditybase.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbcommoditybaseTableAdapter.Update(deletedRows));
+                    result = (result + this._tbsystems_orgTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66472,6 +66440,14 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
+            if ((this._tbcategorylocalizationTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbcategorylocalization.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbcategorylocalizationTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
             if ((this._tbinitvalueTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbinitvalue.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -66488,43 +66464,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tblogTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tblog.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tblogTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tboutfittingbaseTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tboutfittingbase.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._tboutfittingbaseTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tmpa_s2s_besttripsTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbshipyardbaseTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbshipyardbase.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbshipyardbaseTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbstationeconomyTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbstationeconomyTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66536,67 +66480,43 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmpa_allcommoditiesTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbeddnrelaysTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbeddnrelays.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmpa_allcommoditiesTableAdapter.Update(deletedRows));
+                    result = (result + this._tbeddnrelaysTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmneighbourstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbshipyardbaseTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbshipyardbase.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmneighbourstationsTableAdapter.Update(deletedRows));
+                    result = (result + this._tbshipyardbaseTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmfilteredstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmfilteredstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbcommodity_has_attributeTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbcommodity_has_attribute.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmfilteredstationsTableAdapter.Update(deletedRows));
+                    result = (result + this._tbcommodity_has_attributeTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmpa_bycommodityTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_bycommodity.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbstations_orgTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbstations_org.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmpa_bycommodityTableAdapter.Update(deletedRows));
+                    result = (result + this._tbstations_orgTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tmpa_bystationTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_bystation.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbstationeconomyTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbstationeconomy.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tmpa_bystationTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tmbestprofitsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tmbestprofitsTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbvisitedstationsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbvisitedstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbvisitedstationsTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
-            if ((this._tbvisitedsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbvisitedsystemsTableAdapter.Update(deletedRows));
+                    result = (result + this._tbstationeconomyTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66608,27 +66528,91 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbsystems_orgTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbsystems_org.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tmbestprofitsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmbestprofits.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbsystems_orgTableAdapter.Update(deletedRows));
+                    result = (result + this._tmbestprofitsTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbcommodityclassificationTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tmpa_s2s_besttripsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_s2s_besttrips.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbcommodityclassificationTableAdapter.Update(deletedRows));
+                    result = (result + this._tmpa_s2s_besttripsTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tblanguageTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tmpa_bystationTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_bystation.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tblanguageTableAdapter.Update(deletedRows));
+                    result = (result + this._tmpa_bystationTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tmpa_bycommodityTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_bycommodity.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmpa_bycommodityTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tmpa_allcommoditiesTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_allcommodities.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmpa_allcommoditiesTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tmfilteredstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmfilteredstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmfilteredstationsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tmneighbourstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmneighbourstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmneighbourstationsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tmpa_s2s_stationdataTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tmpa_s2s_stationdata.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tmpa_s2s_stationdataTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbvisitedsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbvisitedsystems.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbvisitedsystemsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbvisitedstationsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbvisitedstations.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbvisitedstationsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbcommoditybaseTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbcommoditybase.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbcommoditybaseTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66640,19 +66624,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbeconomylevelTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbeconomylevelTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tbsourceTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbsource.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._tbsourceTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tblanguageTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tblanguage.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tblanguageTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66669,6 +66653,22 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._tbeventtypeTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbeconomylevelTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbeconomylevel.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbeconomylevelTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbcommodityclassificationTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbcommodityclassification.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbcommodityclassificationTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66696,6 +66696,14 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
+            if ((this._tbsystemsTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbsystems.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbsystemsTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
             if ((this._tbstationtypeTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbstationtype.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -66704,11 +66712,11 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbsystemsTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbsystems.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+            if ((this._tbsecurityTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
-                    result = (result + this._tbsystemsTableAdapter.Update(deletedRows));
+                    result = (result + this._tbsecurityTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }
@@ -66728,14 +66736,6 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbvisittypeTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbvisittype.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbvisittypeTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tbpowerTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbpower.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
@@ -66752,19 +66752,19 @@ namespace IBE.SQL.Datasets.dsEliteDBTableAdapters {
                     allChangedRows.AddRange(deletedRows);
                 }
             }
-            if ((this._tbsecurityTableAdapter != null)) {
-                global::System.Data.DataRow[] deletedRows = dataSet.tbsecurity.Select(null, null, global::System.Data.DataViewRowState.Deleted);
-                if (((deletedRows != null) 
-                            && (0 < deletedRows.Length))) {
-                    result = (result + this._tbsecurityTableAdapter.Update(deletedRows));
-                    allChangedRows.AddRange(deletedRows);
-                }
-            }
             if ((this._tbstateTableAdapter != null)) {
                 global::System.Data.DataRow[] deletedRows = dataSet.tbstate.Select(null, null, global::System.Data.DataViewRowState.Deleted);
                 if (((deletedRows != null) 
                             && (0 < deletedRows.Length))) {
                     result = (result + this._tbstateTableAdapter.Update(deletedRows));
+                    allChangedRows.AddRange(deletedRows);
+                }
+            }
+            if ((this._tbvisittypeTableAdapter != null)) {
+                global::System.Data.DataRow[] deletedRows = dataSet.tbvisittype.Select(null, null, global::System.Data.DataViewRowState.Deleted);
+                if (((deletedRows != null) 
+                            && (0 < deletedRows.Length))) {
+                    result = (result + this._tbvisittypeTableAdapter.Update(deletedRows));
                     allChangedRows.AddRange(deletedRows);
                 }
             }

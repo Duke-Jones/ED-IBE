@@ -530,8 +530,8 @@ CREATE TABLE IF NOT EXISTS `elite_db`.`tbLog` (
   `commodity_id` INT NULL,
   `cargoaction_id` INT NULL,
   `cargovolume` INT NULL,
-  `credits_transaction` INT NULL,
-  `credits_total` INT NULL,
+  `credits_transaction` BIGINT NULL,
+  `credits_total` BIGINT NULL,
   `notes` VARCHAR(1024) NULL,
   `distance` DOUBLE NULL,
   INDEX `fk_tbLog_tbCommodities1_idx` (`commodity_id` ASC),
@@ -1305,7 +1305,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.7.0');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.7.2');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;

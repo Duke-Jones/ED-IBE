@@ -330,8 +330,8 @@ namespace IBE.MTCommandersLog
                 TempRow.loccommodity        = Event.Cargo;
                 TempRow.cargoaction         = Event.CargoAction;
                 TempRow.cargovolume         = (Int32)Event.CargoVolume;
-                TempRow.credits_transaction = (Int32)Event.TransactionAmount;
-                TempRow.credits_total       = (Int32)Event.Credits;
+                TempRow.credits_transaction = (Int64)Event.TransactionAmount;
+                TempRow.credits_total       = (Int64)Event.Credits;
                 TempRow.eventtype           = Event.EventType;
                 TempRow.notes               = Event.Notes;
 
@@ -348,7 +348,7 @@ namespace IBE.MTCommandersLog
         /// saves new entrys if the timestamp is not existingClassification, otherwise existingClassification data will be changed
         /// </summary>
         /// <param name="ChangedData">row with data to save</param>
-        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int32 CreditsTransAction, Int32 Credits_Total, String EventType, String Notes, double? Distance=null)
+        public void SaveEvent(DateTime EventDate, String System, String Station, String Cargo, String CargoAction, int CargoVolume, Int64 CreditsTransAction, Int64 Credits_Total, String EventType, String Notes, double? Distance=null)
         {
             try
             {
@@ -1194,6 +1194,13 @@ namespace IBE.MTCommandersLog
                                                                 Program.actualCondition.Station, "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(), 
                                                                 "Market Data Collected", "");
                             }
+                        }
+                        else
+                        {
+                            // add new
+                            Program.CommandersLog.SaveEvent(DateTime.UtcNow, Program.actualCondition.System,
+                                                            Program.actualCondition.Station, "", "", 0, 0, Program.CompanionIO.SGetCreditsTotal(),
+                                                            "Market Data Collected", "");
                         }
                     }
                     else

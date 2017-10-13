@@ -90,21 +90,39 @@ namespace IBE.EDDB_Data
             {
                 String[] Parts = CsvString.Split(',');
 
-                if(Parts.GetUpperBound(0) >= 7)
+                if (Parts.GetUpperBound(0) >= 7)
                 {
-                    Id              = Int32.Parse(Parts[0]);
-                    StationId       = Int32.Parse(Parts[1]);
-                    CommodityId     = Int32.Parse(Parts[2]);
-                    Supply          = Int32.Parse(Parts[3]);
-                    BuyPrice        = Int32.Parse(Parts[4]);
-                    SellPrice       = Int32.Parse(Parts[5]);
-                    Demand          = Int32.Parse(Parts[6]);
-                    CollectedAt     = long.Parse(Parts[7]);
-                }
+                    // new EDDB format
 
-                if(Parts.GetUpperBound(0) >= 8)
+                    Id = Int32.Parse(Parts[0]);
+                    StationId = Int32.Parse(Parts[1]);
+                    CommodityId = Int32.Parse(Parts[2]);
+                    Supply = Int32.Parse(Parts[3]);
+                    SupplyLevel = Parts[4];
+                    BuyPrice = Int32.Parse(Parts[5]);
+                    SellPrice = Int32.Parse(Parts[6]);
+                    Demand = Int32.Parse(Parts[7]);
+                    DemandLevel = Parts[8];
+                    CollectedAt = long.Parse(Parts[9]);
+                }
+                else
                 {
-                    UpdateCount     = Int32.Parse(Parts[8]);
+                    if (Parts.GetUpperBound(0) >= 7)
+                    {
+                        Id = Int32.Parse(Parts[0]);
+                        StationId = Int32.Parse(Parts[1]);
+                        CommodityId = Int32.Parse(Parts[2]);
+                        Supply = Int32.Parse(Parts[3]);
+                        BuyPrice = Int32.Parse(Parts[4]);
+                        SellPrice = Int32.Parse(Parts[5]);
+                        Demand = Int32.Parse(Parts[6]);
+                        CollectedAt = long.Parse(Parts[7]);
+                    }
+
+                    if (Parts.GetUpperBound(0) >= 8)
+                    {
+                        UpdateCount = Int32.Parse(Parts[8]);
+                    }
                 }
             }
             catch (Exception ex)
