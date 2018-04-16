@@ -1097,7 +1097,7 @@ TRIGGER `elite_db`.`tbCommodityData_AFTER_INSERT`
 AFTER INSERT ON `elite_db`.`tbcommoditydata`
 FOR EACH ROW
 BEGIN                                                                                                                                                                         
-	DECLARE isActive BOOLEAN;                                                                                                                                                  
+    DECLARE isActive BOOLEAN;                                                                                                                                                  
                                                                                                                                                                               
     SELECT ((InitValue <> '0') and (InitValue <> 'False')) INTO isActive                                                                                                      
     FROM tbInitValue                                                                                                                                                          
@@ -1105,11 +1105,11 @@ BEGIN
     AND   InitKey   = 'CollectPriceHistory';                                                                                                                                  
                                                                                                                                                                               
     IF isActive THEN                                                                                                                                                          
-		INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                                
-		(`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                             
-		VALUES                                                                                                                                                                 
-		(NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);	   
-	END IF;                                                                                                                                                                    
+        INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                                
+        (`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                             
+        VALUES                                                                                                                                                                 
+        (NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);	   
+    END IF;                                                                                                                                                                    
 END$$
 
 USE `elite_db`$$
@@ -1119,7 +1119,7 @@ TRIGGER `elite_db`.`tbCommodityData_AFTER_UPDATE`
 AFTER UPDATE ON `elite_db`.`tbcommoditydata`
 FOR EACH ROW
 BEGIN                                                                                                                                                                         
-	DECLARE isActive BOOLEAN;                                                                                                                                                  
+    DECLARE isActive BOOLEAN;                                                                                                                                                  
                                                                                                                                                                               
     SELECT ((InitValue <> '0') and (InitValue <> 'False')) INTO isActive                                                                                                      
     FROM tbInitValue                                                                                                                                                          
@@ -1127,14 +1127,14 @@ BEGIN
     AND   InitKey   = 'CollectPriceHistory';                                                                                                                                  
                                                                                                                                                                               
     IF isActive THEN                                                                                                                                                          
-		IF (NEW.Sell <> OLD.Sell) OR (NEW.Buy <> OLD.Buy) OR (NEW.Sources_id <> OLD.Sources_id) OR                                                                             
-		   (TIMESTAMPDIFF(hour, OLD.timestamp, NEW.timestamp) > 24) THEN                                                                                                       
-			INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                            
-			(`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                         
-			VALUES                                                                                                                                                             
-			(NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);
-		END IF;                                                                                                                                                                
-	END IF;                                                                                                                                                                    
+        IF (NEW.Sell <> OLD.Sell) OR (NEW.Buy <> OLD.Buy) OR (NEW.Sources_id <> OLD.Sources_id) OR                                                                             
+           (TIMESTAMPDIFF(hour, OLD.timestamp, NEW.timestamp) > 24) THEN                                                                                                       
+            INSERT INTO `elite_db`.`tbPriceHistory`                                                                                                                            
+            (`station_id`, `commodity_id`, `Sell`, `Buy`, `Demand`, `DemandLevel`, `Supply`, `SupplyLevel`, `Sources_id`, `timestamp`)                                         
+            VALUES                                                                                                                                                             
+            (NEW.`station_id`, NEW.`commodity_id`, NEW.`Sell`, NEW.`Buy`, NEW.`Demand`, NEW.`DemandLevel`, NEW.`Supply`, NEW.`SupplyLevel`, NEW.`Sources_id`, NEW.`timestamp`);
+        END IF;                                                                                                                                                                
+    END IF;                                                                                                                                                                    
 END$$
 
 
@@ -1174,6 +1174,11 @@ INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (6, 'Service');
 INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (7, 'Terraforming');
 INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (8, 'Tourism');
 INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (9, 'None');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (10, 'Colony');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (11, 'Repair');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (12, 'Rescue');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (13, 'Damaged');
+INSERT INTO `elite_db`.`tbEconomy` (`id`, `economy`) VALUES (14, 'Prison');
 
 COMMIT;
 
@@ -1305,7 +1310,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `elite_db`;
-INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.7.2');
+INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'Version', '0.7.3');
 INSERT INTO `elite_db`.`tbInitValue` (`InitGroup`, `InitKey`, `InitValue`) VALUES ('Database', 'CollectPriceHistory', 'False');
 
 COMMIT;
