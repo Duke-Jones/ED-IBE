@@ -1,5 +1,5 @@
-#ED-IBE
-####(ED-Intelligent Boardcomputer Extension)  
+# ED-IBE
+#### (ED-Intelligent Boardcomputer Extension)  
 for Elite Dangerous 
 
     Trading Tool (local database, no data sharing)
@@ -31,7 +31,7 @@ Licensed under the [GNU Public License (GPL) v2](https://github.com/Duke-Jones/E
 *****************************************************************************************
 *****************************************************************************************
 
-####Needed for development:
+#### Needed for development:
 
 - VS2015
 - dotNet 4.6 (and 4.6 targeting pack) (http://getdotnet.azurewebsites.net/target-dotnet-platforms.html#)
